@@ -8,6 +8,17 @@ export interface Valley {
   image: string;
 }
 
+export interface OriginsSectionContent {
+  title: string;
+  subtitle: string;
+}
+
+export const originsSection: OriginsSectionContent = {
+  title: "Where It Comes From",
+  subtitle:
+    "High-altitude valleys where ancient herding traditions meet modern stewardship. Each place shapes the character of what grows there.",
+};
+
 export const originsContent: Valley[] = [
   {
     id: "spiti",

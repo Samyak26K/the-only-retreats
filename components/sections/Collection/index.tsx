@@ -3,7 +3,7 @@ import { Section } from "@/components/ui/Section";
 
 export function CollectionSection() {
   return (
-    <Section>
+    <Section id="collection">
       <Container>
         <div className="py-12 text-center text-sm text-muted">
           Collection Section

@@ -3,7 +3,7 @@ import { Section } from "@/components/ui/Section";
 
 export function FooterSection() {
   return (
-    <Section background="surface">
+    <Section id="contact" background="surface">
       <Container>
         <div className="py-12 text-center text-sm text-muted">
           Footer Section

@@ -19,12 +19,12 @@ export const heroContent: HeroContent = {
     "Authentic products sourced from the mountains, crafted with intention.",
   shloka: "The mountains are ancient teachers. We listen. We learn. We share.",
   primaryCTA: {
-    label: "Explore Collection",
-    href: "#collection",
+    label: "Explore Origins",
+    href: "#origins",
   },
   secondaryCTA: {
-    label: "Our Story",
-    href: "#origins",
+    label: "View Collection",
+    href: "#collection",
   },
   backgroundImage: "/images/hero-himalayan-landscape.jpg",
 };

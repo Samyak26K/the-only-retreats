@@ -3,7 +3,7 @@ import { Section } from "@/components/ui/Section";
 
 export function HeritageSection() {
   return (
-    <Section>
+    <Section id="heritage">
       <Container>
         <div className="py-12 text-center text-sm text-muted">
           Heritage Section

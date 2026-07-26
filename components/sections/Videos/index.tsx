@@ -3,7 +3,7 @@ import { Section } from "@/components/ui/Section";
 
 export function VideosSection() {
   return (
-    <Section>
+    <Section id="journal">
       <Container>
         <div className="py-12 text-center text-sm text-muted">
           Videos Section

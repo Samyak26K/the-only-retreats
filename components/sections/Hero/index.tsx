@@ -7,7 +7,7 @@ import { heroContent } from "@/lib/content/hero";
 
 export function HeroSection() {
   return (
-    <Section>
+    <Section id="journey">
       <Container className="flex flex-col items-center justify-center">
         <div className="space-y-8 sm:space-y-10">
           <Heading
