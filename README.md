@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Only Retreats
 
-## Getting Started
+The Only Retreats is a premium D2C commerce platform for Himalayan heritage products. The brand direction is calm, timeless, editorial, and luxurious, with an emphasis on provenance and restraint rather than aggressive retail visuals.
 
-First, run the development server:
+This repository is initialized as the application foundation only. UI composition, product flows, and business logic are intentionally deferred to later phases.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tech Stack
+
+| Layer           | Technology                                    |
+| --------------- | --------------------------------------------- |
+| Framework       | Next.js 15, App Router, TypeScript            |
+| Styling         | Tailwind CSS v4, shadcn/ui                    |
+| Database        | PostgreSQL on Neon, Prisma ORM                |
+| CMS             | Sanity                                        |
+| Authentication  | Clerk                                         |
+| Media           | Cloudinary                                    |
+| Payments        | Razorpay, Stripe-ready                        |
+| Email           | Resend                                        |
+| Motion          | GSAP, Motion, Lenis                           |
+| State and forms | React Hook Form, Zod, Zustand, TanStack Query |
+| Utilities       | clsx, tailwind-merge, date-fns, Lucide React  |
+| DX              | ESLint, Prettier, Husky, lint-staged          |
+
+## Folder Structure
+
+```text
+app/                 Next.js App Router entry points
+components/
+  ui/                Base UI primitives
+  layout/            App shell primitives
+  shared/            Reusable shared building blocks
+  sections/          Page sections for later phases
+hooks/               Client-side hooks
+lib/                 Core utilities, environment helpers, integrations
+providers/           React providers
+services/            External service adapters
+types/               Shared TypeScript types
+utils/               Generic helper functions
+styles/              Global styles and design tokens
+prisma/              Prisma schema and migrations
+sanity/              Sanity schemas and studio assets
+public/              Static assets
+docs/                Internal documentation
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Path aliases are configured in `tsconfig.json` so imports can resolve cleanly from the project root and common top-level folders.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Install dependencies.
 
-## Learn More
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. Copy the environment template.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   copy .env.example .env
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Fill in the service credentials required for your local environment.
 
-## Deploy on Vercel
+4. Generate the Prisma client.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```bash
+   npm run db:generate
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Development Commands
+
+| Command                | Description                                        |
+| ---------------------- | -------------------------------------------------- |
+| `npm run dev`          | Start the development server                       |
+| `npm run build`        | Build for production                               |
+| `npm run start`        | Run the production server                          |
+| `npm run lint`         | Run ESLint                                         |
+| `npm run lint:fix`     | Run ESLint with auto-fix                           |
+| `npm run format`       | Format the codebase with Prettier                  |
+| `npm run format:check` | Check formatting with Prettier                     |
+| `npm run typecheck`    | Run the TypeScript compiler without emitting files |
+| `npm run db:generate`  | Generate Prisma Client                             |
+| `npm run db:push`      | Push the Prisma schema to the database             |
+| `npm run db:migrate`   | Create and apply Prisma migrations                 |
+| `npm run db:studio`    | Open Prisma Studio                                 |
+
+## Environment
+
+Refer to `.env.example` for the complete list of required placeholders. Keep `.env` and all secrets out of version control.
+
+## Notes
+
+This repository is intentionally scaffolded for the initialization phase only. Additional modules, UI, and domain logic should be introduced in later increments once the architecture is approved.
