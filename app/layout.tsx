@@ -6,6 +6,7 @@ import {
   Tiro_Devanagari_Sanskrit,
 } from "next/font/google";
 
+import { Header } from "@/components/layout/Header";
 import { SITE_NAME } from "@/lib/constants";
 import { AppProviders } from "@/providers/app-providers";
 
@@ -59,7 +60,10 @@ export default function RootLayout({
       className={`${displayFont.variable} ${headingFont.variable} ${bodyFont.variable} ${sanskritFont.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <AppProviders>{children}</AppProviders>
+        <AppProviders>
+          <Header />
+          <main className="flex-1">{children}</main>
+        </AppProviders>
       </body>
     </html>
   );
