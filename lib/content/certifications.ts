@@ -3,7 +3,18 @@ export interface Certification {
   icon: string;
 }
 
-export const certificationsContent: Certification[] = [
+export interface CertificationSectionContent {
+  title: string;
+  subtitle: string;
+}
+
+export const certificationSection: CertificationSectionContent = {
+  title: "Certifications",
+  subtitle:
+    "Ethical sourcing, traceability, and quality standards that protect the integrity of every product.",
+};
+
+export const certifications: Certification[] = [
   {
     name: "Organic Certified",
     icon: "/icons/organic.svg",
