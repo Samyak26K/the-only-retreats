@@ -5,6 +5,9 @@ export interface Product {
   price: number;
   image: string;
   origin: string;
+  featured?: boolean;
+  tagline?: string;
+  editorialDescription?: string;
 }
 
 export const collectionContent: Product[] = [
@@ -15,6 +18,10 @@ export const collectionContent: Product[] = [
     price: 1200,
     image: "/images/product-yak-ghee.jpg",
     origin: "Spiti Valley, Himachal Pradesh",
+    featured: true,
+    tagline: "The Flagship",
+    editorialDescription:
+      "Clarified over wood fire at 12,000 feet. This ghee carries the essence of Spiti—cold mountain air, sparse grasslands, and centuries of herding wisdom. Each jar is a testament to patience, purity, and the relationship between land, animal, and caretaker.",
   },
   {
     id: "raw-honey",
@@ -43,3 +50,7 @@ export const collectionContent: Product[] = [
     origin: "Kinnaur & Spiti",
   },
 ];
+
+export function getFeaturedProduct(): Product | undefined {
+  return collectionContent.find((product) => product.featured);
+}

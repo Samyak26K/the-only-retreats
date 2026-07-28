@@ -15,6 +15,9 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
       return;
     }
 
+    // Prevent body scroll when drawer is open
+    document.body.style.overflow = "hidden";
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
@@ -23,7 +26,10 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
 
     window.addEventListener("keydown", handleKeyDown);
 
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [open, onClose]);
 
   return (
@@ -45,7 +51,7 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
         aria-modal="true"
         aria-label="Mobile navigation"
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-[85vw] max-w-[20rem] flex-col border-r border-border bg-background p-5 shadow-lg transition-transform duration-200",
+          "fixed inset-y-0 left-0 z-50 flex w-[85vw] max-w-[20rem] flex-col border-r border-border bg-background p-5 shadow-lg transition-transform duration-200 overflow-y-auto",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >

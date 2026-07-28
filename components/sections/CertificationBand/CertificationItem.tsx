@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import type { Certification } from "@/lib/content/certifications";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +12,7 @@ export function CertificationItem({ certification }: CertificationItemProps) {
         "flex min-w-0 flex-1 items-center justify-center gap-3 rounded-lg border border-border bg-surface px-4 py-4 text-center md:min-w-[12rem]",
       )}
     >
-      <Image
+      <img
         src={certification.icon}
         alt=""
         aria-hidden="true"

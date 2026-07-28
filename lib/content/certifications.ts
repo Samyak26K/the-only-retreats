@@ -17,18 +17,18 @@ export const certificationSection: CertificationSectionContent = {
 export const certifications: Certification[] = [
   {
     name: "Organic Certified",
-    icon: "/icons/organic.svg",
+    icon: "/globe.svg",
   },
   {
     name: "Fair Trade",
-    icon: "/icons/fair-trade.svg",
+    icon: "/globe.svg",
   },
   {
     name: "Traceable Source",
-    icon: "/icons/traceable.svg",
+    icon: "/globe.svg",
   },
   {
     name: "Sustainable",
-    icon: "/icons/sustainable.svg",
+    icon: "/globe.svg",
   },
 ];
