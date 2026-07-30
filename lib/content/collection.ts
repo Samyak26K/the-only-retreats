@@ -10,31 +10,12 @@ export interface Product {
   editorialDescription?: string;
 }
 
-export interface CollectionProduct {
-  id: string;
-  name: string;
-  tagline: string;
-  description: string;
-  cta: string;
-  href: string;
-  image: string;
-}
-
-export const collectionSection: CollectionSectionContent = {
-  title: "Featured Collection",
-  subtitle:
-    "A single focused introduction to the collection, presented as an editorial feature rather than a product grid.",
-};
-
-export const collectionProducts: CollectionProduct[] = [
+export const collectionContent: Product[] = [
   {
     id: "yak-ghee-premium",
     name: "Yak Ghee — Premium",
-    tagline: "Pure, clarified yak butter from high altitude herds.",
-    description:
-      "Our signature ghee is slow-made in the mountains and carries the depth of high-altitude pasture, hand-churned tradition, and careful sourcing.",
-    cta: "Explore Product",
-    href: "#contact",
+    shortDescription: "Pure, clarified yak butter from high altitude herds.",
+    price: 1200,
     image: "/images/product-yak-ghee.jpg",
     origin: "Spiti Valley, Himachal Pradesh",
     featured: true,
@@ -45,32 +26,28 @@ export const collectionProducts: CollectionProduct[] = [
   {
     id: "raw-honey",
     name: "Raw Himalayan Honey",
-    tagline: "Unfiltered, unpasteurized wildflower honey.",
-    description:
-      "Harvested in small batches, this honey preserves the character of alpine blooms and the natural variations of the valley seasons.",
-    cta: "Explore Product",
-    href: "#contact",
+    shortDescription:
+      "Unfiltered, unpasteurized wildflower honey. Living culture.",
+    price: 450,
     image: "/images/product-honey.jpg",
+    origin: "Kinnaur Valley, Himachal Pradesh",
   },
   {
     id: "yak-butter",
     name: "Yak Butter — Unsalted",
-    tagline: "Rich, grassy butter for cooking and traditional tea.",
-    description:
-      "A versatile mountain staple with a clean finish, crafted to support both traditional preparations and contemporary kitchens.",
-    cta: "Explore Product",
-    href: "#contact",
+    shortDescription: "Rich, grassy butter for cooking and traditional tea.",
+    price: 680,
     image: "/images/product-yak-butter.jpg",
+    origin: "Ladakh Plateau",
   },
   {
     id: "ghee-infused-spices",
     name: "Ghee & Spice Blend",
-    tagline: "Clarified yak ghee infused with Himalayan warming spices.",
-    description:
-      "A more layered interpretation of the house staple, bringing warmth and aroma to everyday cooking.",
-    cta: "Explore Product",
-    href: "#contact",
+    shortDescription:
+      "Clarified yak ghee infused with Himalayan warming spices.",
+    price: 920,
     image: "/images/product-spice-ghee.jpg",
+    origin: "Kinnaur & Spiti",
   },
 ];
 
