@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
+import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { getFeaturedProduct } from "@/lib/content/collection";
 
