@@ -1,7 +1,12 @@
-import { useEffect } from "react";
-import { X } from "lucide-react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { ShoppingBag, UserRound, X } from "lucide-react";
 
 import { MobileNavigation } from "@/components/layout/MobileNavigation";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { navigationContent } from "@/lib/content/navigation";
 import { cn } from "@/lib/utils";
 
 type MobileDrawerProps = {
@@ -9,34 +14,45 @@ type MobileDrawerProps = {
   onClose: () => void;
 };
 
+const drawerCloseButtonClasses =
+  "flex size-12 items-center justify-center rounded-full text-foreground transition-colors duration-fast hover:bg-surface";
+
+const drawerUtilityRowClasses =
+  "flex min-h-14 items-center gap-4 rounded-lg px-2 -mx-2 text-left transition-colors duration-fast hover:bg-surface";
+
 export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useFocusTrap(panelRef, open, onClose);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!open) {
       return;
     }
 
-    // Prevent body scroll when drawer is open
-    document.body.style.overflow = "hidden";
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
+    const { style } = document.body;
+    const previousOverflow = style.overflow;
+    style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
+      style.overflow = previousOverflow;
     };
-  }, [open, onClose]);
+  }, [open]);
 
-  return (
+  if (!mounted) {
+    return null;
+  }
+
+  return createPortal(
     <div className="md:hidden">
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-[color:rgba(38,37,33,0.5)] transition-opacity duration-200",
+          "fixed inset-0 z-50 bg-[rgba(43,43,43,0.5)] transition-opacity duration-slow",
           open
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",
@@ -46,33 +62,51 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
       />
 
       <aside
+        ref={panelRef}
         id="mobile-drawer"
         role="dialog"
         aria-modal="true"
-        aria-label="Mobile navigation"
+        aria-label={navigationContent.menu.title}
+        inert={!open}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-[85vw] max-w-[20rem] flex-col border-r border-border bg-background p-5 shadow-lg transition-transform duration-200 overflow-y-auto",
-          open ? "translate-x-0" : "-translate-x-full",
+          "fixed inset-y-0 right-0 z-[60] flex w-[85vw] max-w-sm flex-col overflow-y-auto rounded-l-3xl border-l border-border bg-background p-8 shadow-lg transition-transform duration-slow",
+          open ? "translate-x-0" : "translate-x-full",
         )}
       >
         <div className="flex items-center justify-between">
           <span className="text-sm font-semibold uppercase tracking-[0.24em] text-muted">
-            Menu
+            {navigationContent.menu.title}
           </span>
           <button
             type="button"
-            aria-label="Close menu"
+            aria-label={navigationContent.menu.closeLabel}
             onClick={onClose}
-            className="rounded-full p-2 text-foreground transition-colors hover:bg-surface"
+            className={drawerCloseButtonClasses}
           >
             <X className="size-5" />
           </button>
         </div>
 
-        <div className="mt-8 flex-1">
+        <div className="mt-12 flex-1">
           <MobileNavigation onNavigate={onClose} />
         </div>
+
+        <div className="mt-10 flex flex-col gap-1 border-t border-border pt-6">
+          <button type="button" className={drawerUtilityRowClasses}>
+            <UserRound className="size-6 text-muted" aria-hidden="true" />
+            <span className="text-base font-medium text-foreground">
+              {navigationContent.utility.account.label}
+            </span>
+          </button>
+          <button type="button" className={drawerUtilityRowClasses}>
+            <ShoppingBag className="size-6 text-muted" aria-hidden="true" />
+            <span className="text-base font-medium text-foreground">
+              {navigationContent.utility.cart.label}
+            </span>
+          </button>
+        </div>
       </aside>
-    </div>
+    </div>,
+    document.body,
   );
 }

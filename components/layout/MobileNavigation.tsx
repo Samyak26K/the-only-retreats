@@ -1,24 +1,21 @@
 import Link from "next/link";
 
-const navItems = [
-  { label: "Journey", href: "#journey" },
-  { label: "Collection", href: "#collection" },
-  { label: "Origins", href: "#origins" },
-  { label: "Heritage", href: "#heritage" },
-  { label: "Journal", href: "#journal" },
-  { label: "Contact", href: "#contact" },
-];
+import { navigationContent } from "@/lib/content/navigation";
 
-export function MobileNavigation({ onNavigate }: { onNavigate?: () => void }) {
+type MobileNavigationProps = {
+  onNavigate?: () => void;
+};
+
+export function MobileNavigation({ onNavigate }: MobileNavigationProps) {
   return (
-    <nav aria-label="Mobile" className="flex flex-col gap-4">
+    <nav aria-label="Mobile" className="flex flex-col">
       <ul className="flex flex-col gap-3">
-        {navItems.map((item) => (
+        {navigationContent.primaryLinks.map((item) => (
           <li key={item.label}>
             <Link
               href={item.href}
               onClick={onNavigate}
-              className="block text-base font-medium uppercase tracking-[0.24em] text-foreground transition-colors hover:text-muted"
+              className="flex min-h-12 items-center text-lg font-medium uppercase tracking-[0.2em] text-foreground transition-colors duration-fast hover:text-forest"
             >
               {item.label}
             </Link>

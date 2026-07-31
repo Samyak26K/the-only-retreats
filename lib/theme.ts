@@ -6,12 +6,16 @@ export const fontVariables = {
 } as const;
 
 export const colors = {
-  background: "#F8F7F2",
-  surface: "#ECE7DB",
-  border: "#CFC5B3",
-  muted: "#7E766B",
-  text: "#262521",
-  forest: "#304238",
+  background: "#F7F5F1",
+  surface: "#FFFFFF",
+  cloud: "#E6EDF3",
+  border: "#D9D7D3",
+  muted: "#5F6670",
+  text: "#2B2B2B",
+  forest: "#2F3A2A",
+  gold: "#B8A080",
+  success: "#557A46",
+  destructive: "#B86A5D",
   moss: "#5F7154",
   copper: "#A46F42",
   honey: "#C48A2E",
@@ -32,8 +36,14 @@ export const spacing = {
 export const radius = {
   small: "0.375rem",
   medium: "0.75rem",
+  /** Buttons */
   large: "1rem",
+  /** Cards */
   extraLarge: "1.5rem",
+  /** Panels & Images */
+  panel: "1.75rem",
+  /** Bottom Sheets & Drawers */
+  sheet: "2rem",
 } as const;
 
 export const shadows = {
@@ -43,12 +53,23 @@ export const shadows = {
 } as const;
 
 export const transitions = {
-  fast: "120ms ease-out",
-  normal: "180ms ease-out",
-  slow: "260ms ease-out",
+  fast: "150ms",
+  normal: "300ms",
+  slow: "600ms",
+  hero: "1200ms",
 } as const;
 
 export const container = {
   maxWidth: "1280px",
-  padding: "clamp(1rem, 2.5vw, 2rem)",
+  padding: {
+    mobile: "1.5rem",
+    tablet: "3rem",
+    desktop: "5rem",
+  },
+} as const;
+
+export const navbarHeight = {
+  mobile: "4.5rem",
+  tablet: "5rem",
+  desktop: "5.5rem",
 } as const;

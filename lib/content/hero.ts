@@ -1,30 +1,48 @@
+export interface SanskritVerse {
+  devanagari: string;
+  transliteration: string;
+  translation: string;
+  context: string;
+}
+
+export interface HeroMedia {
+  desktop: string;
+  mobile: string;
+  alt: string;
+}
+
 export interface HeroContent {
+  shloka: SanskritVerse;
   title: string;
-  subtitle: string;
-  shloka: string;
-  primaryCTA: {
+  titleEmphasis: string;
+  supporting: string;
+  cta: {
     label: string;
     href: string;
   };
-  secondaryCTA: {
-    label: string;
-    href: string;
-  };
-  backgroundImage: string;
+  scrollCue: string;
+  media: HeroMedia;
 }
 
 export const heroContent: HeroContent = {
-  title: "Pure Heritage from the High Himalayas",
-  subtitle:
-    "Authentic products sourced from the mountains, crafted with intention.",
-  shloka: "The mountains are ancient teachers. We listen. We learn. We share.",
-  primaryCTA: {
-    label: "Explore Origins",
+  shloka: {
+    devanagari: "सर्वे भवन्तु सुखिनः।",
+    transliteration: "Sarve Bhavantu Sukhinah",
+    translation: "May all beings be nourished.",
+    context:
+      "An ancient Sanskrit blessing expressing the wish that all beings live with well-being, nourishment, and peace. It reflects the philosophy behind The Only Retreats: sharing authentic Himalayan nourishment with care, respect, and harmony with nature.",
+  },
+  title: "The Himalayas are not a destination.",
+  titleEmphasis: "They are a source.",
+  supporting: "From the purest origins comes the truest nourishment.",
+  cta: {
+    label: "Enter the Source",
     href: "#origins",
   },
-  secondaryCTA: {
-    label: "View Collection",
-    href: "#collection",
+  scrollCue: "Begin the descent",
+  media: {
+    desktop: "/images/hero/hero-v1.webp",
+    mobile: "/images/hero/hero-mobile.webp",
+    alt: "Mist rising over a high Himalayan valley at first light.",
   },
-  backgroundImage: "/images/hero-himalayan-landscape.jpg",
 };
