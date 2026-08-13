@@ -3,6 +3,7 @@ import { z } from "zod";
 const serverEnvSchema = z.object({
   DATABASE_URL: z.string().url().optional(),
   CLERK_SECRET_KEY: z.string().min(1).optional(),
+  DEV_ADMIN_CLERK_USER_ID: z.string().min(1).optional(),
   SANITY_API_TOKEN: z.string().min(1).optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
   RAZORPAY_KEY_ID: z.string().min(1).optional(),
@@ -26,6 +27,11 @@ export type ClientEnv = z.infer<typeof clientEnvSchema>;
 /** Validates server-side environment variables (call from server code only). */
 export function getServerEnv(): ServerEnv {
   return serverEnvSchema.parse(process.env);
+}
+
+export function getDatabaseUrl(): string | undefined {
+  const env = getServerEnv();
+  return env.DATABASE_URL;
 }
 
 /** Validates public environment variables available in the browser. */

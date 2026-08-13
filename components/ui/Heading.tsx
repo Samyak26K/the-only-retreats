@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 type HeadingAlignment = "left" | "center" | "right";
 
-type HeadingProps = ComponentPropsWithoutRef<"div"> & {
+type HeadingProps = Omit<ComponentPropsWithoutRef<"div">, "title"> & {
   eyebrow?: ReactNode;
   title: ReactNode;
   subtitle?: ReactNode;

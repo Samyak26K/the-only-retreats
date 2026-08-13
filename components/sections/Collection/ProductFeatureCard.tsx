@@ -1,9 +1,9 @@
 import Image from "next/image";
 
-import type { CollectionProduct } from "@/lib/content/collection";
+import type { Product } from "@/lib/content/collection";
 
 type ProductFeatureCardProps = {
-  product: CollectionProduct;
+  product: Product;
 };
 
 export function ProductFeatureCard({ product }: ProductFeatureCardProps) {
@@ -31,19 +31,19 @@ export function ProductFeatureCard({ product }: ProductFeatureCardProps) {
         </div>
 
         <p className="font-body text-base leading-7 text-muted sm:text-lg sm:leading-8">
-          {product.tagline}
+          {product.tagline ?? product.shortDescription}
         </p>
 
         <p className="max-w-xl text-sm leading-7 text-muted sm:text-base sm:leading-8">
-          {product.description}
+          {product.editorialDescription ?? product.shortDescription}
         </p>
 
         <div className="pt-2">
           <a
-            href={product.href}
+            href={`/products/${product.id}`}
             className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-transparent bg-primary px-2.5 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/80 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            {product.cta}
+            View product
           </a>
         </div>
       </div>

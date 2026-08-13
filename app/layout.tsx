@@ -6,7 +6,7 @@ import {
   Tiro_Devanagari_Sanskrit,
 } from "next/font/google";
 
-import { Header } from "@/components/layout/Header";
+import { AppShell } from "@/components/layout/AppShell";
 import { DEFAULT_SITE_URL, SITE_NAME } from "@/lib/constants";
 import { AppProviders } from "@/providers/app-providers";
 
@@ -91,10 +91,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <AppProviders>
-          <Header />
-          <main id="main-content" className="flex-1">
-            {children}
-          </main>
+          <AppShell>{children}</AppShell>
         </AppProviders>
       </body>
     </html>

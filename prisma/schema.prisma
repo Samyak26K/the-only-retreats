@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -11,4 +9,702 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  COMING_SOON
+  SEASONAL
+  SOLD_OUT
+  ARCHIVED
+}
+
+enum VariantStatus {
+  ACTIVE
+  INACTIVE
+  DISCONTINUED
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum InventoryMovementType {
+  PURCHASE
+  PRODUCTION
+  PACKING
+  SALE
+  ADJUSTMENT
+  RETURN
+  DAMAGE
+  CANCELLATION
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  FAILED
+  REFUNDED
+}
+
+enum FulfillmentStatus {
+  UNFULFILLED
+  PARTIALLY_FULFILLED
+  FULFILLED
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ContentEntryType {
+  JOURNAL
+  FIELD_NOTE
+  ORIGIN_STORY
+  PRODUCER_STORY
+  CULTURAL_DOCUMENTATION
+  OTHER
+}
+
+enum ShipmentStatus {
+  PENDING
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+  CANCELLED
+}
+
+model Country {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  code      String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  states    State[]
+
+  @@index([name])
+}
+
+model State {
+  id        String     @id @default(cuid())
+  countryId String
+  country   Country    @relation(fields: [countryId], references: [id])
+  name      String
+  code      String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  districts District[]
+
+  @@unique([countryId, name])
+  @@index([countryId])
+}
+
+model District {
+  id        String   @id @default(cuid())
+  stateId   String
+  state     State    @relation(fields: [stateId], references: [id])
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  regions   Region[]
+
+  @@unique([stateId, name])
+  @@index([stateId])
+}
+
+model Region {
+  id            String    @id @default(cuid())
+  districtId    String
+  district      District  @relation(fields: [districtId], references: [id])
+  name          String
+  description   String?
+  mountainRange String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  origins       Origin[]
+  villages      Village[]
+
+  @@unique([districtId, name])
+  @@index([districtId])
+}
+
+model Village {
+  id          String     @id @default(cuid())
+  regionId    String
+  region      Region     @relation(fields: [regionId], references: [id])
+  name        String
+  description String?
+  latitude    Decimal?   @db.Decimal(9, 6)
+  longitude   Decimal?   @db.Decimal(9, 6)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  origins     Origin[]
+  producers   Producer[]
+
+  @@unique([regionId, name])
+  @@index([regionId])
+  @@index([isActive])
+}
+
+model Origin {
+  id                   String             @id @default(cuid())
+  name                 String
+  regionId             String
+  region               Region             @relation(fields: [regionId], references: [id])
+  villageId            String?
+  village              Village?           @relation(fields: [villageId], references: [id])
+  altitude             String?
+  landscape            String?
+  climate              String?
+  biodiversity         String?
+  seasonality          String?
+  traditionalPractices String?
+  historicalContext    String?
+  originStory          String?
+  verificationStatus   VerificationStatus @default(UNVERIFIED)
+  isActive             Boolean            @default(true)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  products             Product[]          @relation("PrimaryOriginProducts")
+  productionRecords    ProductionRecord[]
+
+  @@unique([name, regionId])
+  @@index([regionId])
+  @@index([villageId])
+  @@index([verificationStatus])
+}
+
+model Producer {
+  id                  String             @id @default(cuid())
+  name                String
+  villageId           String?
+  village             Village?           @relation(fields: [villageId], references: [id])
+  locationDescription String?
+  relationshipStatus  String?
+  notes               String?
+  verificationStatus  VerificationStatus @default(UNVERIFIED)
+  isActive            Boolean            @default(true)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  productionRecords   ProductionRecord[]
+  batches             Batch[]
+
+  @@unique([name, villageId])
+  @@index([villageId])
+  @@index([verificationStatus])
+  @@index([isActive])
+}
+
+model ProductionMethod {
+  id          String             @id @default(cuid())
+  name        String             @unique
+  description String?
+  isActive    Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  records     ProductionRecord[]
+}
+
+model Category {
+  id               String     @id @default(cuid())
+  name             String
+  slug             String     @unique
+  description      String?
+  parentCategoryId String?
+  parentCategory   Category?  @relation("CategoryHierarchy", fields: [parentCategoryId], references: [id])
+  childCategories  Category[] @relation("CategoryHierarchy")
+  products         Product[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([slug])
+}
+
+model Product {
+  id                String                @id @default(cuid())
+  categoryId        String?
+  category          Category?             @relation(fields: [categoryId], references: [id])
+  primaryOriginId   String?
+  primaryOrigin     Origin?               @relation("PrimaryOriginProducts", fields: [primaryOriginId], references: [id])
+  name              String
+  slug              String                @unique
+  shortDescription  String?
+  longDescription   String?
+  brand             String?
+  status            ProductStatus         @default(DRAFT)
+  featured          Boolean               @default(false)
+  seoTitle          String?
+  seoDescription    String?
+  currency          String                @default("INR")
+  mrp               Decimal?              @db.Decimal(10, 2)
+  sellingPrice      Decimal?              @db.Decimal(10, 2)
+  costPrice         Decimal?              @db.Decimal(10, 2)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  variants          ProductVariant[]
+  media             ProductMedia[]
+  passport          ProductPassport?
+  contentBlocks     ProductContentBlock[]
+  batches           Batch[]
+  productionRecords ProductionRecord[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([featured])
+  @@index([categoryId])
+}
+
+model ProductVariant {
+  id             String          @id @default(cuid())
+  productId      String
+  product        Product         @relation(fields: [productId], references: [id])
+  name           String
+  sku            String          @unique
+  netQuantity    Decimal?        @db.Decimal(10, 2)
+  unit           String?
+  mrp            Decimal         @db.Decimal(10, 2)
+  sellingPrice   Decimal         @db.Decimal(10, 2)
+  status         VariantStatus   @default(ACTIVE)
+  isDefault      Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  inventoryItems InventoryItem[]
+  orderItems     OrderItem[]
+
+  @@index([productId])
+  @@index([sku])
+  @@index([status])
+}
+
+model ProductMedia {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  type      String?
+  url       String
+  alt       String?
+  caption   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
+  @@index([sortOrder])
+}
+
+model ProductPassport {
+  id                      String   @id @default(cuid())
+  productId               String   @unique
+  product                 Product  @relation(fields: [productId], references: [id])
+  batchId                 String?  @unique
+  batch                   Batch?   @relation(fields: [batchId], references: [id])
+  identitySummary         String?
+  originSummary           String?
+  landscapeSummary        String?
+  peopleSummary           String?
+  productionMethodSummary String?
+  ingredientsSummary      String?
+  characteristicsSummary  String?
+  seasonalitySummary      String?
+  traceabilitySummary     String?
+  documentationSummary    String?
+  certificationsSummary   String?
+  sustainabilitySummary   String?
+  storageSummary          String?
+  qualitySummary          String?
+  metadata                Json?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@index([productId])
+  @@index([batchId])
+}
+
+model ProductContentBlock {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  sectionKey String
+  title      String?
+  body       String?
+  mediaUrl   String?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([productId, sortOrder])
+}
+
+model ProductionRecord {
+  id                 String             @id @default(cuid())
+  producerId         String?
+  producer           Producer?          @relation(fields: [producerId], references: [id])
+  originId           String?
+  origin             Origin?            @relation(fields: [originId], references: [id])
+  productionMethodId String?
+  productionMethod   ProductionMethod?  @relation(fields: [productionMethodId], references: [id])
+  productId          String?
+  product            Product?           @relation(fields: [productId], references: [id])
+  productionDate     DateTime?
+  productionPeriod   String?
+  notes              String?
+  qualityStatus      VerificationStatus @default(UNVERIFIED)
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  batches            Batch[]
+
+  @@index([productId])
+  @@index([producerId])
+  @@index([originId])
+  @@index([productionDate])
+}
+
+model Batch {
+  id                 String             @id @default(cuid())
+  productId          String
+  product            Product            @relation(fields: [productId], references: [id])
+  productionRecordId String?
+  productionRecord   ProductionRecord?  @relation(fields: [productionRecordId], references: [id])
+  producerId         String?
+  producer           Producer?          @relation(fields: [producerId], references: [id])
+  batchNumber        String
+  productionDate     DateTime?
+  quantityProduced   Decimal?           @db.Decimal(10, 2)
+  qualityStatus      VerificationStatus @default(UNVERIFIED)
+  verificationStatus VerificationStatus @default(UNVERIFIED)
+  notes              String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  packingRecords     PackingRecord[]
+  passport           ProductPassport?
+  orderItems         OrderItem[]
+
+  @@unique([productId, batchNumber])
+  @@index([productId])
+  @@index([batchNumber])
+  @@index([productionDate])
+}
+
+model PackingRecord {
+  id                String             @id @default(cuid())
+  batchId           String
+  batch             Batch              @relation(fields: [batchId], references: [id])
+  packingLocationId String?
+  packingLocation   InventoryLocation? @relation(fields: [packingLocationId], references: [id])
+  packingDate       DateTime?
+  quantityPacked    Decimal?           @db.Decimal(10, 2)
+  operatorId        String?
+  operator          AdminUser?         @relation("PackingOperator", fields: [operatorId], references: [id])
+  packagingFormat   String?
+  notes             String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@index([batchId])
+  @@index([packingDate])
+  @@index([packingLocationId])
+}
+
+model InventoryLocation {
+  id             String          @id @default(cuid())
+  name           String
+  type           String?
+  address        String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  inventoryItems InventoryItem[]
+  packingRecords PackingRecord[]
+
+  @@index([isActive])
+}
+
+model InventoryItem {
+  id                  String              @id @default(cuid())
+  productVariantId    String
+  productVariant      ProductVariant      @relation(fields: [productVariantId], references: [id])
+  inventoryLocationId String
+  inventoryLocation   InventoryLocation   @relation(fields: [inventoryLocationId], references: [id])
+  quantityOnHand      Decimal             @default(0) @db.Decimal(10, 2)
+  quantityReserved    Decimal             @default(0) @db.Decimal(10, 2)
+  reorderThreshold    Decimal?            @db.Decimal(10, 2)
+  status              VariantStatus       @default(ACTIVE)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  inventoryMovements  InventoryMovement[]
+
+  @@unique([productVariantId, inventoryLocationId])
+  @@index([productVariantId])
+  @@index([inventoryLocationId])
+}
+
+model InventoryMovement {
+  id              String                @id @default(cuid())
+  inventoryItemId String
+  inventoryItem   InventoryItem         @relation(fields: [inventoryItemId], references: [id])
+  movementType    InventoryMovementType
+  quantity        Decimal               @db.Decimal(10, 2)
+  referenceType   String?
+  referenceId     String?
+  reason          String?
+  notes           String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([inventoryItemId])
+  @@index([movementType])
+  @@index([createdAt])
+}
+
+model Customer {
+  id          String            @id @default(cuid())
+  clerkUserId String            @unique
+  firstName   String?
+  lastName    String?
+  email       String?           @unique
+  phone       String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  addresses   CustomerAddress[]
+  orders      Order[]
+
+  @@index([email])
+}
+
+model CustomerAddress {
+  id             String   @id @default(cuid())
+  customerId     String
+  customer       Customer @relation(fields: [customerId], references: [id])
+  type           String?
+  fullName       String?
+  line1          String?
+  line2          String?
+  city           String?
+  state          String?
+  postalCode     String?
+  country        String?
+  isDefault      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  billingOrders  Order[]  @relation("BillingAddress")
+  shippingOrders Order[]  @relation("ShippingAddress")
+
+  @@index([customerId])
+  @@index([type])
+}
+
+model Order {
+  id                String            @id @default(cuid())
+  orderNumber       String            @unique
+  customerId        String
+  customer          Customer          @relation(fields: [customerId], references: [id])
+  status            OrderStatus       @default(PENDING)
+  paymentStatus     PaymentStatus     @default(PENDING)
+  fulfillmentStatus FulfillmentStatus @default(UNFULFILLED)
+  currency          String            @default("INR")
+  subtotal          Decimal           @db.Decimal(10, 2)
+  discountAmount    Decimal           @default(0) @db.Decimal(10, 2)
+  shippingAmount    Decimal           @default(0) @db.Decimal(10, 2)
+  taxAmount         Decimal           @default(0) @db.Decimal(10, 2)
+  total             Decimal           @db.Decimal(10, 2)
+  billingAddressId  String?
+  billingAddress    CustomerAddress?  @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  shippingAddressId String?
+  shippingAddress   CustomerAddress?  @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  items             OrderItem[]
+  payments          Payment[]
+  shipments         Shipment[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id               String         @id @default(cuid())
+  orderId          String
+  order            Order          @relation(fields: [orderId], references: [id])
+  productVariantId String
+  productVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  batchId          String?
+  batch            Batch?         @relation(fields: [batchId], references: [id])
+  quantity         Int            @default(1)
+  unitPrice        Decimal        @db.Decimal(10, 2)
+  discountAmount   Decimal        @default(0) @db.Decimal(10, 2)
+  taxAmount        Decimal        @default(0) @db.Decimal(10, 2)
+  totalAmount      Decimal        @db.Decimal(10, 2)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([orderId])
+  @@index([productVariantId])
+  @@index([batchId])
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  orderId               String
+  order                 Order         @relation(fields: [orderId], references: [id])
+  provider              String?
+  providerTransactionId String?
+  amount                Decimal       @db.Decimal(10, 2)
+  currency              String        @default("INR")
+  status                PaymentStatus @default(PENDING)
+  paymentMethod         String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([providerTransactionId])
+  @@index([status])
+}
+
+model Shipment {
+  id             String         @id @default(cuid())
+  orderId        String
+  order          Order          @relation(fields: [orderId], references: [id])
+  carrier        String?
+  trackingNumber String?
+  status         ShipmentStatus @default(PENDING)
+  shippedAt      DateTime?
+  deliveredAt    DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([orderId])
+  @@index([trackingNumber])
+  @@index([status])
+}
+
+model DiscountCoupon {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  type       String?
+  value      Decimal   @db.Decimal(10, 2)
+  startDate  DateTime?
+  endDate    DateTime?
+  usageLimit Int?
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([code])
+  @@index([isActive])
+}
+
+model Role {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  description     String?
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  adminUsers      AdminUser[]
+  rolePermissions RolePermission[]
+}
+
+model Permission {
+  id              String           @id @default(cuid())
+  name            String           @unique
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(cuid())
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id])
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  createdAt    DateTime   @default(now())
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+}
+
+model AdminUser {
+  id             String          @id @default(cuid())
+  clerkUserId    String?         @unique
+  email          String          @unique
+  name           String?
+  roleId         String?
+  role           Role?           @relation(fields: [roleId], references: [id])
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  auditLogs      AuditLog[]
+  packingRecords PackingRecord[] @relation("PackingOperator")
+  contentEntries ContentEntry[]
+
+  @@index([email])
+  @@index([roleId])
+  @@index([isActive])
+}
+
+model AuditLog {
+  id            String     @id @default(cuid())
+  actorId       String?
+  actor         AdminUser? @relation(fields: [actorId], references: [id])
+  action        String
+  entityType    String
+  entityId      String
+  previousState Json?
+  newState      Json?
+  metadata      Json?
+  createdAt     DateTime   @default(now())
+
+  @@index([entityType])
+  @@index([entityId])
+  @@index([createdAt])
+}
+
+model ContentEntry {
+  id          String           @id @default(cuid())
+  slug        String           @unique
+  title       String
+  type        ContentEntryType @default(JOURNAL)
+  body        String?
+  authorId    String?
+  author      AdminUser?       @relation(fields: [authorId], references: [id])
+  status      ContentStatus    @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([publishedAt])
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
