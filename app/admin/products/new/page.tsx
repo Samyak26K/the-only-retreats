@@ -56,10 +56,12 @@ export default async function NewProductPage() {
     redirect("/admin/products");
   }
 
-  const categories = await prisma.category.findMany({
-    orderBy: { name: "asc" },
-  });
-  const origins = await prisma.origin.findMany({ orderBy: { name: "asc" } });
+  const [categories, origins] = await Promise.all([
+    prisma.category.findMany({
+      orderBy: { name: "asc" },
+    }),
+    prisma.origin.findMany({ orderBy: { name: "asc" } }),
+  ]);
 
   return (
     <div className="space-y-6">

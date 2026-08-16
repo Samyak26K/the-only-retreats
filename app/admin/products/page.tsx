@@ -31,9 +31,9 @@ export default async function AdminProductsPage() {
           subtitle="Manage catalog products and their availability without changing the public storefront experience."
           alignment="left"
         />
-        <Link href="/admin/products/new">
-          <Button>Create product</Button>
-        </Link>
+        <Button render={<Link href="/admin/products/new" />}>
+          Create product
+        </Button>
       </div>
 
       {error ? (
@@ -47,16 +47,14 @@ export default async function AdminProductsPage() {
           <p className="text-sm text-muted">Product catalog</p>
         </div>
         {products.length === 0 ? (
-          <div className="p-8 text-sm text-muted">
-            No products are available yet. Connect the database and seed the
-            catalog to start managing records.
-          </div>
+          <div className="p-8 text-sm text-muted">No products yet.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-border text-sm">
               <thead className="bg-muted/20 text-left text-xs uppercase tracking-[0.24em] text-muted">
                 <tr>
                   <th className="px-4 py-3">Product</th>
+                  <th className="px-4 py-3">Variants</th>
                   <th className="px-4 py-3">Category</th>
                   <th className="px-4 py-3">Origin</th>
                   <th className="px-4 py-3">Status</th>
@@ -75,6 +73,22 @@ export default async function AdminProductsPage() {
                       <p className="mt-1 text-xs text-muted">{product.slug}</p>
                     </td>
                     <td className="px-4 py-4 text-muted">
+                      <p className="text-foreground">
+                        {product.variants.length.toLocaleString("en-IN")}
+                      </p>
+                      <p className="mt-1 text-xs text-muted">
+                        {product.variants.length === 0
+                          ? "No variants"
+                          : product.variants
+                              .slice(0, 2)
+                              .map(
+                                (variant) =>
+                                  `${variant.name} (${variant.status})`,
+                              )
+                              .join(", ")}
+                      </p>
+                    </td>
+                    <td className="px-4 py-4 text-muted">
                       {product.category?.name ?? "—"}
                     </td>
                     <td className="px-4 py-4 text-muted">
@@ -84,14 +98,20 @@ export default async function AdminProductsPage() {
                     <td className="px-4 py-4 text-muted">
                       {product.featured ? "Yes" : "No"}
                     </td>
-                    <td className="px-4 py-4 text-muted">—</td>
+                    <td className="px-4 py-4 text-muted">
+                      {new Date(product.updatedAt).toLocaleDateString("en-IN")}
+                    </td>
                     <td className="px-4 py-4">
                       <div className="flex flex-wrap gap-2">
-                        <Link href={`/admin/products/${product.id}`}>
-                          <Button variant="outline" size="sm">
-                            Edit
-                          </Button>
-                        </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          render={
+                            <Link href={`/admin/products/${product.id}`} />
+                          }
+                        >
+                          Edit
+                        </Button>
                       </div>
                     </td>
                   </tr>

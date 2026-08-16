@@ -99,8 +99,8 @@ async function main() {
     update: {},
     create: {
       name: "Himalayan Badri Cow Ghee Origin",
-      regionId: kulluValley.id,
-      villageId: pulag.id,
+      region: { connect: { id: kulluValley.id } },
+      village: { connect: { id: pulag.id } },
       altitude: "2,460 m",
       landscape: "Development/demo Himalayan valley landscape",
       climate: "Cool mountain climate",
@@ -118,8 +118,8 @@ async function main() {
     where: { slug: "himalayan-badri-cow-ghee" },
     update: {},
     create: {
-      categoryId: category.id,
-      primaryOriginId: origin.id,
+      category: { connect: { id: category.id } },
+      primaryOrigin: { connect: { id: origin.id } },
       name: "Himalayan Badri Cow Ghee",
       slug: "himalayan-badri-cow-ghee",
       shortDescription:
@@ -142,7 +142,7 @@ async function main() {
     where: { sku: "HIMALAYANBADRICOWGHEE500" },
     update: {},
     create: {
-      productId: product.id,
+      product: { connect: { id: product.id } },
       name: "500 ml",
       sku: "HIMALAYANBADRICOWGHEE500",
       netQuantity: 500,
@@ -158,7 +158,7 @@ async function main() {
     where: { sku: "HIMALAYANBADRICOWGHEE1000" },
     update: {},
     create: {
-      productId: product.id,
+      product: { connect: { id: product.id } },
       name: "1000 ml",
       sku: "HIMALAYANBADRICOWGHEE1000",
       netQuantity: 1000,
@@ -175,15 +175,15 @@ async function main() {
       producer: {
         create: {
           name: "Development Demo Producer",
-          villageId: pulag.id,
+          village: { connect: { id: pulag.id } },
           relationshipStatus: "Development/demo",
           notes: "Development/demo producer record for seed data.",
           verificationStatus: "PENDING",
         },
       },
-      originId: origin.id,
-      productionMethodId: productionMethod.id,
-      productId: product.id,
+      origin: { connect: { id: origin.id } },
+      productionMethod: { connect: { id: productionMethod.id } },
+      product: { connect: { id: product.id } },
       productionDate: new Date("2024-09-01T00:00:00.000Z"),
       productionPeriod: "Development/demo harvest period",
       notes: "Development/demo production record for seed data.",
@@ -194,8 +194,8 @@ async function main() {
 
   await prisma.batch.create({
     data: {
-      productId: product.id,
-      productionRecordId: productionRecord.id,
+      product: { connect: { id: product.id } },
+      productionRecord: { connect: { id: productionRecord.id } },
       batchNumber: "DEV-BATCH-001",
       productionDate: new Date("2024-09-01T00:00:00.000Z"),
       quantityProduced: 100,
@@ -226,8 +226,8 @@ async function main() {
     },
     update: {},
     create: {
-      productVariantId: variant500.id,
-      inventoryLocationId: inventoryLocation.id,
+      productVariant: { connect: { id: variant500.id } },
+      inventoryLocation: { connect: { id: inventoryLocation.id } },
       quantityOnHand: 12,
       quantityReserved: 2,
       reorderThreshold: 5,
@@ -244,8 +244,8 @@ async function main() {
     },
     update: {},
     create: {
-      productVariantId: variant1000.id,
-      inventoryLocationId: inventoryLocation.id,
+      productVariant: { connect: { id: variant1000.id } },
+      inventoryLocation: { connect: { id: inventoryLocation.id } },
       quantityOnHand: 8,
       quantityReserved: 1,
       reorderThreshold: 3,

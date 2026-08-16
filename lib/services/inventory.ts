@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { timeAdminStage } from "@/lib/server/dev-timing";
 import { recordAuditLog } from "@/lib/services/audit";
 import { inventoryAdjustmentSchema } from "@/lib/validation/service-schemas";
+
+export type InventoryStockStatus = "healthy" | "low-stock" | "out-of-stock";
 
 export type InventorySummary = {
   id: string;
@@ -10,6 +13,13 @@ export type InventorySummary = {
   quantityReserved: number;
   reorderThreshold: number | null;
   status: string;
+  availableQuantity: number;
+  stockStatus: InventoryStockStatus;
+  lastUpdated: Date;
+  productName: string | null;
+  variantName: string | null;
+  variantSku: string | null;
+  locationName: string | null;
 };
 
 export type InventoryMovementRecord = {
@@ -24,22 +34,117 @@ export type InventoryMovementRecord = {
   createdAt: Date;
 };
 
-export async function getInventory(
-  productVariantId?: string,
-): Promise<InventorySummary[]> {
-  const inventoryItems = await prisma.inventoryItem.findMany({
-    where: productVariantId ? { productVariantId } : undefined,
-    orderBy: { createdAt: "desc" },
-  });
+export function resolveInventoryStockStatus(
+  quantityOnHand: number,
+  reorderThreshold: number | null,
+): InventoryStockStatus {
+  if (quantityOnHand <= 0) {
+    return "out-of-stock";
+  }
 
-  return inventoryItems.map((item) => ({
-    ...item,
-    quantityOnHand: Number(item.quantityOnHand),
-    quantityReserved: Number(item.quantityReserved),
-    reorderThreshold: item.reorderThreshold
-      ? Number(item.reorderThreshold)
-      : null,
-  }));
+  if (reorderThreshold !== null && quantityOnHand <= reorderThreshold) {
+    return "low-stock";
+  }
+
+  return "healthy";
+}
+
+export async function getInventory(filters?: {
+  q?: string;
+  stockStatus?: InventoryStockStatus | "";
+  locationId?: string;
+  productVariantId?: string;
+}): Promise<InventorySummary[]> {
+  return timeAdminStage("prisma.getInventory", async () => {
+    const trimmedQuery = filters?.q?.trim();
+
+    const inventoryItems = await prisma.inventoryItem.findMany({
+      where: {
+        ...(filters?.productVariantId
+          ? { productVariantId: filters.productVariantId }
+          : {}),
+        ...(filters?.locationId
+          ? { inventoryLocationId: filters.locationId }
+          : {}),
+        ...(trimmedQuery
+          ? {
+              OR: [
+                {
+                  productVariant: {
+                    product: {
+                      name: { contains: trimmedQuery, mode: "insensitive" },
+                    },
+                  },
+                },
+                {
+                  productVariant: {
+                    name: { contains: trimmedQuery, mode: "insensitive" },
+                  },
+                },
+                {
+                  productVariant: {
+                    sku: { contains: trimmedQuery, mode: "insensitive" },
+                  },
+                },
+                {
+                  inventoryLocation: {
+                    name: { contains: trimmedQuery, mode: "insensitive" },
+                  },
+                },
+              ],
+            }
+          : {}),
+      },
+      orderBy: { updatedAt: "desc" },
+      include: {
+        productVariant: {
+          include: {
+            product: true,
+          },
+        },
+        inventoryLocation: true,
+      },
+    });
+
+    const mappedItems = inventoryItems.map((item) => {
+      const quantityOnHand = Number(item.quantityOnHand);
+      const quantityReserved = Number(item.quantityReserved);
+      const reorderThreshold = item.reorderThreshold
+        ? Number(item.reorderThreshold)
+        : null;
+      const availableQuantity = quantityOnHand - quantityReserved;
+      const stockStatus = resolveInventoryStockStatus(
+        quantityOnHand,
+        reorderThreshold,
+      );
+
+      return {
+        id: item.id,
+        productVariantId: item.productVariantId,
+        inventoryLocationId: item.inventoryLocationId,
+        quantityOnHand,
+        quantityReserved,
+        reorderThreshold,
+        status: item.status,
+        availableQuantity,
+        stockStatus,
+        lastUpdated: item.updatedAt,
+        productName: item.productVariant.product?.name ?? null,
+        variantName: item.productVariant.name ?? null,
+        variantSku: item.productVariant.sku ?? null,
+        locationName: item.inventoryLocation.name ?? null,
+      };
+    });
+
+    const normalizedStockStatus = filters?.stockStatus;
+    if (normalizedStockStatus) {
+      return mappedItems.filter(
+        (item) => item.stockStatus === normalizedStockStatus,
+      );
+    }
+
+    return mappedItems;
+  });
 }
 
 export async function getInventoryMovements(
@@ -66,6 +171,14 @@ export async function adjustInventory(
   const parsed = inventoryAdjustmentSchema.parse(input);
   const inventoryItem = await prisma.inventoryItem.findUnique({
     where: { id: parsed.inventoryItemId },
+    include: {
+      productVariant: {
+        include: {
+          product: true,
+        },
+      },
+      inventoryLocation: true,
+    },
   });
 
   if (!inventoryItem) {
@@ -78,6 +191,7 @@ export async function adjustInventory(
     where: { id: parsed.inventoryItemId },
     data: {
       quantityOnHand: nextQuantity,
+      updatedAt: new Date(),
     },
   });
 
@@ -103,12 +217,26 @@ export async function adjustInventory(
     metadata: { movementId: movement.id },
   });
 
+  const quantityOnHand = Number(updated.quantityOnHand);
+  const quantityReserved = Number(updated.quantityReserved);
+  const reorderThreshold = updated.reorderThreshold
+    ? Number(updated.reorderThreshold)
+    : null;
+
   return {
-    ...updated,
-    quantityOnHand: Number(updated.quantityOnHand),
-    quantityReserved: Number(updated.quantityReserved),
-    reorderThreshold: updated.reorderThreshold
-      ? Number(updated.reorderThreshold)
-      : null,
+    id: updated.id,
+    productVariantId: updated.productVariantId,
+    inventoryLocationId: updated.inventoryLocationId,
+    quantityOnHand,
+    quantityReserved,
+    reorderThreshold,
+    status: updated.status,
+    availableQuantity: quantityOnHand - quantityReserved,
+    stockStatus: resolveInventoryStockStatus(quantityOnHand, reorderThreshold),
+    lastUpdated: updated.updatedAt,
+    productName: inventoryItem.productVariant.product?.name ?? null,
+    variantName: inventoryItem.productVariant.name ?? null,
+    variantSku: inventoryItem.productVariant.sku ?? null,
+    locationName: inventoryItem.inventoryLocation.name ?? null,
   };
 }

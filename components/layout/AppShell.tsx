@@ -17,9 +17,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const showHeader = shouldShowHeader(pathname ?? "/");
 
+  // Admin/auth routes own their own document shell. Avoid wrapping them in the
+  // storefront <main className="flex-1"> flex child, which can distort layout
+  // coordinates and break pointer hit-testing for sidebars and actions.
+  if (!showHeader) {
+    return <>{children}</>;
+  }
+
   return (
     <>
-      {showHeader ? <Header /> : null}
+      <Header />
       <main id="main-content" className="flex-1">
         {children}
       </main>

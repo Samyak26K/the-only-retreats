@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { timeAdminStage } from "@/lib/server/dev-timing";
 import { recordAuditLog } from "@/lib/services/audit";
 import {
   productCreateSchema,
@@ -11,14 +12,30 @@ export type ProductListItem = {
   slug: string;
   status: string;
   featured: boolean;
+  updatedAt: Date;
+  currency: string;
+  mrp: number | null;
+  sellingPrice: number | null;
+  variants: Array<{
+    id: string;
+    name: string;
+    status: string;
+  }>;
+  category: { id: string; name: string; slug: string } | null;
+  primaryOrigin: { id: string; name: string } | null;
+};
+
+export type ProductDetail = {
+  id: string;
+  name: string;
+  slug: string;
+  status: string;
+  featured: boolean;
   currency: string;
   mrp: number | null;
   sellingPrice: number | null;
   category: { id: string; name: string; slug: string } | null;
   primaryOrigin: { id: string; name: string } | null;
-};
-
-export type ProductDetail = ProductListItem & {
   shortDescription: string | null;
   longDescription: string | null;
   brand: string | null;
@@ -26,44 +43,58 @@ export type ProductDetail = ProductListItem & {
 };
 
 export async function listProducts(): Promise<ProductListItem[]> {
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      status: true,
-      featured: true,
-      currency: true,
-      mrp: true,
-      sellingPrice: true,
-      shortDescription: true,
-      longDescription: true,
-      brand: true,
-      costPrice: true,
-      category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
+  return timeAdminStage("prisma.listProducts", async () => {
+    const products = await prisma.product.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        status: true,
+        featured: true,
+        updatedAt: true,
+        currency: true,
+        mrp: true,
+        sellingPrice: true,
+        variants: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+          },
+          orderBy: { createdAt: "asc" },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        primaryOrigin: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
-      primaryOrigin: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-  });
+    });
 
-  return products.map((product) => ({
-    ...product,
-    status: product.status,
-    mrp: product.mrp ? Number(product.mrp) : null,
-    sellingPrice: product.sellingPrice ? Number(product.sellingPrice) : null,
-    costPrice: product.costPrice ? Number(product.costPrice) : null,
-  }));
+    return products.map((product) => ({
+      status: product.status,
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      featured: product.featured,
+      updatedAt: product.updatedAt,
+      currency: product.currency,
+      mrp: product.mrp ? Number(product.mrp) : null,
+      sellingPrice: product.sellingPrice ? Number(product.sellingPrice) : null,
+      variants: product.variants,
+      category: product.category,
+      primaryOrigin: product.primaryOrigin,
+    }));
+  });
 }
 
 export async function getProductBySlug(
