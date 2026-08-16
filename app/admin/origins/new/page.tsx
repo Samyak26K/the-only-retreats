@@ -55,8 +55,10 @@ export default async function NewOriginPage() {
     redirect("/admin/origins");
   }
 
-  const regions = await prisma.region.findMany({ orderBy: { name: "asc" } });
-  const villages = await prisma.village.findMany({ orderBy: { name: "asc" } });
+  const [regions, villages] = await Promise.all([
+    prisma.region.findMany({ orderBy: { name: "asc" } }),
+    prisma.village.findMany({ orderBy: { name: "asc" } }),
+  ]);
 
   return (
     <div className="space-y-6">

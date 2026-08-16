@@ -31,9 +31,9 @@ export default async function AdminOriginsPage() {
           subtitle="Maintain the heritage origin records that underpin the product narrative."
           alignment="left"
         />
-        <Link href="/admin/origins/new">
-          <Button>Create origin</Button>
-        </Link>
+        <Button render={<Link href="/admin/origins/new" />}>
+          Create origin
+        </Button>
       </div>
       {error ? (
         <div className="rounded-2xl border border-dashed border-border bg-background p-6 text-sm text-muted">
@@ -74,11 +74,13 @@ export default async function AdminOriginsPage() {
                       {origin.isActive ? "Active" : "Inactive"}
                     </td>
                     <td className="px-4 py-4">
-                      <Link href={`/admin/origins/${origin.id}`}>
-                        <Button variant="outline" size="sm">
-                          Edit
-                        </Button>
-                      </Link>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        render={<Link href={`/admin/origins/${origin.id}`} />}
+                      >
+                        Edit
+                      </Button>
                     </td>
                   </tr>
                 ))}

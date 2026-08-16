@@ -1,0 +1,68 @@
+{
+  "phase": "after-auth-opt-v2",
+  "startedAt": "2026-08-13T16:47:27.372Z",
+  "routes": [
+    {
+      "name": "Products",
+      "path": "/admin/products",
+      "clientMs": 2971,
+      "status": 200,
+      "serverTiming": null
+    },
+    {
+      "name": "Origins",
+      "path": "/admin/origins",
+      "clientMs": 2060,
+      "status": 200,
+      "serverTiming": null
+    },
+    {
+      "name": "Inventory",
+      "path": "/admin/inventory",
+      "clientMs": 2131,
+      "status": 200,
+      "serverTiming": null
+    },
+    {
+      "name": "Customers",
+      "path": "/admin/customers",
+      "clientMs": 1950,
+      "status": 200,
+      "serverTiming": null
+    },
+    {
+      "name": "Create origin",
+      "path": "/admin/origins/new",
+      "clientMs": 2488,
+      "status": 200,
+      "serverTiming": null
+    },
+    {
+      "name": "Edit origin",
+      "path": "/admin/origins/cmsot55dc000gtzw0lwo46n80",
+      "clientMs": 2867,
+      "status": 200,
+      "serverTiming": null
+    }
+  ],
+  "mouseNav": [
+    {
+      "from": "/admin/products",
+      "to": "/admin/origins",
+      "mouseClickToUrlMs": 2231,
+      "finalUrl": "http://localhost:3000/admin/origins"
+    },
+    {
+      "from": "/admin/origins",
+      "to": "/admin/inventory",
+      "mouseClickToUrlMs": 1716,
+      "finalUrl": "http://localhost:3000/admin/inventory"
+    },
+    {
+      "from": "/admin/origins",
+      "to": "/admin/origins/new",
+      "mouseClickToUrlMs": 2406,
+      "finalUrl": "http://localhost:3000/admin/origins/new"
+    }
+  ]
+}

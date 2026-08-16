@@ -1,0 +1,2621 @@
+{
+  "phase": "before-fix",
+  "startedAt": "2026-08-13T16:15:03.107Z",
+  "baseUrl": "http://localhost:3000",
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "navTimeoutMs": 120000,
+  "controls": [
+    {
+      "control": "Products",
+      "found": true,
+      "selector": "aside a[href=\"/admin/products\"]",
+      "boundingClientRect": {
+        "x": 24,
+        "y": 261.59375,
+        "width": 239,
+        "height": 36,
+        "top": 261.59375,
+        "left": 24,
+        "right": 263,
+        "bottom": 297.59375
+      },
+      "center": {
+        "x": 143.5,
+        "y": 279.59375
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "A",
+        "id": null,
+        "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+        "href": "/admin/products",
+        "text": "Products",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/products",
+          "text": "Products",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-3 space-y-1",
+          "href": null,
+          "text": "ProductsOrigins",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "",
+          "href": null,
+          "text": "CatalogProductsOrigins",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-8 space-y-8",
+          "href": null,
+          "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "ASIDE",
+          "id": null,
+          "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 279.59375,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/products",
+          "text": "Products",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/products",
+            "text": "Products",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "ProductsOrigins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "CatalogProductsOrigins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": true
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/products",
+        "expectedText": "Products",
+        "isSelfOrChild": true,
+        "interactiveHref": "/admin/products",
+        "interactiveTag": "A",
+        "interactiveText": "Products"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "A",
+        "targetHref": "/admin/products",
+        "targetText": "Products",
+        "interactiveTag": "A",
+        "interactiveHref": "/admin/products",
+        "interactiveText": "Products",
+        "clientX": 143.5,
+        "clientY": 279.59375
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin",
+      "afterUrl": "http://localhost:3000/admin/products",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/products",
+      "clickToUrlMs": 52908
+    },
+    {
+      "control": "Origins",
+      "found": true,
+      "selector": "aside a[href=\"/admin/origins\"]",
+      "boundingClientRect": {
+        "x": 24,
+        "y": 301.59375,
+        "width": 239,
+        "height": 36,
+        "top": 301.59375,
+        "left": 24,
+        "right": 263,
+        "bottom": 337.59375
+      },
+      "center": {
+        "x": 143.5,
+        "y": 319.59375
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "A",
+        "id": null,
+        "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+        "href": "/admin/origins",
+        "text": "Origins",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/origins",
+          "text": "Origins",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-3 space-y-1",
+          "href": null,
+          "text": "ProductsOrigins",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "",
+          "href": null,
+          "text": "CatalogProductsOrigins",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-8 space-y-8",
+          "href": null,
+          "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "ASIDE",
+          "id": null,
+          "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 319.59375,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/origins",
+          "text": "Origins",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/origins",
+            "text": "Origins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "ProductsOrigins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "CatalogProductsOrigins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": true
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/origins",
+        "expectedText": "Origins",
+        "isSelfOrChild": true,
+        "interactiveHref": "/admin/origins",
+        "interactiveTag": "A",
+        "interactiveText": "Origins"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "A",
+        "targetHref": "/admin/origins",
+        "targetText": "Origins",
+        "interactiveTag": "A",
+        "interactiveHref": "/admin/origins",
+        "interactiveText": "Origins",
+        "clientX": 143.5,
+        "clientY": 319.59375
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin",
+      "afterUrl": "http://localhost:3000/admin/origins",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/origins",
+      "clickToUrlMs": 6501
+    },
+    {
+      "control": "Inventory",
+      "found": true,
+      "selector": "aside a[href=\"/admin/inventory\"]",
+      "boundingClientRect": {
+        "x": 24,
+        "y": 398.390625,
+        "width": 239,
+        "height": 36,
+        "top": 398.390625,
+        "left": 24,
+        "right": 263,
+        "bottom": 434.390625
+      },
+      "center": {
+        "x": 143.5,
+        "y": 416.390625
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "A",
+        "id": null,
+        "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+        "href": "/admin/inventory",
+        "text": "Inventory",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/inventory",
+          "text": "Inventory",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-3 space-y-1",
+          "href": null,
+          "text": "InventoryOrdersCustomers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "",
+          "href": null,
+          "text": "OperationsInventoryOrdersCustomers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-8 space-y-8",
+          "href": null,
+          "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "ASIDE",
+          "id": null,
+          "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 416.390625,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/inventory",
+          "text": "Inventory",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/inventory",
+            "text": "Inventory",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "InventoryOrdersCustomers",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "OperationsInventoryOrdersCustomers",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": true
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/inventory",
+        "expectedText": "Inventory",
+        "isSelfOrChild": true,
+        "interactiveHref": "/admin/inventory",
+        "interactiveTag": "A",
+        "interactiveText": "Inventory"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "A",
+        "targetHref": "/admin/inventory",
+        "targetText": "Inventory",
+        "interactiveTag": "A",
+        "interactiveHref": "/admin/inventory",
+        "interactiveText": "Inventory",
+        "clientX": 143.5,
+        "clientY": 416.390625
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin",
+      "afterUrl": "http://localhost:3000/admin/inventory",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/inventory",
+      "clickToUrlMs": 28555
+    },
+    {
+      "control": "Orders",
+      "found": true,
+      "selector": "aside a[href=\"/admin/orders\"]",
+      "boundingClientRect": {
+        "x": 24,
+        "y": 438.390625,
+        "width": 239,
+        "height": 36,
+        "top": 438.390625,
+        "left": 24,
+        "right": 263,
+        "bottom": 474.390625
+      },
+      "center": {
+        "x": 143.5,
+        "y": 456.390625
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "A",
+        "id": null,
+        "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+        "href": "/admin/orders",
+        "text": "Orders",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/orders",
+          "text": "Orders",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-3 space-y-1",
+          "href": null,
+          "text": "InventoryOrdersCustomers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "",
+          "href": null,
+          "text": "OperationsInventoryOrdersCustomers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-8 space-y-8",
+          "href": null,
+          "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "ASIDE",
+          "id": null,
+          "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 456.390625,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/orders",
+          "text": "Orders",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/orders",
+            "text": "Orders",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "InventoryOrdersCustomers",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "OperationsInventoryOrdersCustomers",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": true
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/orders",
+        "expectedText": "Orders",
+        "isSelfOrChild": true,
+        "interactiveHref": "/admin/orders",
+        "interactiveTag": "A",
+        "interactiveText": "Orders"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "A",
+        "targetHref": "/admin/orders",
+        "targetText": "Orders",
+        "interactiveTag": "A",
+        "interactiveHref": "/admin/orders",
+        "interactiveText": "Orders",
+        "clientX": 143.5,
+        "clientY": 456.390625
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin",
+      "afterUrl": "http://localhost:3000/admin/orders",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/orders",
+      "clickToUrlMs": 37885
+    },
+    {
+      "control": "Customers",
+      "found": true,
+      "selector": "aside a[href=\"/admin/customers\"]",
+      "boundingClientRect": {
+        "x": 24,
+        "y": 478.390625,
+        "width": 239,
+        "height": 36,
+        "top": 478.390625,
+        "left": 24,
+        "right": 263,
+        "bottom": 514.390625
+      },
+      "center": {
+        "x": 143.5,
+        "y": 496.390625
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "A",
+        "id": null,
+        "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+        "href": "/admin/customers",
+        "text": "Customers",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/customers",
+          "text": "Customers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-3 space-y-1",
+          "href": null,
+          "text": "InventoryOrdersCustomers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "",
+          "href": null,
+          "text": "OperationsInventoryOrdersCustomers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-8 space-y-8",
+          "href": null,
+          "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "ASIDE",
+          "id": null,
+          "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 496.390625,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/customers",
+          "text": "Customers",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/customers",
+            "text": "Customers",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "InventoryOrdersCustomers",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "OperationsInventoryOrdersCustomers",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": true
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/customers",
+        "expectedText": "Customers",
+        "isSelfOrChild": true,
+        "interactiveHref": "/admin/customers",
+        "interactiveTag": "A",
+        "interactiveText": "Customers"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "A",
+        "targetHref": "/admin/customers",
+        "targetText": "Customers",
+        "interactiveTag": "A",
+        "interactiveHref": "/admin/customers",
+        "interactiveText": "Customers",
+        "clientX": 143.5,
+        "clientY": 496.390625
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin",
+      "afterUrl": "http://localhost:3000/admin/customers",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/customers",
+      "clickToUrlMs": 74493
+    },
+    {
+      "control": "Content",
+      "found": true,
+      "selector": "aside a[href=\"/admin/content\"]",
+      "boundingClientRect": {
+        "x": 24,
+        "y": 575.1875,
+        "width": 239,
+        "height": 36,
+        "top": 575.1875,
+        "left": 24,
+        "right": 263,
+        "bottom": 611.1875
+      },
+      "center": {
+        "x": 143.5,
+        "y": 593.1875
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "A",
+        "id": null,
+        "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+        "href": "/admin/content",
+        "text": "Content",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/content",
+          "text": "Content",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-3 space-y-1",
+          "href": null,
+          "text": "Content",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "",
+          "href": null,
+          "text": "EditorialContent",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-8 space-y-8",
+          "href": null,
+          "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "ASIDE",
+          "id": null,
+          "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 593.1875,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/content",
+          "text": "Content",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/content",
+            "text": "Content",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "Content",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "EditorialContent",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": true
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/content",
+        "expectedText": "Content",
+        "isSelfOrChild": true,
+        "interactiveHref": "/admin/content",
+        "interactiveTag": "A",
+        "interactiveText": "Content"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "A",
+        "targetHref": "/admin/content",
+        "targetText": "Content",
+        "interactiveTag": "A",
+        "interactiveHref": "/admin/content",
+        "interactiveText": "Content",
+        "clientX": 143.5,
+        "clientY": 593.1875
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin",
+      "afterUrl": "http://localhost:3000/admin/content",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/content",
+      "clickToUrlMs": 97800
+    },
+    {
+      "control": "Settings",
+      "found": true,
+      "selector": "aside a[href=\"/admin/settings\"]",
+      "boundingClientRect": {
+        "x": 24,
+        "y": 671.984375,
+        "width": 239,
+        "height": 36,
+        "top": 671.984375,
+        "left": 24,
+        "right": 263,
+        "bottom": 707.984375
+      },
+      "center": {
+        "x": 143.5,
+        "y": 689.984375
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "A",
+        "id": null,
+        "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+        "href": "/admin/settings",
+        "text": "Settings",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/settings",
+          "text": "Settings",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-3 space-y-1",
+          "href": null,
+          "text": "Settings",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "",
+          "href": null,
+          "text": "SystemSettings",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "mt-8 space-y-8",
+          "href": null,
+          "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "ASIDE",
+          "id": null,
+          "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 689.984375,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/settings",
+          "text": "Settings",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/settings",
+            "text": "Settings",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "Settings",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "SystemSettings",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": true
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/settings",
+        "expectedText": "Settings",
+        "isSelfOrChild": true,
+        "interactiveHref": "/admin/settings",
+        "interactiveTag": "A",
+        "interactiveText": "Settings"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "A",
+        "targetHref": "/admin/settings",
+        "targetText": "Settings",
+        "interactiveTag": "A",
+        "interactiveHref": "/admin/settings",
+        "interactiveText": "Settings",
+        "clientX": 143.5,
+        "clientY": 689.984375
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin",
+      "afterUrl": "http://localhost:3000/admin/settings",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/settings",
+      "clickToUrlMs": 43613
+    },
+    {
+      "control": "Create origin",
+      "found": true,
+      "selector": "a[href=\"/admin/origins/new\"], [data-slot=\"button\"]:has-text(\"Create origin\")",
+      "boundingClientRect": {
+        "x": 1300.796875,
+        "y": 183.703125,
+        "width": 107.203125,
+        "height": 32,
+        "top": 183.703125,
+        "left": 1300.796875,
+        "right": 1408,
+        "bottom": 215.703125
+      },
+      "center": {
+        "x": 1354.3984375,
+        "y": 199.703125
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "BUTTON",
+        "id": null,
+        "className": "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transit",
+        "href": null,
+        "text": "Create origin",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "className": "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transit",
+          "href": null,
+          "text": "Create origin",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "className": "",
+          "href": "/admin/origins/new",
+          "text": "Create origin",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex flex-wrap items-end justify-between gap-4",
+          "href": null,
+          "text": "OriginsMaintain the heritage origin records that underpin th",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "space-y-6",
+          "href": null,
+          "text": "OriginsMaintain the heritage origin records that underpin th",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": null,
+          "className": "px-6 py-6 lg:px-8 lg:py-8",
+          "href": null,
+          "text": "OriginsMaintain the heritage origin records that underpin th",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex-1",
+          "href": null,
+          "text": "Internal operationsOperations DashboardSUPER_ADMINarnavbhend",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "className": "flex min-h-full flex-col bg-background text-foreground",
+          "href": null,
+          "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "HTML",
+          "id": null,
+          "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+          "href": null,
+          "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 199.703125,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin",
+          "text": "Overview",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin",
+            "text": "Overview",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "Overview",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "DashboardOverview",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": false
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/origins/new",
+        "expectedText": "Create origin",
+        "isSelfOrChild": true,
+        "interactiveHref": null,
+        "interactiveTag": "BUTTON",
+        "interactiveText": "Create origin"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "BUTTON",
+        "targetHref": null,
+        "targetText": "Create origin",
+        "interactiveTag": "BUTTON",
+        "interactiveHref": null,
+        "interactiveText": "Create origin",
+        "clientX": 1354.3984375,
+        "clientY": 199.703125
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin/origins",
+      "afterUrl": "http://localhost:3000/admin/origins/new",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/origins/new",
+      "clickToUrlMs": 51164
+    },
+    {
+      "control": "Edit",
+      "found": true,
+      "selector": "a[href^=\"/admin/origins/\"]:not([href$=\"/new\"])",
+      "boundingClientRect": {
+        "x": 1231.1875,
+        "y": 307.5625,
+        "width": 45.515625,
+        "height": 19,
+        "top": 307.5625,
+        "left": 1231.1875,
+        "right": 1276.703125,
+        "bottom": 326.5625
+      },
+      "center": {
+        "x": 1253.9453125,
+        "y": 317.0625
+      },
+      "viewport": {
+        "w": 1440,
+        "h": 1000
+      },
+      "inViewport": true,
+      "elementFromPoint": {
+        "tag": "BUTTON",
+        "id": null,
+        "className": "group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus",
+        "href": null,
+        "text": "Edit",
+        "pointerEvents": "auto",
+        "position": "static",
+        "zIndex": "auto"
+      },
+      "elementsFromPoint": [
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "className": "group/button inline-flex shrink-0 items-center justify-center border bg-clip-padding font-medium whitespace-nowrap transition-all outline-none select-none focus",
+          "href": null,
+          "text": "Edit",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "A",
+          "id": null,
+          "className": "",
+          "href": "/admin/origins/cmsot55dc000gtzw0lwo46n80",
+          "text": "Edit",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "TD",
+          "id": null,
+          "className": "px-4 py-4",
+          "href": null,
+          "text": "Edit",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "TABLE",
+          "id": null,
+          "className": "min-w-full divide-y divide-border text-sm",
+          "href": null,
+          "text": "NameVerificationStatusActionsHimalayan Badri Cow Ghee Origin",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "overflow-x-auto",
+          "href": null,
+          "text": "NameVerificationStatusActionsHimalayan Badri Cow Ghee Origin",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "overflow-hidden rounded-2xl border border-border bg-background shadow-sm",
+          "href": null,
+          "text": "NameVerificationStatusActionsHimalayan Badri Cow Ghee Origin",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "space-y-6",
+          "href": null,
+          "text": "OriginsMaintain the heritage origin records that underpin th",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": null,
+          "className": "px-6 py-6 lg:px-8 lg:py-8",
+          "href": null,
+          "text": "OriginsMaintain the heritage origin records that underpin th",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex-1",
+          "href": null,
+          "text": "Internal operationsOperations DashboardSUPER_ADMINarnavbhend",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "flex min-h-screen flex-col lg:flex-row",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "DIV",
+          "id": null,
+          "className": "min-h-screen bg-muted/20",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        {
+          "tag": "MAIN",
+          "id": "main-content",
+          "className": "flex-1",
+          "href": null,
+          "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        }
+      ],
+      "asideMetrics": {
+        "width": 288,
+        "left": 0,
+        "right": 288,
+        "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r"
+      },
+      "visualSidebarProbe": {
+        "x": 200,
+        "y": 317.0625,
+        "elementFromPoint": {
+          "tag": "A",
+          "id": null,
+          "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+          "href": "/admin/origins",
+          "text": "Origins",
+          "pointerEvents": "auto",
+          "position": "static",
+          "zIndex": "auto"
+        },
+        "elementsFromPoint": [
+          {
+            "tag": "A",
+            "id": null,
+            "className": "flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground",
+            "href": "/admin/origins",
+            "text": "Origins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-3 space-y-1",
+            "href": null,
+            "text": "ProductsOrigins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "",
+            "href": null,
+            "text": "CatalogProductsOrigins",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "mt-8 space-y-8",
+            "href": null,
+            "text": "DashboardOverviewCatalogProductsOriginsOperationsInventoryOr",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "ASIDE",
+            "id": null,
+            "className": "w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "flex min-h-screen flex-col lg:flex-row",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "DIV",
+            "id": null,
+            "className": "min-h-screen bg-muted/20",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "MAIN",
+            "id": "main-content",
+            "className": "flex-1",
+            "href": null,
+            "text": "The Only RetreatsAdmin ConsoleView siteDashboardOverviewCata",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "BODY",
+            "id": null,
+            "className": "flex min-h-full flex-col bg-background text-foreground",
+            "href": null,
+            "text": "Skip to contentThe Only RetreatsAdmin ConsoleView siteDashbo",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          },
+          {
+            "tag": "HTML",
+            "id": null,
+            "className": "__variable_07d15b __variable_bdb315 __variable_d2dc74 __variable_9216a2 h-full antialiased",
+            "href": null,
+            "text": "Admin | The Only Retreats@font-face{font-family:'__nextjs-Ge",
+            "pointerEvents": "auto",
+            "position": "static",
+            "zIndex": "auto"
+          }
+        ],
+        "hitsExpectedControl": false
+      },
+      "expected": {
+        "expectedTag": "A",
+        "expectedHref": "/admin/origins/cmsot55dc000gtzw0lwo46n80",
+        "expectedText": "Edit",
+        "isSelfOrChild": true,
+        "interactiveHref": null,
+        "interactiveTag": "BUTTON",
+        "interactiveText": "Edit"
+      },
+      "pointerEventReceiver": {
+        "eventType": "pointerdown",
+        "targetTag": "BUTTON",
+        "targetHref": null,
+        "targetText": "Edit",
+        "interactiveTag": "BUTTON",
+        "interactiveHref": null,
+        "interactiveText": "Edit",
+        "clientX": 1253.9453125,
+        "clientY": 317.0625
+      },
+      "physicalHitMatchesControl": true,
+      "interceptor": null,
+      "beforeUrl": "http://localhost:3000/admin/origins",
+      "afterUrl": "http://localhost:3000/admin/origins/cmsot55dc000gtzw0lwo46n80",
+      "navigationStarted": true,
+      "finalUrl": "http://localhost:3000/admin/origins/cmsot55dc000gtzw0lwo46n80",
+      "clickToUrlMs": 38203
+    }
+  ],
+  "navigationTiming": {
+    "from": "/admin/products",
+    "to": "/admin/origins",
+    "mouseClickToUrlMs": 2561
+  }
+}

@@ -50,7 +50,7 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-muted/20">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <aside className="w-full border-b border-border bg-background/95 px-6 py-6 lg:w-72 lg:border-b-0 lg:border-r">
+        <aside className="relative z-20 w-full shrink-0 border-b border-border bg-background px-6 py-6 lg:w-72 lg:border-r lg:border-b-0">
           <div className="flex items-center justify-between lg:block">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted">
@@ -62,13 +62,13 @@ export default async function AdminLayout({
             </div>
             <Link
               href="/"
-              className="text-sm text-primary underline-offset-4 hover:underline lg:mt-4"
+              className="text-sm text-primary underline-offset-4 hover:underline lg:mt-4 lg:inline-block"
             >
               View site
             </Link>
           </div>
 
-          <div className="mt-8 space-y-8">
+          <nav aria-label="Admin" className="mt-8 space-y-8">
             {[
               ["OVERVIEW", "Dashboard"],
               ["CATALOG", "Catalog"],
@@ -84,24 +84,25 @@ export default async function AdminLayout({
                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-muted">
                     {sectionLabel}
                   </p>
-                  <div className="mt-3 space-y-1">
+                  <ul className="mt-3 space-y-1">
                     {items.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex items-center rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-muted hover:text-foreground"
-                      >
-                        {item.label}
-                      </Link>
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className="flex items-center rounded-lg px-3 py-2 text-sm text-muted transition-colors duration-fast hover:bg-muted hover:text-foreground"
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               );
             })}
-          </div>
+          </nav>
         </aside>
 
-        <div className="flex-1">
+        <div className="relative z-0 min-w-0 flex-1">
           <header className="border-b border-border bg-background/90 px-6 py-4 backdrop-blur">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -116,14 +117,16 @@ export default async function AdminLayout({
                 <div className="rounded-full border border-border bg-muted/30 px-3 py-2 text-sm text-foreground">
                   {adminContext.roleName}
                 </div>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" type="button">
                   {adminContext.email ?? "Admin"}
                 </Button>
               </div>
             </div>
           </header>
 
-          <main className="px-6 py-6 lg:px-8 lg:py-8">{children}</main>
+          <main id="main-content" className="px-6 py-6 lg:px-8 lg:py-8">
+            {children}
+          </main>
         </div>
       </div>
     </div>

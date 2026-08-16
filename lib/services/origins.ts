@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { timeAdminStage } from "@/lib/server/dev-timing";
 import { recordAuditLog } from "@/lib/services/audit";
 import {
   originCreateSchema,
@@ -23,58 +24,62 @@ export type OriginRecord = {
 };
 
 export async function listOrigins(): Promise<OriginRecord[]> {
-  const origins = await prisma.origin.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      regionId: true,
-      villageId: true,
-      altitude: true,
-      landscape: true,
-      climate: true,
-      biodiversity: true,
-      seasonality: true,
-      traditionalPractices: true,
-      historicalContext: true,
-      originStory: true,
-      verificationStatus: true,
-      isActive: true,
-    },
-  });
+  return timeAdminStage("prisma.listOrigins", async () => {
+    const origins = await prisma.origin.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        regionId: true,
+        villageId: true,
+        altitude: true,
+        landscape: true,
+        climate: true,
+        biodiversity: true,
+        seasonality: true,
+        traditionalPractices: true,
+        historicalContext: true,
+        originStory: true,
+        verificationStatus: true,
+        isActive: true,
+      },
+    });
 
-  return origins.map((origin) => ({
-    ...origin,
-    verificationStatus: origin.verificationStatus,
-  }));
+    return origins.map((origin) => ({
+      ...origin,
+      verificationStatus: origin.verificationStatus,
+    }));
+  });
 }
 
 export async function getOrigin(id: string): Promise<OriginRecord | null> {
-  const origin = await prisma.origin.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      name: true,
-      regionId: true,
-      villageId: true,
-      altitude: true,
-      landscape: true,
-      climate: true,
-      biodiversity: true,
-      seasonality: true,
-      traditionalPractices: true,
-      historicalContext: true,
-      originStory: true,
-      verificationStatus: true,
-      isActive: true,
-    },
+  return timeAdminStage("prisma.getOrigin", async () => {
+    const origin = await prisma.origin.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        regionId: true,
+        villageId: true,
+        altitude: true,
+        landscape: true,
+        climate: true,
+        biodiversity: true,
+        seasonality: true,
+        traditionalPractices: true,
+        historicalContext: true,
+        originStory: true,
+        verificationStatus: true,
+        isActive: true,
+      },
+    });
+
+    if (!origin) {
+      return null;
+    }
+
+    return { ...origin, verificationStatus: origin.verificationStatus };
   });
-
-  if (!origin) {
-    return null;
-  }
-
-  return { ...origin, verificationStatus: origin.verificationStatus };
 }
 
 export async function createOrigin(
