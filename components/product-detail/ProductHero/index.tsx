@@ -62,11 +62,11 @@ export function ProductHero({ product }: ProductHeroProps) {
         className="h-(--navbar-height-mobile) bg-forest md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)"
       />
 
-      <Container className="py-12 md:py-20 lg:py-24 xl:py-[7.5rem]">
-        <div className="grid gap-14 md:gap-16 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:items-start lg:gap-16 xl:gap-24">
+      <Container className="py-8 md:py-12 lg:py-16">
+        <div className="grid gap-8 md:gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:items-start lg:gap-12">
           <figure className="min-w-0">
             <div className="rounded-(--radius-panel) border border-border/80 bg-surface p-2 shadow-lg sm:p-3">
-              <div className="aspect-[4/5] overflow-hidden rounded-xl bg-cloud md:aspect-[5/4] lg:aspect-[4/5] lg:min-h-[38rem] xl:min-h-[43rem]">
+              <div className="aspect-[4/5] overflow-hidden rounded-xl bg-cloud md:aspect-[5/4] lg:aspect-[4/5] lg:min-h-[28rem] xl:min-h-[32rem]">
                 <picture>
                   <source
                     media="(min-width: 768px)"
@@ -105,13 +105,13 @@ export function ProductHero({ product }: ProductHeroProps) {
 
           <article className="min-w-0 lg:py-6 xl:py-10">
             <header>
-              <p className="inline-flex rounded-full border border-gold/60 bg-surface/60 px-4 py-2 text-[0.7rem] font-medium uppercase tracking-[0.24em] text-muted shadow-sm">
+              <p className="inline-flex rounded-full border border-gold/60 bg-surface/60 px-3 py-1.5 text-[0.6rem] font-medium uppercase tracking-[0.24em] text-muted shadow-sm">
                 {product.origin}
               </p>
 
               <h1
                 id="product-title"
-                className="mt-6 max-w-2xl text-balance font-display text-[clamp(2.5rem,12vw,5.5rem)] leading-[0.9] tracking-[-0.045em] text-foreground md:mt-8 md:text-[clamp(3rem,5vw,5.5rem)]"
+                className="mt-6 max-w-2xl text-balance font-display text-[clamp(1.8rem,5vw,3.5rem)] leading-[0.9] tracking-[-0.045em] text-foreground md:mt-8"
               >
                 {product.name}
               </h1>
@@ -119,7 +119,7 @@ export function ProductHero({ product }: ProductHeroProps) {
               <div className="mt-8 space-y-3 border-l border-gold pl-5 md:mt-10 md:space-y-4 md:pl-6">
                 <p
                   lang="sa"
-                  className="font-sanskrit text-xl leading-relaxed text-gold sm:text-2xl"
+                  className="font-sanskrit text-base leading-relaxed text-gold sm:text-lg"
                 >
                   {product.shloka.devanagari}
                 </p>
@@ -128,14 +128,14 @@ export function ProductHero({ product }: ProductHeroProps) {
                 </p>
               </div>
 
-              <p className="mt-8 max-w-xl font-body text-base leading-7 text-muted sm:text-lg sm:leading-8 md:mt-10">
+              <p className="mt-8 max-w-xl font-body text-sm leading-7 text-muted sm:text-base sm:leading-7 md:mt-10">
                 {product.tagline}
               </p>
             </header>
 
-            <div className="mt-10 border-t border-border pt-8 md:mt-12 md:pt-10">
+            <div className="mt-6 border-t border-border pt-6 md:mt-8 md:pt-8">
               {startingPrice !== undefined ? (
-                <p className="font-heading text-2xl font-medium tracking-[-0.02em] text-foreground sm:text-3xl">
+                <p className="font-heading text-xl font-medium tracking-[-0.02em] text-foreground sm:text-2xl">
                   {formatPrice(startingPrice, product.currency)}
                 </p>
               ) : null}
@@ -245,7 +245,7 @@ export function ProductHero({ product }: ProductHeroProps) {
 
             <aside
               aria-label="Product highlights"
-              className="mt-10 border-t border-border pt-8 md:mt-12"
+              className="mt-6 border-t border-border pt-8 md:mt-8"
             >
               <ul className="grid gap-6 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 xl:gap-5">
                 {product.highlights.slice(0, 3).map((highlight) => (
