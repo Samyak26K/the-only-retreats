@@ -28,9 +28,7 @@ export default async function AdminOriginDetailPage({
   async function updateOriginAction(formData: FormData) {
     "use server";
 
-    if (!adminContext) {
-      throw new Error("Unauthorized");
-    }
+    const writeAdminContext = await requirePermission("origins.write");
 
     const raw = {
       name: formData.get("name"),
@@ -56,9 +54,9 @@ export default async function AdminOriginDetailPage({
 
     await updateOrigin(id, parsed.data, {
       actor: {
-        id: adminContext.adminUserId,
-        email: adminContext.email,
-        role: adminContext.roleName,
+        id: writeAdminContext.adminUserId,
+        email: writeAdminContext.email,
+        role: writeAdminContext.roleName,
       },
     });
   }

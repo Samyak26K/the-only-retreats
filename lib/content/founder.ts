@@ -6,9 +6,9 @@ export interface FounderContent {
 }
 
 export const founderContent: FounderContent = {
-  name: "Founder Name",
+  name: "Rugved Amdabade",
   designation: "Founder & Custodian",
   story:
-    "Five years ago, I spent a season in Spiti. I lived with herding families. I learned that the mountains don't produce through force—they produce through relationship. When I returned, I knew I had to build something aligned with that wisdom. The Only Retreats is not a brand about selling. It's a commitment to share products that carry the integrity of their origin, and to do so in a way that honors the people and the land that made them possible.",
-  image: "/images/founder-portrait.jpg",
+    "I did not set out to build a brand. I set out to understand something. Why does food from the mountains feel different? Not just in taste — but in the body, in the mind, in something harder to name. I spent seasons in Spiti, Lahaul, and Zanskar. I lived with herding families. I watched how they tended their animals, read the seasons, and made decisions that no algorithm could replicate. What I found was not a product opportunity. It was a responsibility. The Only Retreats exists to carry that responsibility forward — to bring what the Himalayas offer in its truest form, to people who are ready to receive it. We do not scale beyond what the land allows. We do not rush what the seasons demand. We simply listen, and bring what we hear.",
+  image: "/images/founder.jpeg",
 };

@@ -169,43 +169,77 @@ export async function adjustInventory(
   },
 ): Promise<InventorySummary> {
   const parsed = inventoryAdjustmentSchema.parse(input);
-  const inventoryItem = await prisma.inventoryItem.findUnique({
-    where: { id: parsed.inventoryItemId },
-    include: {
-      productVariant: {
+  const { inventoryItem, updated, movement } = await prisma.$transaction(
+    async (tx) => {
+      const existingInventoryItem = await tx.inventoryItem.findUnique({
+        where: { id: parsed.inventoryItemId },
         include: {
-          product: true,
+          productVariant: {
+            include: {
+              product: true,
+            },
+          },
+          inventoryLocation: true,
         },
-      },
-      inventoryLocation: true,
-    },
-  });
+      });
 
-  if (!inventoryItem) {
-    throw new Error("Inventory item not found");
-  }
+      if (!existingInventoryItem) {
+        throw new Error("Inventory item not found");
+      }
 
-  const nextQuantity =
-    Number(inventoryItem.quantityOnHand) + parsed.quantityDelta;
-  const updated = await prisma.inventoryItem.update({
-    where: { id: parsed.inventoryItemId },
-    data: {
-      quantityOnHand: nextQuantity,
-      updatedAt: new Date(),
-    },
-  });
+      const nextQuantity =
+        Number(existingInventoryItem.quantityOnHand) + parsed.quantityDelta;
 
-  const movement = await prisma.inventoryMovement.create({
-    data: {
-      inventoryItemId: parsed.inventoryItemId,
-      movementType: parsed.movementType ?? "ADJUSTMENT",
-      quantity: parsed.quantityDelta,
-      referenceType: parsed.referenceType ?? undefined,
-      referenceId: parsed.referenceId ?? undefined,
-      reason: parsed.reason ?? undefined,
-      notes: parsed.notes ?? undefined,
+      if (nextQuantity < 0) {
+        throw new Error("Adjustment would result in negative stock");
+      }
+
+      const updatedCount = await tx.inventoryItem.updateMany({
+        where: {
+          id: parsed.inventoryItemId,
+          ...(parsed.quantityDelta < 0
+            ? { quantityOnHand: { gte: -parsed.quantityDelta } }
+            : {}),
+        },
+        data: {
+          quantityOnHand: {
+            increment: parsed.quantityDelta,
+          },
+          updatedAt: new Date(),
+        },
+      });
+
+      if (updatedCount.count === 0) {
+        throw new Error("Adjustment would result in negative stock");
+      }
+
+      const updatedInventoryItem = await tx.inventoryItem.findUnique({
+        where: { id: parsed.inventoryItemId },
+      });
+
+      if (!updatedInventoryItem) {
+        throw new Error("Inventory item not found");
+      }
+
+      const createdMovement = await tx.inventoryMovement.create({
+        data: {
+          inventoryItemId: parsed.inventoryItemId,
+          movementType: parsed.movementType ?? "ADJUSTMENT",
+          quantity: parsed.quantityDelta,
+          referenceType: parsed.referenceType ?? undefined,
+          referenceId: parsed.referenceId ?? undefined,
+          reason: parsed.reason ?? undefined,
+          notes: parsed.notes ?? undefined,
+        },
+      });
+
+      return {
+        inventoryItem: existingInventoryItem,
+        updated: updatedInventoryItem,
+        movement: createdMovement,
+      };
     },
-  });
+  );
 
   await recordAuditLog({
     actor: options?.actor,

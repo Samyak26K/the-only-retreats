@@ -1,7 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
-import { Heading } from "@/components/ui/Heading";
 import { Section } from "@/components/ui/Section";
 import { getFeaturedProduct } from "@/lib/content/collection";
 
@@ -18,9 +18,13 @@ export function CollectionSection() {
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
           {/* Left: Large product image */}
           <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-border bg-surface lg:aspect-square">
-            <div className="absolute inset-0 flex items-center justify-center bg-muted/20">
-              <span className="text-sm text-muted">Product Image</span>
-            </div>
+            <Image
+              src={featuredProduct.image}
+              alt={featuredProduct.name}
+              fill
+              className="object-cover object-center"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+            />
           </div>
 
           {/* Right: Editorial content */}
@@ -50,15 +54,15 @@ export function CollectionSection() {
             {/* Primary CTA */}
             <div className="flex flex-col gap-4">
               <Link
-                href="#"
+                href={`/products/${featuredProduct.id}`}
                 className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/80 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
-                Discover Yak Ghee
+                Discover {featuredProduct.name}
               </Link>
 
               {/* Secondary link */}
               <Link
-                href="#"
+                href="/products"
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline"
               >
                 View Full Collection

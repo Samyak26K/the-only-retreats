@@ -14,6 +14,7 @@ const DEVELOPMENT_ADMIN_PERMISSION_NAMES: PermissionName[] = [
   "content.read",
   "content.write",
   "support.read",
+  "orders.write",
 ];
 
 export const ADMIN_ROLE_NAMES = [
@@ -35,7 +36,8 @@ export type PermissionName =
   | "origins.write"
   | "content.read"
   | "content.write"
-  | "support.read";
+  | "support.read"
+  | "orders.write";
 
 export type AuthenticatedUser = {
   userId: string;
@@ -391,7 +393,8 @@ function resolvePermissionsForRole(
         permission === "origins.write" ||
         permission === "content.read" ||
         permission === "content.write" ||
-        permission === "support.read",
+        permission === "support.read" ||
+        permission === "orders.write",
     );
 
   if (roleName === "SUPER_ADMIN") {
@@ -408,6 +411,7 @@ function resolvePermissionsForRole(
       "inventory.read",
       "inventory.write",
       "support.read",
+      "orders.write",
     ];
   }
 

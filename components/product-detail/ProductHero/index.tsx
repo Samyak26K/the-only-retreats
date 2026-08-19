@@ -1,7 +1,11 @@
+"use client";
+
+import { useState } from "react";
 import Image, { getImageProps } from "next/image";
 
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/lib/cart";
 import { getStartingPrice, type Product } from "@/lib/content/product";
 
 type ProductHeroProps = {
@@ -19,6 +23,16 @@ function formatPrice(price: number, currency: string) {
 export function ProductHero({ product }: ProductHeroProps) {
   const startingPrice = getStartingPrice(product);
   const imageMedia = product.media.filter((item) => item.type === "image");
+  const { addItem, updateQuantity } = useCartStore();
+  const [selectedVariantId, setSelectedVariantId] = useState(
+    product.variants.find((v) => v.isDefault)?.id ??
+      product.variants[0]?.id ??
+      "",
+  );
+  const [quantity, setQuantity] = useState(1);
+  const selectedVariant = product.variants.find(
+    (v) => v.id === selectedVariantId,
+  );
 
   const sharedHeroImageProps = {
     alt: product.hero.media.alt,
@@ -135,14 +149,28 @@ export function ProductHero({ product }: ProductHeroProps) {
                     aria-label="Available variants"
                     className="mt-3 flex flex-wrap gap-3"
                   >
-                    {product.variants.map((variant) => (
-                      <li
-                        key={variant.id}
-                        className="flex min-h-12 items-center rounded-lg border border-border bg-surface px-5 py-3 text-sm font-medium text-foreground shadow-sm"
-                      >
-                        {variant.label}
-                      </li>
-                    ))}
+                    {product.variants.map((variant) => {
+                      const isSelected = variant.id === selectedVariantId;
+
+                      return (
+                        <li key={variant.id}>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedVariantId(variant.id)}
+                            disabled={!variant.inStock}
+                            className={`flex min-h-12 items-center rounded-lg border px-5 py-3 text-sm font-medium shadow-sm ${
+                              isSelected
+                                ? "border-gold bg-surface text-foreground"
+                                : "border-border bg-surface text-muted"
+                            } ${!variant.inStock ? "opacity-50" : ""}`}
+                          >
+                            {variant.inStock
+                              ? variant.label
+                              : `${variant.label} · Out of Stock`}
+                          </button>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
 
@@ -150,21 +178,66 @@ export function ProductHero({ product }: ProductHeroProps) {
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
                     Quantity
                   </p>
-                  <output
-                    aria-label="Quantity"
-                    className="mt-3 flex h-12 w-24 items-center justify-center rounded-lg border border-border bg-surface text-sm font-medium text-foreground shadow-sm"
-                  >
-                    1
-                  </output>
+                  <div className="mt-3 flex h-12 w-fit items-center rounded-lg border border-border bg-surface text-sm font-medium text-foreground shadow-sm">
+                    <button
+                      type="button"
+                      aria-label="Decrease quantity"
+                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                      className="flex h-12 w-10 items-center justify-center"
+                    >
+                      −
+                    </button>
+                    <output
+                      aria-label="Quantity"
+                      className="flex h-12 w-10 items-center justify-center"
+                    >
+                      {quantity}
+                    </output>
+                    <button
+                      type="button"
+                      aria-label="Increase quantity"
+                      onClick={() => setQuantity((q) => q + 1)}
+                      className="flex h-12 w-10 items-center justify-center"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
 
                 <div className="pt-1">
                   <Button
                     type="button"
-                    disabled
+                    disabled={!selectedVariant?.inStock}
+                    onClick={() => {
+                      if (!selectedVariant || !selectedVariant.inStock) {
+                        return;
+                      }
+
+                      addItem({
+                        variantId: selectedVariant.id,
+                        productId: product.id,
+                        productSlug: product.slug,
+                        productName: product.name,
+                        variantLabel: selectedVariant.label,
+                        price: selectedVariant.price,
+                        currency: product.currency,
+                        imageSrc:
+                          product.media.find((m) => m.type === "image")?.src ??
+                          "",
+                        imageAlt: product.hero.media.alt,
+                      });
+
+                      if (quantity > 1) {
+                        updateQuantity(selectedVariant.id, quantity);
+                      }
+
+                      setQuantity(1);
+                    }}
                     className="h-12 w-full px-6 uppercase tracking-[0.18em] sm:h-14"
                   >
-                    Add to Ritual
+                    {selectedVariant?.inStock === false
+                      ? "Out of Stock"
+                      : "Add to Ritual"}
                   </Button>
                 </div>
               </div>

@@ -235,13 +235,14 @@ export interface Product {
  */
 export const products: Product[] = [
   {
-    id: "yak-ghee-premium",
-    slug: "yak-ghee-premium",
-    name: "Yak Ghee — Premium",
-    tagline: "Clarified over wood fire at 12,000 feet.",
-    category: "ghee",
+    id: "winter-white-honey",
+    slug: "winter-white-honey",
+    name: "Winter White Honey",
+    tagline:
+      "Raw, unheated, unfiltered. Harvested from a single Himalayan flowering season.",
+    category: "honey",
     currency: "INR",
-    origin: "Spiti Valley, Himachal Pradesh",
+    origin: "Lahaul Valley, Himachal Pradesh",
     status: "active",
     inventoryStatus: "inStock",
     featured: true,
@@ -252,9 +253,9 @@ export const products: Product[] = [
 
     hero: {
       media: {
-        desktop: "/images/product-yak-ghee.jpg",
-        mobile: "/images/product-yak-ghee.jpg",
-        alt: "Jar of premium yak ghee against a Himalayan backdrop.",
+        desktop: "/images/products/winter-white-honey.jpeg",
+        mobile: "/images/products/winter-white-honey.jpeg",
+        alt: "Jar of Winter White Honey with Himalayan mountains in background",
       },
       scrollCue: "Discover the Craft",
     },
@@ -263,8 +264,8 @@ export const products: Product[] = [
       {
         id: "packaging",
         type: "image",
-        src: "/images/product-yak-ghee.jpg",
-        alt: "Yak Ghee Premium jar packaging.",
+        src: "/images/products/winter-white-honey.jpeg",
+        alt: "Winter White Honey jar packaging",
         variant: "packaging",
       },
     ],

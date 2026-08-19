@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Menu, Search, ShoppingBag, UserRound } from "lucide-react";
 import Link from "next/link";
 
@@ -8,6 +8,7 @@ import { DesktopNavigation } from "@/components/layout/DesktopNavigation";
 import { MobileDrawer } from "@/components/layout/MobileDrawer";
 import { Container } from "@/components/ui/Container";
 import { useHeaderScroll } from "@/hooks/useHeaderScroll";
+import { useCartStore } from "@/lib/cart";
 import { navigationContent } from "@/lib/content/navigation";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +22,11 @@ const utilityButtonClasses = (isScrolled: boolean) =>
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const isScrolled = useHeaderScroll(12);
+  const itemCount = useCartStore((state) => state.getItemCount());
+
+  useEffect(() => setMounted(true), []);
 
   const closeDrawer = useCallback(() => setMobileOpen(false), []);
 
@@ -121,16 +126,21 @@ export function Header() {
           >
             <UserRound className="size-6" />
           </button>
-          <button
-            type="button"
+          <Link
+            href="/cart"
             aria-label={navigationContent.utility.cart.label}
             className={cn(
               utilityButtonClasses(isScrolled),
-              "hidden md:inline-flex",
+              "relative hidden md:inline-flex",
             )}
           >
             <ShoppingBag className="size-6" />
-          </button>
+            {mounted && itemCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
+                {itemCount > 9 ? "9+" : itemCount}
+              </span>
+            )}
+          </Link>
         </div>
       </Container>
 

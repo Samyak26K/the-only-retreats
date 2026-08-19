@@ -15,21 +15,19 @@ import { ProductShloka } from "@/components/product-detail/ProductShloka";
 import { ProductStory } from "@/components/product-detail/ProductStory";
 import { ProductTasteProfile } from "@/components/product-detail/ProductTasteProfile";
 import { FooterSection } from "@/components/sections/Footer";
-import { getAllProductSlugs, getProductBySlug } from "@/lib/content/product";
+import { getProductBySlug } from "@/lib/content/product";
+import { getPublishedProductBySlug } from "@/lib/storefront/products";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return getAllProductSlugs().map((slug) => ({ slug }));
-}
-
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product =
+    (await getPublishedProductBySlug(slug)) ?? getProductBySlug(slug) ?? null;
 
   if (!product) {
     return {};
@@ -55,7 +53,8 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product =
+    (await getPublishedProductBySlug(slug)) ?? getProductBySlug(slug) ?? null;
 
   if (!product) {
     notFound();

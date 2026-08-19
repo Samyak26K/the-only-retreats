@@ -12,16 +12,17 @@ export interface Product {
 
 export const collectionContent: Product[] = [
   {
-    id: "yak-ghee-premium",
-    name: "Yak Ghee — Premium",
-    shortDescription: "Pure, clarified yak butter from high altitude herds.",
+    id: "winter-white-honey",
+    name: "Winter White Honey",
+    shortDescription:
+      "Raw, unheated, unfiltered. Harvested from a single Himalayan flowering season.",
     price: 1200,
-    image: "/images/product-yak-ghee.jpg",
-    origin: "Spiti Valley, Himachal Pradesh",
+    image: "/images/products/winter-white-honey.jpeg",
+    origin: "Lahaul Valley, Himachal Pradesh",
     featured: true,
     tagline: "The Flagship",
     editorialDescription:
-      "Clarified over wood fire at 12,000 feet. This ghee carries the essence of Spiti—cold mountain air, sparse grasslands, and centuries of herding wisdom. Each jar is a testament to patience, purity, and the relationship between land, animal, and caretaker.",
+      "Most honey in the market is blended, heated, and filtered multiple times. This honey is none of those things. Raw, unheated, harvested from a single Himalayan region during one flowering season. Pure, rare, and true to its origin.",
   },
   {
     id: "raw-honey",

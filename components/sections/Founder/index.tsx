@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
@@ -11,9 +12,13 @@ export function FounderSection() {
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
           {/* Left: Portrait placeholder */}
           <div className="relative aspect-[3/4] overflow-hidden rounded-lg border border-border bg-surface lg:aspect-[3/4]">
-            <div className="absolute inset-0 flex items-center justify-center bg-muted/20">
-              <span className="text-sm text-muted">Founder Portrait</span>
-            </div>
+            <Image
+              src={founderContent.image}
+              alt={founderContent.name}
+              fill
+              className="object-cover object-top"
+              sizes="(min-width: 1024px) 50vw, 100vw"
+            />
           </div>
 
           {/* Right: Editorial content */}

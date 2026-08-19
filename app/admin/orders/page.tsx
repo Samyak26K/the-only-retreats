@@ -66,7 +66,7 @@ function isDateFilter(value: string): value is DateFilter {
 export default async function AdminOrdersPage({
   searchParams,
 }: OrdersPageProps) {
-  const adminContext = await requirePermission("products.read").catch(
+  const adminContext = await requirePermission("support.read").catch(
     () => null,
   );
 
@@ -172,7 +172,7 @@ export default async function AdminOrdersPage({
     <div className="space-y-6">
       <Heading
         title="Orders"
-        subtitle="Read-only order visibility for internal operations until safe order mutations are implemented."
+        subtitle="Order visibility for internal operations with status tracking and drill-down detail."
         alignment="left"
       />
 
@@ -264,13 +264,19 @@ export default async function AdminOrdersPage({
                   <th className="px-4 py-3">Payment</th>
                   <th className="px-4 py-3">Fulfillment</th>
                   <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border bg-background">
                 {orders.map((order) => (
                   <tr key={order.id}>
                     <td className="px-4 py-4 text-foreground">
-                      {order.orderNumber}
+                      <Link
+                        href={`/admin/orders/${order.id}`}
+                        className="font-medium text-primary hover:underline"
+                      >
+                        {order.orderNumber}
+                      </Link>
                     </td>
                     <td className="px-4 py-4 text-muted">
                       {toCustomerLabel(order)}
@@ -289,6 +295,14 @@ export default async function AdminOrdersPage({
                       {order.fulfillmentStatus}
                     </td>
                     <td className="px-4 py-4 text-muted">{order.status}</td>
+                    <td className="px-4 py-4 text-muted">
+                      <Link
+                        href={`/admin/orders/${order.id}`}
+                        className="font-medium text-primary hover:underline"
+                      >
+                        View
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
