@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
@@ -25,25 +26,28 @@ export default async function NewProductPage() {
 
     const raw = {
       name: formData.get("name"),
-      slug: formData.get("slug"),
-      brand: formData.get("brand"),
-      categoryId: formData.get("categoryId"),
-      primaryOriginId: formData.get("primaryOriginId"),
-      shortDescription: formData.get("shortDescription"),
-      longDescription: formData.get("longDescription"),
+      slug: formData.get("slug") || undefined,
+      brand: formData.get("brand") || undefined,
+      categoryId: formData.get("categoryId") || undefined,
+      primaryOriginId: formData.get("primaryOriginId") || undefined,
+      shortDescription: formData.get("shortDescription") || undefined,
+      longDescription: formData.get("longDescription") || undefined,
       status: formData.get("status"),
       featured: formData.get("featured") === "on",
-      currency: formData.get("currency"),
-      mrp: formData.get("mrp"),
-      sellingPrice: formData.get("sellingPrice"),
-      seoTitle: formData.get("seoTitle"),
-      seoDescription: formData.get("seoDescription"),
+      currency: formData.get("currency") || "INR",
+      mrp: formData.get("mrp") || undefined,
+      sellingPrice: formData.get("sellingPrice") || undefined,
+      seoTitle: formData.get("seoTitle") || undefined,
+      seoDescription: formData.get("seoDescription") || undefined,
     };
 
     const parsed = productCreateSchema.safeParse(raw);
 
     if (!parsed.success) {
-      throw new Error("Validation failed");
+      console.error("Validation errors:", parsed.error.flatten());
+      throw new Error(
+        "Validation failed: " + JSON.stringify(parsed.error.flatten()),
+      );
     }
 
     await createProduct(parsed.data, {
@@ -212,9 +216,12 @@ export default async function NewProductPage() {
 
         <div className="flex gap-3">
           <Button type="submit">Save product</Button>
-          <Button type="button" variant="outline" onClick={() => {}}>
+          <Link
+            href="/admin/products"
+            className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface"
+          >
             Cancel
-          </Button>
+          </Link>
         </div>
       </form>
     </div>

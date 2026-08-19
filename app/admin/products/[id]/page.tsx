@@ -87,10 +87,6 @@ export default async function AdminProductDetailPage({
     notFound();
   }
 
-  function toRedirect(status: "success" | "error", code: string) {
-    return `/admin/products/${id}?${status}=${encodeURIComponent(code)}`;
-  }
-
   async function updateProductAction(formData: FormData) {
     "use server";
 
@@ -132,7 +128,7 @@ export default async function AdminProductDetailPage({
     const writeAdminContext = await requirePermission("products.write");
 
     if (!cuidSchema.safeParse(id).success) {
-      redirect(toRedirect("error", "variant_invalid_id"));
+      redirect(`/admin/products/${id}?error=variant_invalid_id`);
     }
 
     const netQuantity = formData.get("netQuantity");
@@ -152,7 +148,7 @@ export default async function AdminProductDetailPage({
       .safeParse(raw);
 
     if (!parsed.success) {
-      redirect(toRedirect("error", "variant_validation_failed"));
+      redirect(`/admin/products/${id}?error=variant_validation_failed`);
     }
 
     try {
@@ -166,18 +162,18 @@ export default async function AdminProductDetailPage({
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "Product not found") {
-          redirect(toRedirect("error", "variant_not_found"));
+          redirect(`/admin/products/${id}?error=variant_not_found`);
         }
 
         if (error.message === "SKU already exists") {
-          redirect(toRedirect("error", "variant_sku_conflict"));
+          redirect(`/admin/products/${id}?error=variant_sku_conflict`);
         }
       }
 
-      redirect(toRedirect("error", "variant_create_failed"));
+      redirect(`/admin/products/${id}?error=variant_create_failed`);
     }
 
-    redirect(toRedirect("success", "variant_created"));
+    redirect(`/admin/products/${id}?success=variant_created`);
   }
 
   async function updateVariantAction(formData: FormData) {
@@ -186,14 +182,14 @@ export default async function AdminProductDetailPage({
     const writeAdminContext = await requirePermission("products.write");
 
     if (!cuidSchema.safeParse(id).success) {
-      redirect(toRedirect("error", "variant_invalid_id"));
+      redirect(`/admin/products/${id}?error=variant_invalid_id`);
     }
 
     const variantIdRaw = formData.get("variantId");
     const variantIdParsed = cuidSchema.safeParse(variantIdRaw);
 
     if (!variantIdParsed.success) {
-      redirect(toRedirect("error", "variant_invalid_id"));
+      redirect(`/admin/products/${id}?error=variant_invalid_id`);
     }
 
     const netQuantity = formData.get("netQuantity");
@@ -213,7 +209,7 @@ export default async function AdminProductDetailPage({
       .safeParse(raw);
 
     if (!parsed.success) {
-      redirect(toRedirect("error", "variant_validation_failed"));
+      redirect(`/admin/products/${id}?error=variant_validation_failed`);
     }
 
     try {
@@ -227,22 +223,22 @@ export default async function AdminProductDetailPage({
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "Variant not found") {
-          redirect(toRedirect("error", "variant_not_found"));
+          redirect(`/admin/products/${id}?error=variant_not_found`);
         }
 
         if (error.message === "Variant does not belong to product") {
-          redirect(toRedirect("error", "variant_wrong_product"));
+          redirect(`/admin/products/${id}?error=variant_wrong_product`);
         }
 
         if (error.message === "SKU already exists") {
-          redirect(toRedirect("error", "variant_sku_conflict"));
+          redirect(`/admin/products/${id}?error=variant_sku_conflict`);
         }
       }
 
-      redirect(toRedirect("error", "variant_update_failed"));
+      redirect(`/admin/products/${id}?error=variant_update_failed`);
     }
 
-    redirect(toRedirect("success", "variant_updated"));
+    redirect(`/admin/products/${id}?success=variant_updated`);
   }
 
   async function deactivateVariantAction(formData: FormData) {
@@ -251,14 +247,14 @@ export default async function AdminProductDetailPage({
     const writeAdminContext = await requirePermission("products.write");
 
     if (!cuidSchema.safeParse(id).success) {
-      redirect(toRedirect("error", "variant_invalid_id"));
+      redirect(`/admin/products/${id}?error=variant_invalid_id`);
     }
 
     const variantIdRaw = formData.get("variantId");
     const variantIdParsed = cuidSchema.safeParse(variantIdRaw);
 
     if (!variantIdParsed.success) {
-      redirect(toRedirect("error", "variant_invalid_id"));
+      redirect(`/admin/products/${id}?error=variant_invalid_id`);
     }
 
     try {
@@ -272,18 +268,18 @@ export default async function AdminProductDetailPage({
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "Variant not found") {
-          redirect(toRedirect("error", "variant_not_found"));
+          redirect(`/admin/products/${id}?error=variant_not_found`);
         }
 
         if (error.message === "Variant does not belong to product") {
-          redirect(toRedirect("error", "variant_wrong_product"));
+          redirect(`/admin/products/${id}?error=variant_wrong_product`);
         }
       }
 
-      redirect(toRedirect("error", "variant_deactivate_failed"));
+      redirect(`/admin/products/${id}?error=variant_deactivate_failed`);
     }
 
-    redirect(toRedirect("success", "variant_deactivated"));
+    redirect(`/admin/products/${id}?success=variant_deactivated`);
   }
 
   return (

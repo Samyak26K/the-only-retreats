@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Menu, Search, ShoppingBag, UserRound } from "lucide-react";
+import { Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { DesktopNavigation } from "@/components/layout/DesktopNavigation";
 import { MobileDrawer } from "@/components/layout/MobileDrawer";
@@ -23,10 +24,44 @@ const utilityButtonClasses = (isScrolled: boolean) =>
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<
+    Array<{
+      id: string;
+      name: string;
+      slug: string;
+      origin: string | null;
+    }>
+  >([]);
+  const router = useRouter();
   const isScrolled = useHeaderScroll(12);
   const itemCount = useCartStore((state) => state.getItemCount());
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSearchOpen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const data = await res.json();
+      setSearchResults(data.results ?? []);
+    } catch {
+      setSearchResults([]);
+    }
+  };
 
   const closeDrawer = useCallback(() => setMobileOpen(false), []);
 
@@ -111,7 +146,8 @@ export function Header() {
         <div className="flex items-center gap-1">
           <button
             type="button"
-            aria-label={navigationContent.utility.search.label}
+            aria-label="Search"
+            onClick={() => setSearchOpen(true)}
             className={utilityButtonClasses(isScrolled)}
           >
             <Search className="size-6" />
@@ -126,6 +162,21 @@ export function Header() {
           >
             <UserRound className="size-6" />
           </button>
+          <Link
+            href="/cart"
+            aria-label="Cart"
+            className={cn(
+              utilityButtonClasses(isScrolled),
+              "relative md:hidden",
+            )}
+          >
+            <ShoppingBag className="size-6" />
+            {mounted && itemCount > 0 && (
+              <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
+                {itemCount > 9 ? "9+" : itemCount}
+              </span>
+            )}
+          </Link>
           <Link
             href="/cart"
             aria-label={navigationContent.utility.cart.label}
@@ -143,6 +194,71 @@ export function Header() {
           </Link>
         </div>
       </Container>
+
+      {searchOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center bg-forest/80 px-4 pt-24 backdrop-blur-sm"
+          onClick={() => setSearchOpen(false)}
+        >
+          <div
+            className="w-full max-w-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative">
+              <Search className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-muted" />
+              <input
+                autoFocus
+                type="search"
+                placeholder="Search products, valleys, origins..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-full rounded-2xl border border-border bg-surface py-4 pr-12 pl-12 text-lg text-foreground placeholder:text-muted/50 focus:border-gold focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setSearchOpen(false)}
+                className="absolute top-1/2 right-4 -translate-y-1/2 text-muted transition-colors hover:text-foreground"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+            {searchResults.length > 0 && (
+              <div className="mt-2 overflow-hidden rounded-2xl border border-border/30 bg-surface">
+                {searchResults.map((result) => (
+                  <button
+                    key={result.id}
+                    type="button"
+                    onClick={() => {
+                      router.push(`/products/${result.slug}`);
+                      setSearchOpen(false);
+                      setSearchQuery("");
+                      setSearchResults([]);
+                    }}
+                    className="flex w-full items-center justify-between border-b border-border/20 px-4 py-3 text-left transition-colors last:border-0 hover:bg-background/50"
+                  >
+                    <span className="font-heading text-sm text-foreground">
+                      {result.name}
+                    </span>
+                    {result.origin && (
+                      <span className="text-xs text-muted">
+                        {result.origin}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+            {searchQuery.length >= 2 && searchResults.length === 0 && (
+              <p className="mt-4 text-center text-sm text-muted/60">
+                No products found for &quot;{searchQuery}&quot;
+              </p>
+            )}
+            <p className="mt-4 text-center text-xs text-muted">
+              Press ESC to close
+            </p>
+          </div>
+        </div>
+      )}
 
       <MobileDrawer open={mobileOpen} onClose={closeDrawer} />
     </header>
