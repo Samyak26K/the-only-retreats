@@ -14,7 +14,7 @@ export function ProductJourney({ steps }: ProductJourneyProps) {
   }
 
   return (
-    <Section aria-labelledby="product-journey-title">
+    <Section aria-labelledby="product-journey-title" className="py-10 md:py-14">
       <Container>
         <Heading
           eyebrow="Origin Journey"
@@ -24,7 +24,7 @@ export function ProductJourney({ steps }: ProductJourneyProps) {
             </span>
           }
           subtitle="A patient passage from source to home, shaped by place, craft, and the people who preserve both."
-          className="mb-16 md:mb-24"
+          className="mb-8 md:mb-12"
         />
 
         <ol className="relative before:absolute before:inset-y-0 before:left-3 before:w-px before:bg-gold/70 md:before:left-1/2">
@@ -34,7 +34,7 @@ export function ProductJourney({ steps }: ProductJourneyProps) {
             return (
               <li
                 key={step.id}
-                className="relative grid pb-16 last:pb-0 motion-safe:animate-[hero-rise_600ms_ease-out_both] motion-safe:[animation-range:entry_10%_cover_30%] motion-safe:[animation-timeline:view()] md:grid-cols-2 md:pb-24"
+                className="relative grid pb-8 last:pb-0 motion-safe:animate-[hero-rise_600ms_ease-out_both] motion-safe:[animation-range:entry_10%_cover_30%] motion-safe:[animation-timeline:view()] md:grid-cols-2 md:pb-12"
               >
                 <span
                   aria-hidden="true"
@@ -49,13 +49,13 @@ export function ProductJourney({ steps }: ProductJourneyProps) {
                       : "md:col-start-2 md:ml-0 md:pl-16",
                   )}
                 >
-                  <p className="text-xs font-medium tracking-[0.24em] text-gold">
+                  <p className="text-[0.6rem] font-medium tracking-[0.2em] text-gold">
                     {String(index + 1).padStart(2, "0")}
                   </p>
-                  <h3 className="mt-4 font-display text-3xl leading-tight tracking-[-0.03em] text-foreground md:text-4xl">
+                  <h3 className="mt-2 font-display text-xl leading-tight tracking-[-0.02em] text-foreground md:text-2xl">
                     {step.title}
                   </h3>
-                  <p className="mt-4 text-sm leading-7 text-muted md:text-base md:leading-8">
+                  <p className="mt-2 text-xs leading-6 text-muted md:text-sm md:leading-7">
                     {step.description}
                   </p>
                 </article>

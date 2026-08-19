@@ -174,8 +174,8 @@ export function Header() {
           >
             <Search className="size-6" />
           </button>
-          <button
-            type="button"
+          <Link
+            href="/account"
             aria-label={navigationContent.utility.account.label}
             className={cn(
               utilityButtonClasses(showScrolled),
@@ -183,7 +183,7 @@ export function Header() {
             )}
           >
             <UserRound className="size-6" />
-          </button>
+          </Link>
           <Link
             href="/cart"
             aria-label="Cart"

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
@@ -17,13 +18,14 @@ function formatPrice(amount: number, currency: string) {
 }
 
 const inputClassName =
-  "w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground outline-none placeholder:text-muted/50 focus:border-gold";
+  "w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-foreground outline-none placeholder:text-muted/50 focus:border-gold";
 
 const labelClassName =
   "mb-2 block text-xs font-semibold uppercase tracking-wide text-muted";
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { user } = useUser();
   const items = useCartStore((state) => state.items);
   const getSubtotal = useCartStore((state) => state.getSubtotal);
   const clearCart = useCartStore((state) => state.clearCart);
@@ -32,7 +34,7 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [addressLine1, setAddressLine1] = useState("");
-  const [addressLine2, setAddressLine2] = useState("");
+  const [addressLine2] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState("");
@@ -41,6 +43,14 @@ export default function CheckoutPage() {
 
   const subtotal = getSubtotal();
   const summaryCurrency = items[0]?.currency ?? "INR";
+
+  useEffect(() => {
+    if (user) {
+      setFullName([user.firstName, user.lastName].filter(Boolean).join(" "));
+      setEmail(user.emailAddresses[0]?.emailAddress ?? "");
+      setPhone(user.phoneNumbers[0]?.phoneNumber ?? "");
+    }
+  }, [user]);
 
   useEffect(() => {
     setHasHydrated(useCartStore.persist.hasHydrated());
@@ -187,24 +197,35 @@ export default function CheckoutPage() {
         </p>
       </div>
 
-      <Container className="py-12 md:py-20 lg:py-24 xl:py-[7.5rem]">
-        <header className="mb-12 max-w-3xl md:mb-16">
+      <Container className="py-8 md:py-12">
+        <header className="mb-8 max-w-3xl md:mb-10">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
             Order
           </p>
-          <h1 className="mt-4 font-display text-[clamp(2.5rem,8vw,5rem)] leading-[0.95] tracking-[-0.04em] text-foreground">
+          <h1 className="mt-2 font-display text-3xl leading-[0.95] tracking-[-0.04em] text-foreground md:text-4xl">
             Checkout
           </h1>
         </header>
 
-        <div className="grid gap-16 lg:grid-cols-[minmax(0,11fr)_minmax(0,5fr)] lg:items-start lg:gap-20 xl:gap-24">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,5fr)] lg:items-start lg:gap-12">
           <form
-            className="space-y-12 pb-24 md:pb-0"
+            className="space-y-8 pb-24 md:pb-0"
             onSubmit={(event) => event.preventDefault()}
           >
+            <p className="mb-6 rounded-lg border border-border bg-surface p-3 text-xs text-muted">
+              ✦ No account needed — checkout as guest.
+              <Link
+                href="/account/sign-in"
+                className="ml-1 text-gold underline underline-offset-2"
+              >
+                Sign in
+              </Link>{" "}
+              to save your details for next time.
+            </p>
+
             <fieldset className="space-y-5">
-              <legend className="font-heading text-xl text-foreground">
-                Contact Information
+              <legend className="mb-1 font-heading text-base text-foreground">
+                Contact
               </legend>
 
               <div>
@@ -257,37 +278,22 @@ export default function CheckoutPage() {
             </fieldset>
 
             <fieldset className="space-y-5">
-              <legend className="font-heading text-xl text-foreground">
-                Shipping Address
+              <legend className="mb-1 font-heading text-base text-foreground">
+                Delivery Address
               </legend>
 
               <div>
                 <label htmlFor="addressLine1" className={labelClassName}>
-                  Address Line 1
+                  Address
                 </label>
-                <input
+                <textarea
                   id="addressLine1"
                   name="addressLine1"
-                  type="text"
                   required
-                  autoComplete="address-line1"
+                  rows={2}
+                  autoComplete="street-address"
                   value={addressLine1}
                   onChange={(event) => setAddressLine1(event.target.value)}
-                  className={inputClassName}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="addressLine2" className={labelClassName}>
-                  Address Line 2
-                </label>
-                <input
-                  id="addressLine2"
-                  name="addressLine2"
-                  type="text"
-                  autoComplete="address-line2"
-                  value={addressLine2}
-                  onChange={(event) => setAddressLine2(event.target.value)}
                   className={inputClassName}
                 />
               </div>
@@ -312,16 +318,54 @@ export default function CheckoutPage() {
                 <label htmlFor="state" className={labelClassName}>
                   State
                 </label>
-                <input
+                <select
                   id="state"
                   name="state"
-                  type="text"
                   required
                   autoComplete="address-level1"
                   value={state}
                   onChange={(event) => setState(event.target.value)}
                   className={inputClassName}
-                />
+                >
+                  <option value="">Select State</option>
+                  {[
+                    "Andhra Pradesh",
+                    "Arunachal Pradesh",
+                    "Assam",
+                    "Bihar",
+                    "Chhattisgarh",
+                    "Goa",
+                    "Gujarat",
+                    "Haryana",
+                    "Himachal Pradesh",
+                    "Jharkhand",
+                    "Karnataka",
+                    "Kerala",
+                    "Madhya Pradesh",
+                    "Maharashtra",
+                    "Manipur",
+                    "Meghalaya",
+                    "Mizoram",
+                    "Nagaland",
+                    "Odisha",
+                    "Punjab",
+                    "Rajasthan",
+                    "Sikkim",
+                    "Tamil Nadu",
+                    "Telangana",
+                    "Tripura",
+                    "Uttar Pradesh",
+                    "Uttarakhand",
+                    "West Bengal",
+                    "Delhi",
+                    "Jammu & Kashmir",
+                    "Ladakh",
+                  ].map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -349,7 +393,7 @@ export default function CheckoutPage() {
                   type="button"
                   disabled={isLoading}
                   onClick={handlePayment}
-                  className="h-12 w-full px-6 uppercase tracking-[0.18em] sm:h-14"
+                  className="h-11 w-full text-sm uppercase tracking-[0.15em]"
                 >
                   {isLoading
                     ? "Processing..."
@@ -368,54 +412,76 @@ export default function CheckoutPage() {
             </div>
           </form>
 
-          <aside className="border border-border bg-surface p-6 md:p-8">
-            <h2 className="font-heading text-xl text-foreground">
+          <aside className="sticky top-24 space-y-4 rounded-2xl border border-border bg-surface p-6">
+            <div className="mb-4 h-0.5 w-8 bg-gold" />
+
+            <h2 className="font-heading text-sm font-medium uppercase tracking-[0.15em] text-foreground">
               Order Summary
             </h2>
 
-            <ul className="mt-8 divide-y divide-border border-t border-border">
+            <div className="space-y-3 border-b border-border pb-4">
               {items.map((item) => (
-                <li
+                <div
                   key={item.variantId}
-                  className="flex items-start justify-between gap-4 py-4"
+                  className="flex items-start justify-between gap-2"
                 >
                   <div className="min-w-0">
-                    <p className="font-heading text-sm leading-snug text-foreground">
+                    <p className="truncate text-xs font-medium text-foreground">
                       {item.productName}
                     </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.18em] text-muted">
+                    <p className="mt-0.5 text-[0.6rem] uppercase tracking-wide text-muted">
                       {item.variantLabel} · Qty {item.quantity}
                     </p>
                   </div>
-                  <p className="shrink-0 font-heading text-sm text-foreground">
+                  <p className="shrink-0 text-xs font-medium text-foreground">
                     {formatPrice(item.price * item.quantity, item.currency)}
                   </p>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
 
-            <dl className="mt-6 space-y-4 border-t border-border pt-6">
-              <div className="flex items-baseline justify-between gap-4">
-                <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-                  Subtotal
-                </dt>
-                <dd className="font-heading text-base text-foreground">
-                  {formatPrice(subtotal, summaryCurrency)}
-                </dd>
-              </div>
-              <div className="flex items-baseline justify-between gap-4">
-                <dt className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-                  Shipping
-                </dt>
-                <dd className="font-body text-sm text-foreground">Free</dd>
-              </div>
-            </dl>
+            <div className="flex justify-between">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted">
+                Subtotal
+              </p>
+              <p className="text-xs font-medium text-foreground">
+                {formatPrice(subtotal, summaryCurrency)}
+              </p>
+            </div>
 
-            <div className="mt-6 border-t border-border pt-6">
-              <div className="flex items-baseline justify-between gap-4">
-                <p className="font-heading text-lg text-foreground">Total</p>
-                <p className="font-heading text-xl text-foreground">
-                  {formatPrice(subtotal, summaryCurrency)}
+            <div className="flex justify-between border-b border-border pb-4">
+              <p className="text-xs uppercase tracking-[0.12em] text-muted">
+                Shipping
+              </p>
+              <p className="text-xs font-medium text-gold">Free</p>
+            </div>
+
+            <div className="flex justify-between pt-1">
+              <p className="font-heading text-sm font-medium text-foreground">
+                Total
+              </p>
+              <p className="font-heading text-base font-medium text-foreground">
+                {formatPrice(subtotal, summaryCurrency)}
+              </p>
+            </div>
+
+            <div className="space-y-2 border-t border-border pt-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gold">✦</span>
+                <p className="text-[0.6rem] uppercase tracking-wide text-muted">
+                  Secured by Razorpay
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gold">✦</span>
+                <p className="text-[0.6rem] uppercase tracking-wide text-muted">
+                  Easy returns within 48hrs
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gold">✦</span>
+                <p className="text-[0.6rem] uppercase tracking-wide text-muted">
+                  Direct from Himalayan source
                 </p>
               </div>
             </div>

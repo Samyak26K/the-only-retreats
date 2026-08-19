@@ -1,19 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { ProductCertifications } from "@/components/product-detail/ProductCertifications";
-import { ProductFAQ } from "@/components/product-detail/ProductFAQ";
 import { ProductHero } from "@/components/product-detail/ProductHero";
-import { ProductHighlights } from "@/components/product-detail/ProductHighlights";
+import { ProductInfoGrid } from "@/components/product-detail/ProductInfoGrid";
 import { ProductJourney } from "@/components/product-detail/ProductJourney";
-import { ProductNutrition } from "@/components/product-detail/ProductNutrition";
-import { ProductPassport } from "@/components/product-detail/ProductPassport";
 import { ProductRelatedProducts } from "@/components/product-detail/ProductRelatedProducts";
-import { ProductReviews } from "@/components/product-detail/ProductReviews";
-import { ProductRitualGuide } from "@/components/product-detail/ProductRitualGuide";
-import { ProductShloka } from "@/components/product-detail/ProductShloka";
-import { ProductStory } from "@/components/product-detail/ProductStory";
-import { ProductTasteProfile } from "@/components/product-detail/ProductTasteProfile";
+import { ProductWhyExists } from "@/components/product-detail/ProductWhyExists";
 import { FooterSection } from "@/components/sections/Footer";
 import { getProductBySlug } from "@/lib/content/product";
 import { getPublishedProductBySlug } from "@/lib/storefront/products";
@@ -63,17 +55,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <>
       <ProductHero product={product} />
-      <ProductHighlights highlights={product.highlights} />
-      <ProductStory story={product.story} />
-      <ProductShloka shloka={product.shloka} />
+      <ProductWhyExists product={product} />
       <ProductJourney steps={product.originJourney} />
-      <ProductPassport passport={product.productPassport} />
-      <ProductTasteProfile tasteProfile={product.tasteProfile} />
-      <ProductNutrition nutrition={product.nutrition} />
-      <ProductCertifications certifications={product.certifications} />
-      <ProductRitualGuide ritualGuide={product.ritualGuide} />
-      <ProductFAQ faqs={product.faqs} />
-      <ProductReviews reviews={product.reviews} />
+      <ProductInfoGrid product={product} />
       <ProductRelatedProducts product={product} />
       <FooterSection />
     </>

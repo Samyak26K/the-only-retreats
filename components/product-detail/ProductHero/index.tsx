@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Image, { getImageProps } from "next/image";
+import Image from "next/image";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/lib/cart";
 import { getStartingPrice, type Product } from "@/lib/content/product";
+import { cn } from "@/lib/utils";
 
 type ProductHeroProps = {
   product: Product;
@@ -30,30 +33,14 @@ export function ProductHero({ product }: ProductHeroProps) {
       "",
   );
   const [quantity, setQuantity] = useState(1);
+  const [imageIndex, setImageIndex] = useState(0);
   const selectedVariant = product.variants.find(
     (v) => v.id === selectedVariantId,
   );
-
-  const sharedHeroImageProps = {
-    alt: product.hero.media.alt,
-    width: 1200,
-    height: 1500,
-    priority: true,
-    sizes: "(min-width: 1024px) 55vw, 100vw",
-    className: "h-full w-full object-cover",
-  } as const;
-
-  const {
-    props: { srcSet: desktopSrcSet, sizes: desktopSizes },
-  } = getImageProps({
-    ...sharedHeroImageProps,
+  const currentImage = imageMedia[imageIndex] ?? {
     src: product.hero.media.desktop,
-  });
-
-  const { props: mobileImageProps } = getImageProps({
-    ...sharedHeroImageProps,
-    src: product.hero.media.mobile,
-  });
+    alt: product.hero.media.alt,
+  };
 
   return (
     <section aria-labelledby="product-title" className="bg-background">
@@ -62,207 +49,275 @@ export function ProductHero({ product }: ProductHeroProps) {
         className="h-(--navbar-height-mobile) bg-forest md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)"
       />
 
-      <Container className="py-8 md:py-12 lg:py-16">
-        <div className="grid gap-8 md:gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:items-start lg:gap-12">
-          <figure className="min-w-0">
-            <div className="rounded-(--radius-panel) border border-border/80 bg-surface p-2 shadow-lg sm:p-3">
-              <div className="aspect-[4/5] overflow-hidden rounded-xl bg-cloud md:aspect-[5/4] lg:aspect-[4/5] lg:min-h-[28rem] xl:min-h-[32rem]">
-                <picture>
-                  <source
-                    media="(min-width: 768px)"
-                    srcSet={desktopSrcSet}
-                    sizes={desktopSizes}
-                  />
-                  <img {...mobileImageProps} alt={product.hero.media.alt} />
-                </picture>
-              </div>
-            </div>
-
-            <figcaption className="mt-5 md:mt-6">
-              <span className="sr-only">Product media</span>
-              <ul className="flex gap-3 overflow-hidden px-1 sm:gap-4">
-                {imageMedia.map((item, index) => (
-                  <li
-                    key={item.id}
-                    className="aspect-square w-16 shrink-0 overflow-hidden rounded-lg border border-gold/60 bg-surface p-1 shadow-sm sm:w-20"
-                  >
-                    <Image
-                      src={item.src}
-                      alt=""
-                      width={80}
-                      height={80}
-                      loading="lazy"
-                      className="h-full w-full rounded-md object-cover"
-                    />
-                    <span className="sr-only">
-                      Product media preview {index + 1}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </figcaption>
-          </figure>
-
-          <article className="min-w-0 lg:py-6 xl:py-10">
-            <header>
-              <p className="inline-flex rounded-full border border-gold/60 bg-surface/60 px-3 py-1.5 text-[0.6rem] font-medium uppercase tracking-[0.24em] text-muted shadow-sm">
-                {product.origin}
-              </p>
-
-              <h1
-                id="product-title"
-                className="mt-6 max-w-2xl text-balance font-display text-[clamp(1.8rem,5vw,3.5rem)] leading-[0.9] tracking-[-0.045em] text-foreground md:mt-8"
-              >
+      <Container className="py-6 md:py-10">
+        <div className="grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:items-start lg:gap-10">
+          <div className="min-w-0">
+            <nav className="mb-3 flex items-center gap-1.5 text-[0.6rem] uppercase tracking-wide text-muted">
+              <Link href="/" className="hover:text-foreground">
+                Home
+              </Link>
+              <span>/</span>
+              <Link href="/products" className="hover:text-foreground">
+                Collection
+              </Link>
+              <span>/</span>
+              <span className="max-w-[120px] truncate text-foreground">
                 {product.name}
-              </h1>
-
-              <div className="mt-8 space-y-3 border-l border-gold pl-5 md:mt-10 md:space-y-4 md:pl-6">
-                <p
-                  lang="sa"
-                  className="font-sanskrit text-base leading-relaxed text-gold sm:text-lg"
-                >
-                  {product.shloka.devanagari}
-                </p>
-                <p className="max-w-lg font-heading text-sm leading-6 text-muted italic sm:text-base sm:leading-7">
-                  {product.shloka.translation}
-                </p>
-              </div>
-
-              <p className="mt-8 max-w-xl font-body text-sm leading-7 text-muted sm:text-base sm:leading-7 md:mt-10">
-                {product.tagline}
-              </p>
-            </header>
-
-            <div className="mt-6 border-t border-border pt-6 md:mt-8 md:pt-8">
-              {startingPrice !== undefined ? (
-                <p className="font-heading text-xl font-medium tracking-[-0.02em] text-foreground sm:text-2xl">
-                  {formatPrice(startingPrice, product.currency)}
-                </p>
-              ) : null}
-
-              <div className="mt-8 space-y-7">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-                    Variant
-                  </p>
-                  <ul
-                    aria-label="Available variants"
-                    className="mt-3 flex flex-wrap gap-3"
-                  >
-                    {product.variants.map((variant) => {
-                      const isSelected = variant.id === selectedVariantId;
+              </span>
+            </nav>
+            <figure className="min-w-0">
+              <div className="flex flex-row gap-3">
+                {imageMedia.length > 0 ? (
+                  <ul className="flex shrink-0 flex-col gap-2">
+                    {imageMedia.map((item, index) => {
+                      const isSelected = index === imageIndex;
 
                       return (
-                        <li key={variant.id}>
+                        <li key={item.id}>
                           <button
                             type="button"
-                            onClick={() => setSelectedVariantId(variant.id)}
-                            disabled={!variant.inStock}
-                            className={`flex min-h-12 items-center rounded-lg border px-5 py-3 text-sm font-medium shadow-sm ${
-                              isSelected
-                                ? "border-gold bg-surface text-foreground"
-                                : "border-border bg-surface text-muted"
-                            } ${!variant.inStock ? "opacity-50" : ""}`}
+                            onClick={() => setImageIndex(index)}
+                            aria-label={`View product image ${index + 1}`}
+                            aria-pressed={isSelected}
+                            className={`size-14 overflow-hidden rounded-lg border p-0.5 ${
+                              isSelected ? "border-gold" : "border-border"
+                            }`}
                           >
-                            {variant.inStock
-                              ? variant.label
-                              : `${variant.label} · Out of Stock`}
+                            <Image
+                              src={item.src}
+                              alt=""
+                              width={56}
+                              height={56}
+                              loading="lazy"
+                              className="h-full w-full object-cover"
+                            />
                           </button>
                         </li>
                       );
                     })}
                   </ul>
-                </div>
+                ) : null}
 
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
-                    Quantity
-                  </p>
-                  <div className="mt-3 flex h-12 w-fit items-center rounded-lg border border-border bg-surface text-sm font-medium text-foreground shadow-sm">
-                    <button
-                      type="button"
-                      aria-label="Decrease quantity"
-                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="flex h-12 w-10 items-center justify-center"
-                    >
-                      −
-                    </button>
-                    <output
-                      aria-label="Quantity"
-                      className="flex h-12 w-10 items-center justify-center"
-                    >
-                      {quantity}
-                    </output>
-                    <button
-                      type="button"
-                      aria-label="Increase quantity"
-                      onClick={() => setQuantity((q) => q + 1)}
-                      className="flex h-12 w-10 items-center justify-center"
-                    >
-                      +
-                    </button>
+                <div className="min-w-0 flex-1 rounded-(--radius-panel) border border-border/80 bg-surface p-2 shadow-lg sm:p-3">
+                  <div
+                    className="relative overflow-hidden rounded-xl bg-cloud"
+                    style={{ height: "520px" }}
+                  >
+                    <Image
+                      src={currentImage.src}
+                      alt={currentImage.alt}
+                      fill
+                      priority
+                      className="object-cover object-center"
+                      sizes="(min-width: 1024px) 55vw, 100vw"
+                    />
+                    {imageMedia.length > 1 ? (
+                      <>
+                        <button
+                          type="button"
+                          aria-label="Previous image"
+                          onClick={() =>
+                            setImageIndex((index) => Math.max(0, index - 1))
+                          }
+                          disabled={imageIndex === 0}
+                          className="absolute top-1/2 left-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/80 transition-colors hover:bg-background disabled:opacity-30"
+                        >
+                          <ChevronLeft className="size-4" />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="Next image"
+                          onClick={() =>
+                            setImageIndex((index) =>
+                              Math.min(imageMedia.length - 1, index + 1),
+                            )
+                          }
+                          disabled={imageIndex === imageMedia.length - 1}
+                          className="absolute top-1/2 right-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/80 transition-colors hover:bg-background disabled:opacity-30"
+                        >
+                          <ChevronRight className="size-4" />
+                        </button>
+                      </>
+                    ) : null}
                   </div>
                 </div>
+              </div>
+            </figure>
+          </div>
 
-                <div className="pt-1">
-                  <Button
+          <article className="min-w-0 lg:py-2">
+            <span className="mb-2 inline-block rounded-full border border-gold/40 px-2.5 py-1 text-[0.6rem] uppercase tracking-[0.18em] text-gold">
+              {product.category}
+            </span>
+
+            <p className="mb-1 text-[0.6rem] uppercase tracking-[0.18em] text-muted">
+              {product.origin}
+            </p>
+
+            <h1
+              id="product-title"
+              className="mb-2 font-display text-2xl leading-[1] tracking-[-0.03em] text-foreground md:text-3xl lg:text-4xl"
+            >
+              {product.name}
+            </h1>
+
+            <div className="mb-2 flex items-center gap-2">
+              <div className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <span key={s} className="text-xs text-gold">
+                    ★
+                  </span>
+                ))}
+              </div>
+              <span className="text-[0.65rem] text-muted">(24 reviews)</span>
+            </div>
+
+            <div className="mb-3 border-l-2 border-gold/40 pl-3">
+              <p lang="sa" className="font-sanskrit text-sm text-gold">
+                {product.shloka.devanagari}
+              </p>
+              <p className="mt-0.5 text-[0.65rem] text-muted italic">
+                {product.shloka.translation}
+              </p>
+            </div>
+
+            <p className="mb-4 text-sm leading-6 text-muted">
+              {product.tagline}
+            </p>
+
+            <div className="mb-4">
+              {startingPrice !== undefined ? (
+                <>
+                  <p className="font-heading text-xl font-medium text-foreground">
+                    {formatPrice(startingPrice, product.currency)}
+                  </p>
+                  <p className="mt-0.5 text-[0.6rem] text-muted">
+                    Inclusive of all taxes
+                  </p>
+                </>
+              ) : null}
+            </div>
+
+            <div className="mb-3">
+              <p className="mb-2 text-[0.6rem] font-semibold uppercase tracking-[0.15em] text-muted">
+                Variant
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {product.variants.map((variant) => (
+                  <button
+                    key={variant.id}
                     type="button"
-                    disabled={!selectedVariant?.inStock}
-                    onClick={() => {
-                      if (!selectedVariant || !selectedVariant.inStock) {
-                        return;
-                      }
-
-                      addItem({
-                        variantId: selectedVariant.id,
-                        productId: product.id,
-                        productSlug: product.slug,
-                        productName: product.name,
-                        variantLabel: selectedVariant.label,
-                        price: selectedVariant.price,
-                        currency: product.currency,
-                        imageSrc:
-                          product.media.find((m) => m.type === "image")?.src ??
-                          "",
-                        imageAlt: product.hero.media.alt,
-                      });
-
-                      if (quantity > 1) {
-                        updateQuantity(selectedVariant.id, quantity);
-                      }
-
-                      setQuantity(1);
-                    }}
-                    className="h-12 w-full px-6 uppercase tracking-[0.18em] sm:h-14"
+                    onClick={() => setSelectedVariantId(variant.id)}
+                    disabled={!variant.inStock}
+                    className={cn(
+                      "rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
+                      selectedVariantId === variant.id
+                        ? "border-forest bg-forest text-background"
+                        : "border-border text-foreground hover:border-gold",
+                      !variant.inStock && "opacity-50",
+                    )}
                   >
-                    {selectedVariant?.inStock === false
-                      ? "Out of Stock"
-                      : "Add to Ritual"}
-                  </Button>
-                </div>
+                    {variant.label}
+                  </button>
+                ))}
               </div>
             </div>
 
-            <aside
-              aria-label="Product highlights"
-              className="mt-6 border-t border-border pt-8 md:mt-8"
+            <div className="mb-4">
+              <p className="mb-2 text-[0.6rem] font-semibold uppercase tracking-[0.15em] text-muted">
+                Quantity
+              </p>
+              <div className="flex w-fit items-center overflow-hidden rounded-lg border border-border">
+                <button
+                  type="button"
+                  aria-label="Decrease quantity"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="flex h-9 w-9 items-center justify-center text-lg text-muted transition-colors hover:bg-surface"
+                >
+                  −
+                </button>
+                <span className="flex h-9 w-9 items-center justify-center border-x border-border text-sm font-medium">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Increase quantity"
+                  onClick={() => setQuantity((q) => q + 1)}
+                  className="flex h-9 w-9 items-center justify-center text-lg text-muted transition-colors hover:bg-surface"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              disabled={!selectedVariant?.inStock}
+              onClick={() => {
+                if (!selectedVariant || !selectedVariant.inStock) {
+                  return;
+                }
+
+                addItem({
+                  variantId: selectedVariant.id,
+                  productId: product.id,
+                  productSlug: product.slug,
+                  productName: product.name,
+                  variantLabel: selectedVariant.label,
+                  price: selectedVariant.price,
+                  currency: product.currency,
+                  imageSrc:
+                    product.media.find((m) => m.type === "image")?.src ?? "",
+                  imageAlt: product.hero.media.alt,
+                });
+
+                if (quantity > 1) {
+                  updateQuantity(selectedVariant.id, quantity);
+                }
+
+                setQuantity(1);
+              }}
+              className="mb-3 h-11 w-full text-xs uppercase tracking-[0.18em]"
             >
-              <ul className="grid gap-6 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 xl:gap-5">
-                {product.highlights.slice(0, 3).map((highlight) => (
-                  <li
-                    key={highlight.id}
-                    className="border-l border-gold/60 pl-4"
-                  >
-                    <p className="font-heading text-sm font-medium leading-5 text-foreground">
-                      {highlight.title}
-                    </p>
-                    <p className="mt-2 text-xs leading-5 text-muted">
-                      {highlight.description}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </aside>
+              {selectedVariant?.inStock === false
+                ? "Out of Stock"
+                : "Add to Ritual"}
+            </Button>
+
+            <div className="mb-3 flex gap-2">
+              <input
+                type="text"
+                placeholder="Enter PIN code"
+                maxLength={6}
+                className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-xs placeholder:text-muted/50 focus:border-gold focus:outline-none"
+              />
+              <button
+                type="button"
+                className="rounded-lg border border-border px-3 py-2 text-xs uppercase tracking-wide text-muted transition-colors hover:border-gold"
+              >
+                Check
+              </button>
+            </div>
+
+            <div className="grid grid-cols-5 gap-1 border-t border-border pt-3">
+              {[
+                "Raw",
+                "Single Origin",
+                "Small Batch",
+                "Lab Tested",
+                "Pure",
+              ].map((label) => (
+                <div
+                  key={label}
+                  className="flex flex-col items-center gap-1 text-center"
+                >
+                  <span className="text-xs text-gold">✦</span>
+                  <p className="text-[0.5rem] leading-tight uppercase tracking-wide text-muted">
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </div>
           </article>
         </div>
       </Container>

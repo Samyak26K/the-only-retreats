@@ -330,7 +330,48 @@ export async function getPublishedProductBySlug(
       transliteration: "",
       translation: "",
     },
-    originJourney: [],
+    originJourney: [
+      {
+        id: "forage",
+        title: "The Bees Forage",
+        description:
+          "Wild bees collect nectar from alpine flowers blooming at 10,000 feet — thyme, rhododendron, and wild herbs found nowhere else.",
+        image: "/images/valleys/lahaul.webp",
+        location: "Lahaul Valley, 3,050m",
+      },
+      {
+        id: "harvest",
+        title: "Single Harvest",
+        description:
+          "Harvested once a year during the brief flowering season. No second harvest. No blending with other regions.",
+        image: "/images/valleys/kullu.webp",
+        location: "Himachal Pradesh",
+      },
+      {
+        id: "raw",
+        title: "Raw & Unfiltered",
+        description:
+          "Never heated above ambient temperature. Coarsely filtered only to remove debris. All enzymes, pollen and propolis intact.",
+        image: "/images/valleys/nubra.webp",
+        location: "Small batch processing",
+      },
+      {
+        id: "bottled",
+        title: "Glass Bottled",
+        description:
+          "Filled into amber glass jars to protect from light. No plastic. No additives. Sealed and dated by batch.",
+        image: "/images/valleys/zanskar.webp",
+        location: "Artisan packing",
+      },
+      {
+        id: "delivered",
+        title: "From Himalayas",
+        description:
+          "Shipped directly from source to your home. No middlemen. Traceable to the beekeeper family and valley of origin.",
+        image: "/images/valleys/changthang.webp",
+        location: "Direct to you",
+      },
+    ],
     productPassport: {
       originId: product.primaryOrigin?.id ?? "",
       region: product.passport?.originSummary?.trim() || origin,

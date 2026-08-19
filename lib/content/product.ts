@@ -326,28 +326,44 @@ export const products: Product[] = [
 
     originJourney: [
       {
-        id: "herd",
-        title: "The Herd",
+        id: "forage",
+        title: "The Bees Forage",
         description:
-          "Yaks graze freely across sparse, high-altitude grasslands.",
-        image: "/images/valley-spiti.jpg",
-        location: "Spiti Valley",
+          "Wild bees collect nectar from alpine flowers blooming at 10,000 feet — thyme, rhododendron, and wild herbs found nowhere else.",
+        image: "/images/valleys/lahaul.webp",
+        location: "Lahaul Valley, 3,050m",
       },
       {
-        id: "churn",
-        title: "The Churn",
+        id: "harvest",
+        title: "Single Harvest",
         description:
-          "Milk is hand-churned by herding families using traditional methods.",
-        image: "/images/heritage-pastoral.jpg",
-        location: "Spiti Valley",
+          "Harvested once a year during the brief flowering season. No second harvest. No blending with other regions.",
+        image: "/images/valleys/kullu.webp",
+        location: "Himachal Pradesh",
       },
       {
-        id: "clarify",
-        title: "The Clarify",
+        id: "raw",
+        title: "Raw & Unfiltered",
         description:
-          "Butter is slow-clarified over wood fire until golden and pure.",
-        image: "/images/product-yak-ghee.jpg",
-        location: "Spiti Valley",
+          "Never heated above ambient temperature. Coarsely filtered only to remove debris. All enzymes, pollen and propolis intact.",
+        image: "/images/valleys/nubra.webp",
+        location: "Small batch processing",
+      },
+      {
+        id: "bottled",
+        title: "Glass Bottled",
+        description:
+          "Filled into amber glass jars to protect from light. No plastic. No additives. Sealed and dated by batch.",
+        image: "/images/valleys/zanskar.webp",
+        location: "Artisan packing",
+      },
+      {
+        id: "delivered",
+        title: "From Himalayas",
+        description:
+          "Shipped directly from source to your home. No middlemen. Traceable to the beekeeper family and valley of origin.",
+        image: "/images/valleys/changthang.webp",
+        location: "Direct to you",
       },
     ],
 
