@@ -1,33 +1,31 @@
-import { Container } from "@/components/ui/Container";
-import { Heading } from "@/components/ui/Heading";
-import { Section } from "@/components/ui/Section";
-import {
-  certificationSection,
-  certifications,
-} from "@/lib/content/certifications";
+const items = [
+  "Organic Certified",
+  "Fair Trade",
+  "Traceable Source",
+  "Sustainable",
+  "Small Batch",
+  "Direct from Himalaya",
+  "No Additives",
+  "Lab Tested",
+  "Single Origin",
+  "Ancient Methods",
+];
 
-import { CertificationItem } from "./CertificationItem";
+const separator = "✦";
 
 export function CertificationBandSection() {
   return (
-    <Section className="pt-10 md:pt-14 xl:pt-16">
-      <Container className="space-y-6 sm:space-y-8">
-        <Heading
-          title={certificationSection.title}
-          subtitle={certificationSection.subtitle}
-          alignment="center"
-          className="mx-auto"
-        />
-
-        <div className="grid grid-cols-2 gap-4 md:flex md:flex-wrap md:justify-center lg:flex-nowrap">
-          {certifications.map((certification) => (
-            <CertificationItem
-              key={certification.name}
-              certification={certification}
-            />
-          ))}
-        </div>
-      </Container>
-    </Section>
+    <div className="overflow-hidden border-y border-gold/20 bg-forest py-4">
+      <div className="animate-marquee flex whitespace-nowrap">
+        {[...items, ...items, ...items].map((item, index) => (
+          <span key={index} className="inline-flex items-center gap-4 px-4">
+            <span className="text-xs font-medium tracking-[0.25em] text-background/90 uppercase">
+              {item}
+            </span>
+            <span className="text-xs text-gold">{separator}</span>
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }

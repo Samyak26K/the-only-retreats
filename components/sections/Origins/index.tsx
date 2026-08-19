@@ -48,7 +48,13 @@ export function OriginsSection() {
     <section
       id="origins"
       aria-label="Where it comes from"
-      className="-mt-1 bg-[#1a2a1f] py-20 md:py-28"
+      className="-mt-1 py-14 md:py-20"
+      style={{
+        backgroundColor: "#1a2a1f",
+        backgroundImage: "url('/topo.svg')",
+        backgroundRepeat: "repeat",
+        backgroundSize: "600px 600px",
+      }}
     >
       <Container>
         <div className="mb-8 md:mb-10">

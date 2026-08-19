@@ -5,7 +5,6 @@ import { FounderSection } from "@/components/sections/Founder";
 import { HeritageSection } from "@/components/sections/Heritage";
 import { HeroSection } from "@/components/sections/Hero";
 import { OriginsSection } from "@/components/sections/Origins";
-import { VideosSection } from "@/components/sections/Videos";
 
 export default function HomePage() {
   return (
@@ -15,7 +14,6 @@ export default function HomePage() {
       <CertificationBandSection />
       <CollectionSection />
       <HeritageSection />
-      <VideosSection />
       <FounderSection />
       <FooterSection />
     </>

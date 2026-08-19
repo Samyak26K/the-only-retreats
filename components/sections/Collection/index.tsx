@@ -1,76 +1,190 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
-import { Section } from "@/components/ui/Section";
-import { getFeaturedProduct } from "@/lib/content/collection";
+import { collectionContent } from "@/lib/content/collection";
+
+const productShlokas: Record<
+  string,
+  { sanskrit: string; translation: string }
+> = {
+  "winter-white-honey": {
+    sanskrit: "मधु वाता ऋतायते",
+    translation: "May the winds bring sweetness",
+  },
+  "yak-ghee-premium": {
+    sanskrit: "गावो विश्वस्य मातरः",
+    translation: "The cow is the mother of the world",
+  },
+  "raw-honey": {
+    sanskrit: "मधु नक्तमुतोषसि",
+    translation: "Sweet be the night and sweet the dawn",
+  },
+};
+
+const productAltitudes: Record<string, string> = {
+  "winter-white-honey": "3,050 m",
+  "yak-ghee-premium": "3,650 m",
+  "raw-honey": "2,800 m",
+};
 
 export function CollectionSection() {
-  const featuredProduct = getFeaturedProduct();
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  if (!featuredProduct) {
-    return null;
-  }
+  const scroll = (direction: "left" | "right") => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({
+      left: direction === "left" ? -400 : 400,
+      behavior: "smooth",
+    });
+  };
 
   return (
-    <Section id="collection" background="surface">
+    <section id="collection" className="bg-background py-20 md:py-28">
       <Container>
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-20">
-          {/* Left: Large product image */}
-          <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-border bg-surface lg:aspect-square">
-            <Image
-              src={featuredProduct.image}
-              alt={featuredProduct.name}
-              fill
-              className="object-cover object-center"
-              sizes="(min-width: 1024px) 50vw, 100vw"
-            />
+        {/* Header */}
+        <div className="mb-12 flex items-end justify-between">
+          <div>
+            <p className="mb-3 text-xs uppercase tracking-[0.24em] text-muted">
+              FEATURED COLLECTION
+            </p>
+            <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.03em] text-foreground md:text-5xl">
+              विशिष्ट संग्रह
+            </h2>
+            <p className="mt-2 font-display text-lg text-muted italic">
+              Nourishment crafted by nature, honoured by tradition.
+            </p>
           </div>
 
-          {/* Right: Editorial content */}
-          <div className="flex flex-col justify-center space-y-8">
-            {/* Eyebrow label */}
-            {featuredProduct.tagline && (
-              <p className="font-sanskrit text-[0.75rem] uppercase tracking-[0.28em] text-muted sm:text-sm">
-                {featuredProduct.tagline}
-              </p>
-            )}
-
-            {/* Product title */}
-            <h2 className="font-display text-[clamp(2rem,3.5vw,3.5rem)] leading-[0.95] tracking-[-0.04em] text-foreground">
-              {featuredProduct.name}
-            </h2>
-
-            {/* Origin */}
-            <p className="text-[0.75rem] uppercase tracking-[0.24em] text-muted">
-              {featuredProduct.origin}
-            </p>
-
-            {/* Editorial description */}
-            <p className="font-body text-base leading-7 text-muted/90 sm:text-lg sm:leading-8">
-              {featuredProduct.editorialDescription}
-            </p>
-
-            {/* Primary CTA */}
-            <div className="flex flex-col gap-4">
-              <Link
-                href={`/products/${featuredProduct.id}`}
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg border border-transparent bg-primary px-4 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/80 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-              >
-                Discover {featuredProduct.name}
-              </Link>
-
-              {/* Secondary link */}
-              <Link
-                href="/products"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline"
-              >
-                View Full Collection
-              </Link>
-            </div>
+          {/* Scroll arrows */}
+          <div className="hidden gap-2 md:flex">
+            <button
+              type="button"
+              onClick={() => scroll("left")}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-gold hover:text-gold"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => scroll("right")}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-gold hover:text-gold"
+            >
+              <ChevronRight className="size-4" />
+            </button>
           </div>
         </div>
+
+        {/* Horizontal scroll container */}
+        <div
+          ref={scrollRef}
+          className="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-4 md:mx-0 md:px-0"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          {collectionContent.map((product, index) => {
+            const shloka = productShlokas[product.id];
+            const altitude = productAltitudes[product.id];
+
+            return (
+              <div
+                key={product.id}
+                className="w-[80vw] flex-none snap-start md:w-[400px]"
+              >
+                <Link href={`/products/${product.id}`} className="group block">
+                  {/* Product image */}
+                  <div className="relative mb-6 aspect-[3/4] overflow-hidden rounded-2xl bg-surface">
+                    {product.image ? (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(min-width: 768px) 400px, 80vw"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-surface/50">
+                        <div className="space-y-2 p-6 text-center">
+                          <p className="font-display text-2xl text-foreground/20">
+                            {product.name}
+                          </p>
+                          <p className="text-xs uppercase tracking-widest text-muted/40">
+                            Coming Soon
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Number overlay */}
+                    <div className="absolute top-4 left-4">
+                      <span className="font-display text-5xl leading-none text-white/20">
+                        0{index + 1}
+                      </span>
+                    </div>
+
+                    {/* Altitude badge */}
+                    {altitude && (
+                      <div className="absolute right-4 bottom-4 rounded-full bg-black/40 px-3 py-1 backdrop-blur-sm">
+                        <p className="text-xs tracking-wider text-white/80">
+                          ▲ {altitude}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product info */}
+                  <div className="space-y-3 px-1">
+                    {/* Shloka */}
+                    {shloka && (
+                      <div className="border-l-2 border-gold/40 pl-3">
+                        <p
+                          lang="sa"
+                          className="font-sanskrit text-sm leading-relaxed text-gold"
+                        >
+                          {shloka.sanskrit}
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted italic">
+                          {shloka.translation}
+                        </p>
+                      </div>
+                    )}
+
+                    <p className="text-xs uppercase tracking-[0.2em] text-muted">
+                      {product.origin}
+                    </p>
+
+                    <h3 className="font-display text-2xl tracking-[-0.02em] text-foreground transition-colors group-hover:text-forest">
+                      {product.name}
+                    </h3>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <p className="font-heading text-lg text-foreground">
+                        ₹{product.price.toLocaleString("en-IN")}
+                      </p>
+                      <span className="text-xs tracking-[0.15em] text-muted uppercase transition-colors group-hover:text-forest">
+                        Discover →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* View all link */}
+        <div className="mt-10 text-center">
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 border-b border-border pb-1 text-sm tracking-[0.2em] text-muted uppercase transition-colors hover:border-foreground hover:text-foreground"
+          >
+            View Full Collection
+          </Link>
+        </div>
       </Container>
-    </Section>
+    </section>
   );
 }

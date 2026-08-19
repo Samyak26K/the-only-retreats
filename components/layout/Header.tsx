@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -95,10 +96,54 @@ export function Header() {
           <Link
             href={navigationContent.brand.href}
             className={cn(
-              "hidden origin-left flex-col leading-tight transition-transform duration-normal md:flex",
+              "hidden origin-left items-center gap-3 leading-tight transition-transform duration-normal md:flex",
               showScrolled ? "scale-100" : "scale-110",
             )}
           >
+            <Image
+              src="/logo.png"
+              alt="The Only Retreats"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
+            <div className="flex flex-col leading-tight">
+              <span
+                className={cn(
+                  "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
+                  showScrolled ? "text-foreground" : "text-background",
+                )}
+              >
+                {navigationContent.brand.name}
+              </span>
+              <span
+                className={cn(
+                  "font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal",
+                  showScrolled ? "text-muted" : "text-background/80",
+                )}
+              >
+                {navigationContent.brand.tagline}
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* Mobile lockup: centered independent of the hamburger/search widths. */}
+        <Link
+          href={navigationContent.brand.href}
+          className={cn(
+            "absolute top-1/2 left-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 items-center gap-2 text-center leading-tight transition-transform duration-normal md:hidden",
+            showScrolled ? "scale-100" : "scale-110",
+          )}
+        >
+          <Image
+            src="/logo.png"
+            alt="The Only Retreats"
+            width={32}
+            height={32}
+            className="object-contain"
+          />
+          <div className="flex flex-col items-center leading-tight">
             <span
               className={cn(
                 "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
@@ -109,39 +154,13 @@ export function Header() {
             </span>
             <span
               className={cn(
-                "font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal",
+                "hidden font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal sm:block",
                 showScrolled ? "text-muted" : "text-background/80",
               )}
             >
               {navigationContent.brand.tagline}
             </span>
-          </Link>
-        </div>
-
-        {/* Mobile lockup: centered independent of the hamburger/search widths. */}
-        <Link
-          href={navigationContent.brand.href}
-          className={cn(
-            "absolute top-1/2 left-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center leading-tight transition-transform duration-normal md:hidden",
-            showScrolled ? "scale-100" : "scale-110",
-          )}
-        >
-          <span
-            className={cn(
-              "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
-              showScrolled ? "text-foreground" : "text-background",
-            )}
-          >
-            {navigationContent.brand.name}
-          </span>
-          <span
-            className={cn(
-              "hidden font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal sm:block",
-              showScrolled ? "text-muted" : "text-background/80",
-            )}
-          >
-            {navigationContent.brand.tagline}
-          </span>
+          </div>
         </Link>
 
         <DesktopNavigation isScrolled={showScrolled} />
