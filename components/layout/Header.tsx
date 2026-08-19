@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import { DesktopNavigation } from "@/components/layout/DesktopNavigation";
 import { MobileDrawer } from "@/components/layout/MobileDrawer";
@@ -35,7 +35,10 @@ export function Header() {
     }>
   >([]);
   const router = useRouter();
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
   const isScrolled = useHeaderScroll(12);
+  const showScrolled = isScrolled || !isHomepage;
   const itemCount = useCartStore((state) => state.getItemCount());
 
   useEffect(() => setMounted(true), []);
@@ -69,7 +72,7 @@ export function Header() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-colors duration-normal",
-        isScrolled
+        showScrolled
           ? "bg-surface/95 shadow-md backdrop-blur-sm supports-backdrop-filter:bg-surface/85"
           : "bg-transparent",
       )}
@@ -83,7 +86,7 @@ export function Header() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-drawer"
             onClick={() => setMobileOpen(true)}
-            className={cn(utilityButtonClasses(isScrolled), "md:hidden")}
+            className={cn(utilityButtonClasses(showScrolled), "md:hidden")}
           >
             <Menu className="size-6" />
           </button>
@@ -93,13 +96,13 @@ export function Header() {
             href={navigationContent.brand.href}
             className={cn(
               "hidden origin-left flex-col leading-tight transition-transform duration-normal md:flex",
-              isScrolled ? "scale-100" : "scale-110",
+              showScrolled ? "scale-100" : "scale-110",
             )}
           >
             <span
               className={cn(
                 "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
-                isScrolled ? "text-foreground" : "text-background",
+                showScrolled ? "text-foreground" : "text-background",
               )}
             >
               {navigationContent.brand.name}
@@ -107,7 +110,7 @@ export function Header() {
             <span
               className={cn(
                 "font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal",
-                isScrolled ? "text-muted" : "text-background/80",
+                showScrolled ? "text-muted" : "text-background/80",
               )}
             >
               {navigationContent.brand.tagline}
@@ -120,13 +123,13 @@ export function Header() {
           href={navigationContent.brand.href}
           className={cn(
             "absolute top-1/2 left-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center leading-tight transition-transform duration-normal md:hidden",
-            isScrolled ? "scale-100" : "scale-110",
+            showScrolled ? "scale-100" : "scale-110",
           )}
         >
           <span
             className={cn(
               "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
-              isScrolled ? "text-foreground" : "text-background",
+              showScrolled ? "text-foreground" : "text-background",
             )}
           >
             {navigationContent.brand.name}
@@ -134,21 +137,21 @@ export function Header() {
           <span
             className={cn(
               "hidden font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal sm:block",
-              isScrolled ? "text-muted" : "text-background/80",
+              showScrolled ? "text-muted" : "text-background/80",
             )}
           >
             {navigationContent.brand.tagline}
           </span>
         </Link>
 
-        <DesktopNavigation isScrolled={isScrolled} />
+        <DesktopNavigation isScrolled={showScrolled} />
 
         <div className="flex items-center gap-1">
           <button
             type="button"
             aria-label="Search"
             onClick={() => setSearchOpen(true)}
-            className={utilityButtonClasses(isScrolled)}
+            className={utilityButtonClasses(showScrolled)}
           >
             <Search className="size-6" />
           </button>
@@ -156,7 +159,7 @@ export function Header() {
             type="button"
             aria-label={navigationContent.utility.account.label}
             className={cn(
-              utilityButtonClasses(isScrolled),
+              utilityButtonClasses(showScrolled),
               "hidden md:inline-flex",
             )}
           >
@@ -166,7 +169,7 @@ export function Header() {
             href="/cart"
             aria-label="Cart"
             className={cn(
-              utilityButtonClasses(isScrolled),
+              utilityButtonClasses(showScrolled),
               "relative md:hidden",
             )}
           >
@@ -181,7 +184,7 @@ export function Header() {
             href="/cart"
             aria-label={navigationContent.utility.cart.label}
             className={cn(
-              utilityButtonClasses(isScrolled),
+              utilityButtonClasses(showScrolled),
               "relative hidden md:inline-flex",
             )}
           >

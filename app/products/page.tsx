@@ -2,27 +2,55 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
-import {
-  getAllProducts,
-  getStartingPrice,
-  type ProductStatus,
-} from "@/lib/content/product";
+import { prisma } from "@/lib/prisma";
 
-function statusLabel(status: ProductStatus) {
+function statusLabel(status: string) {
   switch (status) {
-    case "comingSoon":
+    case "COMING_SOON":
       return "Coming Soon";
-    case "seasonal":
+    case "SEASONAL":
       return "Seasonal";
-    case "soldOut":
+    case "SOLD_OUT":
       return "Sold Out";
     default:
       return null;
   }
 }
 
-export default function ProductsPage() {
-  const products = getAllProducts();
+function toNumber(value: unknown) {
+  return typeof value === "number" ? value : Number(value);
+}
+
+export default async function ProductsPage() {
+  const products = await prisma.product.findMany({
+    where: {
+      status: { in: ["ACTIVE", "COMING_SOON", "SEASONAL", "SOLD_OUT"] },
+    },
+    orderBy: { name: "asc" },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      status: true,
+      primaryOrigin: {
+        select: { name: true },
+      },
+      media: {
+        orderBy: { sortOrder: "asc" },
+        select: {
+          url: true,
+          alt: true,
+        },
+        take: 1,
+      },
+      variants: {
+        where: { status: "ACTIVE" },
+        select: {
+          sellingPrice: true,
+        },
+      },
+    },
+  });
 
   return (
     <section className="bg-background">
@@ -32,7 +60,7 @@ export default function ProductsPage() {
       />
 
       <Container>
-        <header className="py-16 md:py-24">
+        <header className="py-10 md:py-16">
           <p className="text-xs uppercase tracking-[0.2em] text-muted">
             THE COLLECTION
           </p>
@@ -49,8 +77,12 @@ export default function ProductsPage() {
         ) : (
           <ul className="grid grid-cols-1 gap-8 pb-24 sm:grid-cols-2 md:gap-10 lg:grid-cols-3">
             {products.map((product) => {
-              const startingPrice = getStartingPrice(product);
-              const heroImage = product.hero.media.desktop.trim();
+              const prices = product.variants
+                .map((variant) => toNumber(variant.sellingPrice))
+                .filter((price) => Number.isFinite(price));
+              const startingPrice =
+                prices.length === 0 ? undefined : Math.min(...prices);
+              const heroImage = product.media[0]?.url?.trim() ?? "";
               const badge = statusLabel(product.status);
               const priceLabel =
                 startingPrice === undefined
@@ -66,19 +98,23 @@ export default function ProductsPage() {
                       {heroImage ? (
                         <Image
                           src={heroImage}
-                          alt={product.hero.media.alt}
+                          alt={product.media[0]?.alt || product.name}
                           fill
                           className="object-cover"
                           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                         />
                       ) : (
-                        <div className="absolute inset-0 bg-stone-100" />
+                        <div className="flex h-full w-full items-center justify-center bg-surface">
+                          <p className="text-xs uppercase tracking-[0.15em] text-muted">
+                            {product.name}
+                          </p>
+                        </div>
                       )}
                     </div>
 
                     <div className="mt-4">
                       <p className="text-xs uppercase tracking-[0.15em] text-muted">
-                        {product.origin}
+                        {product.primaryOrigin?.name ?? ""}
                       </p>
                       <h2 className="mt-1 font-heading text-xl text-foreground">
                         {product.name}
