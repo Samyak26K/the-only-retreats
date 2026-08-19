@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { z } from "zod";
 
 import { Heading } from "@/components/ui/Heading";
+import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
 import { getProductById, updateProduct } from "@/lib/services/products";
 import {
@@ -87,6 +88,11 @@ export default async function AdminProductDetailPage({
     notFound();
   }
 
+  const media = await prisma.productMedia.findMany({
+    where: { productId: id },
+    orderBy: { sortOrder: "asc" },
+  });
+
   async function updateProductAction(formData: FormData) {
     "use server";
 
@@ -120,6 +126,33 @@ export default async function AdminProductDetailPage({
         role: writeAdminContext.roleName,
       },
     });
+  }
+
+  async function addImageAction(formData: FormData) {
+    "use server";
+
+    await requirePermission("products.write");
+
+    const url = formData.get("url") as string;
+    const alt = formData.get("alt") as string;
+
+    if (!url?.trim()) return;
+
+    const existingCount = await prisma.productMedia.count({
+      where: { productId: id },
+    });
+
+    await prisma.productMedia.create({
+      data: {
+        productId: id,
+        type: "image",
+        url: url.trim(),
+        alt: alt?.trim() || null,
+        sortOrder: existingCount,
+      },
+    });
+
+    redirect(`/admin/products/${id}`);
   }
 
   async function createVariantAction(formData: FormData) {
@@ -424,6 +457,68 @@ export default async function AdminProductDetailPage({
           Save changes
         </button>
       </form>
+
+      <section className="space-y-4 rounded-2xl border border-border bg-background p-6 shadow-sm">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">
+            Product Images
+          </h2>
+          <p className="text-sm text-muted">
+            Add Cloudinary image URLs for this product.
+          </p>
+        </div>
+
+        {media.map((item) => (
+          <div
+            key={item.id}
+            className="flex items-center gap-4 rounded-lg border border-border p-3"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.url}
+              alt={item.alt ?? ""}
+              className="h-16 w-16 rounded-lg object-cover"
+            />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm text-foreground">{item.url}</p>
+              <p className="text-xs text-muted">Sort order: {item.sortOrder}</p>
+            </div>
+          </div>
+        ))}
+
+        <form
+          action={addImageAction}
+          className="space-y-3 border-t border-border pt-4"
+        >
+          <div className="grid gap-3 md:grid-cols-2">
+            <label className="space-y-1 text-sm text-muted">
+              <span className="text-foreground">Image URL</span>
+              <input
+                name="url"
+                type="text"
+                required
+                placeholder="https://res.cloudinary.com/..."
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
+              />
+            </label>
+            <label className="space-y-1 text-sm text-muted">
+              <span className="text-foreground">Alt text</span>
+              <input
+                name="alt"
+                type="text"
+                placeholder="Product image description"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
+              />
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          >
+            Add Image
+          </button>
+        </form>
+      </section>
 
       <section className="space-y-4 rounded-2xl border border-border bg-background p-6 shadow-sm">
         <div>
