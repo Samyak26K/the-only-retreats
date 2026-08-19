@@ -85,10 +85,30 @@ export function FooterSection() {
           </div>
 
           {/* Bottom section */}
-          <div className="space-y-6 pt-8 border-t border-border">
+          <div className="space-y-6 border-t border-border pt-8">
             <p className="font-body text-sm text-muted/90">
               {footerContent.bottom.copyright}
             </p>
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              <Link
+                href="/terms"
+                className="text-xs text-muted/70 transition-colors hover:text-foreground"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href="/privacy"
+                className="text-xs text-muted/70 transition-colors hover:text-foreground"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/returns"
+                className="text-xs text-muted/70 transition-colors hover:text-foreground"
+              >
+                Returns & Refunds
+              </Link>
+            </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="font-sanskrit text-[0.75rem] uppercase tracking-[0.24em] text-muted">
                 {footerContent.bottom.madeIn}
