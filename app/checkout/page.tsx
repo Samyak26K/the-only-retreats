@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
+import { useAddressStore } from "@/lib/addresses";
 import { useCartStore } from "@/lib/cart";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,9 @@ export default function CheckoutPage() {
   const items = useCartStore((state) => state.items);
   const getSubtotal = useCartStore((state) => state.getSubtotal);
   const clearCart = useCartStore((state) => state.clearCart);
+  const addAddress = useAddressStore((state) => state.addAddress);
+  const getDefault = useAddressStore((state) => state.getDefault);
+  const addresses = useAddressStore((state) => state.addresses);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -68,6 +72,20 @@ export default function CheckoutPage() {
       setPhone(user.phoneNumbers[0]?.phoneNumber ?? "");
     }
   }, [user]);
+
+  useEffect(() => {
+    const defaultAddr = getDefault();
+    if (defaultAddr && !fullName) {
+      setFullName(defaultAddr.fullName);
+      setPhone(defaultAddr.phone);
+      setAddressLine1(defaultAddr.addressLine1);
+      setCity(defaultAddr.city);
+      setState(defaultAddr.state);
+      setPincode(defaultAddr.pincode);
+    }
+    // Prefill once from the saved default address.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setHasHydrated(useCartStore.persist.hasHydrated());
@@ -181,6 +199,16 @@ export default function CheckoutPage() {
             console.log("Verify success:", verifyData);
             setPaymentCompleted(true);
             clearCart();
+            addAddress({
+              fullName,
+              phone,
+              addressLine1,
+              addressLine2,
+              city,
+              state,
+              pincode,
+              isDefault: addresses.length === 0,
+            });
             console.log(
               "Cart cleared, redirecting to:",
               "/checkout/confirmation?orderNumber=" + verifyData.orderNumber,

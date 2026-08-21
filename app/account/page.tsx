@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { AddressSection } from "@/components/account/AddressSection";
 import { WishlistSection } from "@/components/account/WishlistSection";
 import { SignOutButton } from "@/components/shared/SignOutButton";
 import { Container } from "@/components/ui/Container";
@@ -196,14 +197,7 @@ export default async function AccountPage() {
               <h2 className="mb-4 font-heading text-base font-semibold tracking-[0.15em] text-foreground uppercase">
                 Saved Addresses
               </h2>
-              <div className="rounded-2xl border border-dashed border-border p-8 text-center">
-                <p className="mb-3 text-sm text-muted">
-                  No saved addresses yet
-                </p>
-                <p className="text-xs text-muted/60">
-                  Your address will be saved after your first order
-                </p>
-              </div>
+              <AddressSection />
             </section>
 
             <section id="wishlist" className="border-t border-border pt-10">
