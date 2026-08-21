@@ -72,11 +72,12 @@ export function Header() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-colors duration-normal",
-        "border-b border-border bg-background",
-        isTransparentHero && "md:border-transparent md:bg-transparent",
+        isTransparentHero
+          ? "border-transparent bg-transparent"
+          : "border-b border-border bg-background",
         isHomepage &&
           isScrolled &&
-          "md:border-transparent md:bg-background/95 md:backdrop-blur",
+          "border-transparent bg-background/95 backdrop-blur",
       )}
     >
       <Container className="relative flex h-(--navbar-height-mobile) items-center justify-between gap-4 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
@@ -88,7 +89,11 @@ export function Header() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-drawer"
             onClick={() => setMobileOpen(true)}
-            className={cn(utilityButtonClasses(false), "md:hidden")}
+            className={cn(
+              utilityButtonClasses(false),
+              "md:hidden",
+              isTransparentHero && "text-white hover:bg-white/10",
+            )}
           >
             <Menu className="size-6" />
           </button>
@@ -139,7 +144,10 @@ export function Header() {
             alt="The Only Retreats"
             width={36}
             height={36}
-            className="object-contain"
+            className={cn(
+              "object-contain transition-all duration-300",
+              isTransparentHero && "brightness-0 invert",
+            )}
           />
         </Link>
 
@@ -150,7 +158,10 @@ export function Header() {
             type="button"
             aria-label="Search"
             onClick={() => setSearchOpen(true)}
-            className={utilityButtonClasses(isTransparentHero)}
+            className={cn(
+              utilityButtonClasses(isTransparentHero),
+              isTransparentHero && "text-white",
+            )}
           >
             <Search className="size-6" />
           </button>
@@ -167,7 +178,11 @@ export function Header() {
           <Link
             href="/cart"
             aria-label="Cart"
-            className={cn(utilityButtonClasses(false), "relative md:hidden")}
+            className={cn(
+              utilityButtonClasses(false),
+              "relative md:hidden",
+              isTransparentHero && "text-white",
+            )}
           >
             <ShoppingBag className="size-6" />
             {mounted && itemCount > 0 && (

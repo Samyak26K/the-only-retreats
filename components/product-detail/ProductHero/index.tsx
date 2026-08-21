@@ -109,82 +109,80 @@ export function ProductHero({ product }: ProductHeroProps) {
               </span>
             </nav>
             <figure className="min-w-0">
-              <div className="flex flex-row gap-3">
-                {imageMedia.length > 0 ? (
-                  <ul className="flex shrink-0 flex-col gap-2">
-                    {imageMedia.map((item, index) => {
-                      const isSelected = index === imageIndex;
-
-                      return (
-                        <li key={item.id}>
-                          <button
-                            type="button"
-                            onClick={() => setImageIndex(index)}
-                            aria-label={`View product image ${index + 1}`}
-                            aria-pressed={isSelected}
-                            className={`size-14 overflow-hidden rounded-lg border p-0.5 ${
-                              isSelected ? "border-gold" : "border-border"
-                            }`}
-                          >
-                            <Image
-                              src={item.src}
-                              alt=""
-                              width={56}
-                              height={56}
-                              loading="lazy"
-                              className="h-full w-full object-cover"
-                            />
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ) : null}
-
-                <div className="min-w-0 flex-1 rounded-(--radius-panel) border border-border/80 bg-surface p-2 shadow-lg sm:p-3">
-                  <div
-                    className="relative overflow-hidden rounded-xl bg-cloud"
-                    style={{ height: "520px" }}
-                  >
-                    <Image
-                      src={currentImage.src}
-                      alt={currentImage.alt}
-                      fill
-                      priority
-                      className="object-cover object-center"
-                      sizes="(min-width: 1024px) 55vw, 100vw"
-                    />
-                    {imageMedia.length > 1 ? (
-                      <>
-                        <button
-                          type="button"
-                          aria-label="Previous image"
-                          onClick={() =>
-                            setImageIndex((index) => Math.max(0, index - 1))
-                          }
-                          disabled={imageIndex === 0}
-                          className="absolute top-1/2 left-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/80 transition-colors hover:bg-background disabled:opacity-30"
-                        >
-                          <ChevronLeft className="size-4" />
-                        </button>
-                        <button
-                          type="button"
-                          aria-label="Next image"
-                          onClick={() =>
-                            setImageIndex((index) =>
-                              Math.min(imageMedia.length - 1, index + 1),
-                            )
-                          }
-                          disabled={imageIndex === imageMedia.length - 1}
-                          className="absolute top-1/2 right-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/80 transition-colors hover:bg-background disabled:opacity-30"
-                        >
-                          <ChevronRight className="size-4" />
-                        </button>
-                      </>
-                    ) : null}
-                  </div>
+              <div className="min-w-0 rounded-(--radius-panel) border border-border/80 bg-surface p-2 shadow-lg sm:p-3">
+                <div
+                  className="relative overflow-hidden rounded-xl bg-cloud"
+                  style={{ height: "420px" }}
+                >
+                  <Image
+                    src={currentImage.src}
+                    alt={currentImage.alt}
+                    fill
+                    priority
+                    className="object-cover object-center"
+                    sizes="(min-width: 1024px) 55vw, 100vw"
+                  />
+                  {imageMedia.length > 1 ? (
+                    <>
+                      <button
+                        type="button"
+                        aria-label="Previous image"
+                        onClick={() =>
+                          setImageIndex((index) => Math.max(0, index - 1))
+                        }
+                        disabled={imageIndex === 0}
+                        className="absolute top-1/2 left-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/80 transition-colors hover:bg-background disabled:opacity-30"
+                      >
+                        <ChevronLeft className="size-4" />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Next image"
+                        onClick={() =>
+                          setImageIndex((index) =>
+                            Math.min(imageMedia.length - 1, index + 1),
+                          )
+                        }
+                        disabled={imageIndex === imageMedia.length - 1}
+                        className="absolute top-1/2 right-3 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/80 transition-colors hover:bg-background disabled:opacity-30"
+                      >
+                        <ChevronRight className="size-4" />
+                      </button>
+                    </>
+                  ) : null}
                 </div>
               </div>
+
+              {imageMedia.length > 1 ? (
+                <ul className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                  {imageMedia.map((item, index) => {
+                    const isSelected = index === imageIndex;
+
+                    return (
+                      <li key={item.id} className="shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setImageIndex(index)}
+                          aria-label={`View product image ${index + 1}`}
+                          aria-pressed={isSelected}
+                          className={`h-16 w-16 overflow-hidden rounded-lg border p-0.5 transition-colors ${
+                            isSelected ? "border-gold" : "border-border"
+                          }`}
+                        >
+                          <Image
+                            src={item.src}
+                            alt=""
+                            width={64}
+                            height={64}
+                            loading="lazy"
+                            className="h-full w-full rounded-lg object-cover"
+                          />
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : null}
             </figure>
           </div>
 
