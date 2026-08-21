@@ -87,13 +87,7 @@ function HiddenProductFields({
             key={key}
             type="hidden"
             name={key}
-            value={
-              values[key] === false
-                ? "false"
-                : values[key] === true
-                  ? "true"
-                  : (values[key] ?? "")
-            }
+            value={String(values[key] ?? "")}
           />
         ))}
       {!skip.has("featured") && values.featured ? (
