@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ShoppingBag, UserRound, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 import { MobileNavigation } from "@/components/layout/MobileNavigation";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
@@ -18,7 +20,7 @@ const drawerCloseButtonClasses =
   "flex size-12 items-center justify-center rounded-full text-foreground transition-colors duration-fast hover:bg-surface";
 
 const drawerUtilityRowClasses =
-  "flex min-h-14 items-center gap-4 rounded-lg px-2 -mx-2 text-left transition-colors duration-fast hover:bg-surface";
+  "flex min-h-11 items-center gap-3 rounded-lg px-2 -mx-2 text-left transition-colors duration-fast hover:bg-surface";
 
 export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -69,14 +71,23 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
         aria-label={navigationContent.menu.title}
         inert={!open}
         className={cn(
-          "fixed inset-y-0 right-0 z-[60] flex w-[85vw] max-w-sm flex-col overflow-y-auto rounded-l-3xl border-l border-border bg-background p-8 shadow-lg transition-transform duration-slow",
-          open ? "translate-x-0" : "translate-x-full",
+          "fixed inset-y-0 left-0 z-[60] flex w-[85vw] max-w-xs flex-col overflow-y-auto rounded-r-3xl border-r border-border bg-background p-6 shadow-lg transition-transform duration-slow",
+          open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold uppercase tracking-[0.24em] text-muted">
-            {navigationContent.menu.title}
-          </span>
+        <div className="mb-2 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/logo.png"
+              alt="The Only Retreats"
+              width={28}
+              height={28}
+              className="object-contain"
+            />
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground">
+              The Only Retreats
+            </span>
+          </div>
           <button
             type="button"
             aria-label={navigationContent.menu.closeLabel}
@@ -87,23 +98,29 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
           </button>
         </div>
 
-        <div className="mt-12 flex-1">
+        <div className="mt-8 flex-1">
           <MobileNavigation onNavigate={onClose} />
         </div>
 
-        <div className="mt-10 flex flex-col gap-1 border-t border-border pt-6">
-          <button type="button" className={drawerUtilityRowClasses}>
-            <UserRound className="size-6 text-muted" aria-hidden="true" />
-            <span className="text-base font-medium text-foreground">
-              {navigationContent.utility.account.label}
+        <div className="mt-6 flex flex-col gap-1 border-t border-border pt-4">
+          <Link
+            href="/account"
+            onClick={onClose}
+            className={drawerUtilityRowClasses}
+          >
+            <UserRound className="size-5 text-muted" aria-hidden="true" />
+            <span className="text-sm font-medium text-foreground">
+              My Account
             </span>
-          </button>
-          <button type="button" className={drawerUtilityRowClasses}>
-            <ShoppingBag className="size-6 text-muted" aria-hidden="true" />
-            <span className="text-base font-medium text-foreground">
-              {navigationContent.utility.cart.label}
-            </span>
-          </button>
+          </Link>
+          <Link
+            href="/cart"
+            onClick={onClose}
+            className={drawerUtilityRowClasses}
+          >
+            <ShoppingBag className="size-5 text-muted" aria-hidden="true" />
+            <span className="text-sm font-medium text-foreground">Cart</span>
+          </Link>
         </div>
       </aside>
     </div>,

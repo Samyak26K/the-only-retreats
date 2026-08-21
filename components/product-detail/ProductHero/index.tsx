@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/lib/cart";
 import { type Product } from "@/lib/content/product";
 import { cn } from "@/lib/utils";
+import { useWishlistStore } from "@/lib/wishlist";
 
 type ProductHeroProps = {
   product: Product;
@@ -33,8 +34,13 @@ export function ProductHero({ product }: ProductHeroProps) {
   );
   const [quantity, setQuantity] = useState(1);
   const [imageIndex, setImageIndex] = useState(0);
-  const [wishlisted, setWishlisted] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const addToWishlist = useWishlistStore((state) => state.addItem);
+  const removeFromWishlist = useWishlistStore((state) => state.removeItem);
+  const isWishlisted = useWishlistStore((state) =>
+    state.isWishlisted(product.id),
+  );
   const [pincode, setPincode] = useState("");
   const [pincodeStatus, setPincodeStatus] = useState<
     "idle" | "loading" | "serviceable" | "not-serviceable"
@@ -47,6 +53,9 @@ export function ProductHero({ product }: ProductHeroProps) {
     src: product.hero.media.desktop,
     alt: product.hero.media.alt,
   };
+  const wishlisted = mounted && isWishlisted;
+
+  useEffect(() => setMounted(true), []);
 
   const checkPincode = async () => {
     if (pincode.length !== 6) return;
@@ -351,7 +360,22 @@ export function ProductHero({ product }: ProductHeroProps) {
               </Button>
               <button
                 type="button"
-                onClick={() => setWishlisted((w) => !w)}
+                onClick={() => {
+                  if (wishlisted) {
+                    removeFromWishlist(product.id);
+                  } else {
+                    addToWishlist({
+                      productId: product.id,
+                      productSlug: product.slug,
+                      productName: product.name,
+                      imageSrc:
+                        product.media.find((m) => m.type === "image")?.src ??
+                        "",
+                      price: selectedVariant?.price ?? 0,
+                      currency: product.currency,
+                    });
+                  }
+                }}
                 className={cn(
                   "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border transition-colors",
                   wishlisted

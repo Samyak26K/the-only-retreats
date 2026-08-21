@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { WishlistSection } from "@/components/account/WishlistSection";
 import { SignOutButton } from "@/components/shared/SignOutButton";
 import { Container } from "@/components/ui/Container";
 import { prisma } from "@/lib/prisma";
@@ -25,24 +26,30 @@ export default async function AccountPage() {
   const user = await currentUser();
   if (!user) redirect("/account/sign-in");
 
-  const customer = await prisma.customer.findFirst({
-    where: { email: user.emailAddresses[0]?.emailAddress },
-    include: {
-      orders: {
-        orderBy: { createdAt: "desc" },
-        take: 10,
-        select: {
-          id: true,
-          orderNumber: true,
-          status: true,
-          total: true,
-          createdAt: true,
-          currency: true,
-          fulfillmentStatus: true,
+  const userEmail = user.emailAddresses[0]?.emailAddress;
+
+  const customer = userEmail
+    ? await prisma.customer.findFirst({
+        where: {
+          OR: [{ email: userEmail }, { clerkUserId: user.id }],
         },
-      },
-    },
-  });
+        include: {
+          orders: {
+            orderBy: { createdAt: "desc" },
+            take: 10,
+            select: {
+              id: true,
+              orderNumber: true,
+              status: true,
+              total: true,
+              createdAt: true,
+              currency: true,
+              fulfillmentStatus: true,
+            },
+          },
+        },
+      })
+    : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -203,18 +210,7 @@ export default async function AccountPage() {
               <h2 className="mb-4 font-heading text-base font-semibold tracking-[0.15em] text-foreground uppercase">
                 Wishlist
               </h2>
-              <div className="rounded-2xl border border-dashed border-border p-8 text-center">
-                <p className="mb-3 text-2xl">♡</p>
-                <p className="mb-3 text-sm text-muted">
-                  Your wishlist is empty
-                </p>
-                <Link
-                  href="/products"
-                  className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2 text-xs tracking-[0.15em] text-foreground uppercase transition-colors hover:border-gold hover:text-gold"
-                >
-                  Explore Products
-                </Link>
-              </div>
+              <WishlistSection />
             </section>
 
             <section id="rewards" className="border-t border-border pt-10">

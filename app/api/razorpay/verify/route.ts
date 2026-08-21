@@ -35,8 +35,13 @@ type VerifyPaymentBody = {
 };
 
 export async function POST(req: NextRequest) {
+  console.log("=== VERIFY ROUTE CALLED ===");
   try {
     const body = (await req.json()) as VerifyPaymentBody;
+    console.log("Body parsed:", {
+      orderId: body.razorpay_order_id,
+      paymentId: body.razorpay_payment_id,
+    });
     const {
       razorpay_order_id,
       razorpay_payment_id,
@@ -58,12 +63,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const orderNumber = "TOR-" + Date.now();
-    const nameParts = customerDetails.fullName.trim().split(" ");
-    const firstName = nameParts[0] ?? "";
-    const lastName = nameParts.slice(1).join(" ");
+    console.log("Signature verified successfully");
 
-    let customer = await prisma.customer.findUnique({
+    const orderNumber = "TOR-" + Date.now();
+
+    let customer = await prisma.customer.findFirst({
       where: { email: customerDetails.email },
     });
 
@@ -72,12 +76,22 @@ export async function POST(req: NextRequest) {
         data: {
           clerkUserId: "guest-" + Date.now(),
           email: customerDetails.email,
-          firstName,
-          lastName,
+          firstName: customerDetails.fullName.split(" ")[0],
+          lastName:
+            customerDetails.fullName.split(" ").slice(1).join(" ") || "",
           phone: customerDetails.phone,
         },
       });
     }
+
+    if (customer && !customer.phone && customerDetails.phone) {
+      customer = await prisma.customer.update({
+        where: { id: customer.id },
+        data: { phone: customerDetails.phone },
+      });
+    }
+
+    console.log("Customer:", customer?.id);
 
     const order = await prisma.order.create({
       data: {
@@ -104,6 +118,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    console.log("Order created:", order.orderNumber);
+
+    console.log("=== VERIFY SUCCESS ===");
     return NextResponse.json({
       success: true,
       orderNumber,

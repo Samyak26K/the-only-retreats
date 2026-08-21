@@ -132,36 +132,15 @@ export function Header() {
         {/* Mobile lockup: centered independent of the hamburger/search widths. */}
         <Link
           href={navigationContent.brand.href}
-          className={cn(
-            "absolute top-1/2 left-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 items-center gap-2 text-center leading-tight transition-transform duration-normal md:hidden",
-            "scale-100",
-          )}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden"
         >
           <Image
             src="/logo.png"
             alt="The Only Retreats"
-            width={32}
-            height={32}
+            width={36}
+            height={36}
             className="object-contain"
           />
-          <div className="flex flex-col items-center leading-tight">
-            <span
-              className={cn(
-                "max-w-[160px] truncate font-heading text-sm font-semibold uppercase tracking-[0.15em] transition-colors duration-normal",
-                "text-foreground",
-              )}
-            >
-              {navigationContent.brand.name}
-            </span>
-            <span
-              className={cn(
-                "hidden font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal sm:block",
-                "text-muted",
-              )}
-            >
-              {navigationContent.brand.tagline}
-            </span>
-          </div>
         </Link>
 
         <DesktopNavigation isScrolled={!isTransparentHero} />

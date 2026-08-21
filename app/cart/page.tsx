@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/lib/cart";
 
 function formatPrice(amount: number, currency: string) {
@@ -267,12 +266,12 @@ export default function CartPage() {
                   </p>
                 </div>
 
-                <Button
-                  render={<Link href="/checkout" />}
-                  className="mt-2 h-11 w-full text-xs uppercase tracking-[0.15em]"
+                <Link
+                  href="/checkout"
+                  className="mt-2 inline-flex h-11 w-full items-center justify-center rounded-lg bg-forest text-xs font-medium tracking-[0.15em] text-white uppercase transition-colors hover:bg-forest/90"
                 >
                   Proceed to Checkout
-                </Button>
+                </Link>
 
                 <Link
                   href="/products"

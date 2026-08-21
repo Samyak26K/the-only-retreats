@@ -41,6 +41,7 @@ export default function CheckoutPage() {
   const [pincode, setPincode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasHydrated, setHasHydrated] = useState(false);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
 
   const fetchPincodeData = async (pin: string) => {
     if (pin.length !== 6) return;
@@ -81,10 +82,10 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (items.length === 0) {
+    if (items.length === 0 && !paymentCompleted) {
       router.push("/cart");
     }
-  }, [hasHydrated, items.length, router]);
+  }, [hasHydrated, items.length, router, paymentCompleted]);
 
   const handlePayment = async () => {
     setIsLoading(true);
@@ -131,47 +132,68 @@ export default function CheckoutPage() {
           razorpay_payment_id: string;
           razorpay_signature: string;
         }) => {
-          const verifyRes = await fetch("/api/razorpay/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              customerDetails: {
-                fullName,
-                email,
-                phone,
-                addressLine1,
-                addressLine2,
-                city,
-                state,
-                pincode,
-              },
-              items: items.map((item) => ({
-                variantId: item.variantId,
-                productId: item.productId,
-                productName: item.productName,
-                variantLabel: item.variantLabel,
-                price: item.price,
-                currency: item.currency,
-                quantity: item.quantity,
-              })),
-              subtotal: getSubtotal(),
-              currency: items[0]?.currency ?? "INR",
-            }),
-          });
+          console.log("Payment response received:", response);
+          try {
+            console.log("Sending verify request...");
+            const verifyRes = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                customerDetails: {
+                  fullName,
+                  email,
+                  phone,
+                  addressLine1,
+                  addressLine2,
+                  city,
+                  state,
+                  pincode,
+                },
+                items: items.map((item) => ({
+                  variantId: item.variantId,
+                  productId: item.productId,
+                  productName: item.productName,
+                  variantLabel: item.variantLabel,
+                  price: item.price,
+                  currency: item.currency,
+                  quantity: item.quantity,
+                })),
+                subtotal: getSubtotal(),
+                currency: items[0]?.currency ?? "INR",
+              }),
+            });
+            console.log("Verify response status:", verifyRes.status);
 
-          if (!verifyRes.ok) throw new Error("Payment verification failed");
-          const verifyData = await verifyRes.json();
+            if (!verifyRes.ok) {
+              const errData = await verifyRes.json();
+              console.error("Verify failed:", errData);
+              alert(
+                "Order save failed. Payment ID: " +
+                  response.razorpay_payment_id,
+              );
+              return;
+            }
 
-          clearCart();
-          router.push(
-            "/checkout/confirmation?orderNumber=" +
-              verifyData.orderNumber +
-              "&orderId=" +
-              verifyData.orderId,
-          );
+            const verifyData = await verifyRes.json();
+            console.log("Verify success:", verifyData);
+            setPaymentCompleted(true);
+            clearCart();
+            console.log(
+              "Cart cleared, redirecting to:",
+              "/checkout/confirmation?orderNumber=" + verifyData.orderNumber,
+            );
+            router.push(
+              "/checkout/confirmation?orderNumber=" +
+                verifyData.orderNumber +
+                "&orderId=" +
+                verifyData.orderId,
+            );
+          } catch (error) {
+            console.error("Handler error:", error);
+          }
         },
       };
 
@@ -225,7 +247,7 @@ export default function CheckoutPage() {
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,5fr)] lg:items-start lg:gap-12">
           <form
-            className="space-y-8 pb-24 md:pb-0"
+            className="space-y-8 pb-24 lg:pb-0"
             onSubmit={(event) => event.preventDefault()}
           >
             <p className="mb-6 rounded-lg border border-border bg-surface p-3 text-xs text-muted">
@@ -418,7 +440,7 @@ export default function CheckoutPage() {
             </fieldset>
 
             <div>
-              <div className="fixed right-0 bottom-0 left-0 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:relative md:right-auto md:bottom-auto md:left-auto md:border-0 md:bg-transparent md:p-0">
+              <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:relative md:right-auto md:bottom-auto md:left-auto md:border-0 md:bg-transparent md:p-0">
                 <Button
                   type="button"
                   disabled={isLoading}
@@ -442,7 +464,7 @@ export default function CheckoutPage() {
             </div>
           </form>
 
-          <aside className="sticky top-24 space-y-4 rounded-2xl border border-border bg-surface px-6 pt-6 pb-24 lg:p-6">
+          <aside className="sticky top-24 hidden space-y-4 rounded-2xl border border-border bg-surface px-6 pt-6 pb-24 lg:block lg:p-6">
             <div className="mb-4 h-0.5 w-8 bg-gold" />
 
             <h2 className="font-heading text-sm font-medium uppercase tracking-[0.15em] text-foreground">
