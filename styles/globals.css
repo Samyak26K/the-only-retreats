@@ -276,3 +276,29 @@
     scroll-behavior: auto !important;
   }
 }
+
+::view-transition-old(root) {
+  animation: 200ms ease-in fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 300ms ease-out fade-in;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { NewsletterForm } from "@/components/sections/Footer/NewsletterForm";
 import { Container } from "@/components/ui/Container";
 import { footerContent } from "@/lib/content/footer";
 
@@ -87,19 +88,10 @@ export function FooterSection() {
               <p className="text-sm leading-6 text-white/40">
                 {footerContent.newsletter.description}
               </p>
-              <form className="flex flex-col gap-3">
-                <input
-                  type="email"
-                  placeholder={footerContent.newsletter.placeholder}
-                  className="h-11 rounded-lg border border-white/10 bg-white/5 px-4 text-sm text-white placeholder:text-white/30 focus:border-gold/40 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="h-11 rounded-lg border border-gold/30 bg-gold/20 text-sm font-medium text-gold transition-colors hover:bg-gold/30"
-                >
-                  {footerContent.newsletter.buttonText}
-                </button>
-              </form>
+              <NewsletterForm
+                placeholder={footerContent.newsletter.placeholder}
+                buttonText={footerContent.newsletter.buttonText}
+              />
             </div>
           </div>
 

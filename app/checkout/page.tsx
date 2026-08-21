@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/lib/cart";
+import { cn } from "@/lib/utils";
 
 function formatPrice(amount: number, currency: string) {
   return new Intl.NumberFormat("en-IN", {
@@ -40,6 +41,21 @@ export default function CheckoutPage() {
   const [pincode, setPincode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [hasHydrated, setHasHydrated] = useState(false);
+
+  const fetchPincodeData = async (pin: string) => {
+    if (pin.length !== 6) return;
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+      const data = await res.json();
+      if (data[0]?.Status === "Success") {
+        const postOffice = data[0].PostOffice[0];
+        setCity(postOffice.District);
+        setState(postOffice.State);
+      }
+    } catch {
+      // ignore
+    }
+  };
 
   const subtotal = getSubtotal();
   const summaryCurrency = items[0]?.currency ?? "INR";
@@ -310,7 +326,11 @@ export default function CheckoutPage() {
                   autoComplete="address-level2"
                   value={city}
                   onChange={(event) => setCity(event.target.value)}
-                  className={inputClassName}
+                  readOnly={city !== ""}
+                  className={cn(
+                    inputClassName,
+                    city !== "" && "bg-surface text-muted",
+                  )}
                 />
               </div>
 
@@ -325,6 +345,7 @@ export default function CheckoutPage() {
                   autoComplete="address-level1"
                   value={state}
                   onChange={(event) => setState(event.target.value)}
+                  disabled={state !== ""}
                   className={inputClassName}
                 >
                   <option value="">Select State</option>
@@ -381,9 +402,18 @@ export default function CheckoutPage() {
                   autoComplete="postal-code"
                   maxLength={6}
                   value={pincode}
-                  onChange={(event) => setPincode(event.target.value)}
+                  onChange={(event) => {
+                    setPincode(event.target.value);
+                    if (event.target.value.length === 6) {
+                      fetchPincodeData(event.target.value);
+                    }
+                  }}
+                  placeholder="Enter 6-digit pincode"
                   className={inputClassName}
                 />
+                <p className="mt-1 text-[0.6rem] text-muted">
+                  City and state will be auto-filled
+                </p>
               </div>
             </fieldset>
 

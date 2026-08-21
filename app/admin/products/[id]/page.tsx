@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { z } from "zod";
 
+import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
@@ -18,6 +19,9 @@ import {
 } from "@/lib/validation/service-schemas";
 
 const cuidSchema = z.string().cuid();
+
+const inputClassName =
+  "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:border-gold focus:outline-none";
 
 function formatCurrency(amount: number, currency: string) {
   return new Intl.NumberFormat("en-IN", {
@@ -48,6 +52,44 @@ function toFeedbackMessage(value: string | undefined) {
   };
 
   return messages[value] ?? "Operation could not be completed.";
+}
+
+type ProductEditValues = {
+  name: string;
+  slug: string;
+  brand: string;
+  shortDescription: string;
+  longDescription: string;
+  status: string;
+  featured: boolean;
+  currency: string;
+  mrp: string;
+  sellingPrice: string;
+  seoTitle: string;
+  seoDescription: string;
+};
+
+function HiddenProductFields({
+  values,
+  exclude,
+}: {
+  values: ProductEditValues;
+  exclude: Array<keyof ProductEditValues>;
+}) {
+  const skip = new Set(exclude);
+
+  return (
+    <>
+      {(Object.keys(values) as Array<keyof ProductEditValues>)
+        .filter((key) => key !== "featured" && !skip.has(key))
+        .map((key) => (
+          <input key={key} type="hidden" name={key} value={values[key]} />
+        ))}
+      {!skip.has("featured") && values.featured ? (
+        <input type="hidden" name="featured" value="on" />
+      ) : null}
+    </>
+  );
 }
 
 export default async function AdminProductDetailPage({
@@ -88,10 +130,40 @@ export default async function AdminProductDetailPage({
     notFound();
   }
 
-  const media = await prisma.productMedia.findMany({
-    where: { productId: id },
-    orderBy: { sortOrder: "asc" },
-  });
+  const [media, productExtras] = await Promise.all([
+    prisma.productMedia.findMany({
+      where: { productId: id },
+      orderBy: { sortOrder: "asc" },
+    }),
+    prisma.product.findUnique({
+      where: { id },
+      select: {
+        seoTitle: true,
+        seoDescription: true,
+        passport: {
+          select: {
+            altitude: true,
+            region: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const editValues: ProductEditValues = {
+    name: product.name,
+    slug: product.slug,
+    brand: product.brand ?? "",
+    shortDescription: product.shortDescription ?? "",
+    longDescription: product.longDescription ?? "",
+    status: product.status,
+    featured: product.featured,
+    currency: product.currency,
+    mrp: product.mrp?.toString() ?? "",
+    sellingPrice: product.sellingPrice?.toString() ?? "",
+    seoTitle: productExtras?.seoTitle ?? "",
+    seoDescription: productExtras?.seoDescription ?? "",
+  };
 
   async function updateProductAction(formData: FormData) {
     "use server";
@@ -315,13 +387,32 @@ export default async function AdminProductDetailPage({
     redirect(`/admin/products/${id}?success=variant_deactivated`);
   }
 
+  async function deleteImageAction(formData: FormData) {
+    "use server";
+
+    await requirePermission("products.write");
+
+    const mediaId = formData.get("mediaId") as string;
+
+    if (!mediaId) {
+      return;
+    }
+
+    await prisma.productMedia.deleteMany({
+      where: { id: mediaId, productId: id },
+    });
+
+    redirect(`/admin/products/${id}`);
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl space-y-6">
       <Heading
         title={`Edit ${product.name}`}
-        subtitle="Update the product record and keep the public site unchanged until you publish new content."
+        subtitle="Update product details, images, and variants."
         alignment="left"
       />
+
       {successMessage ? (
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
           {successMessage}
@@ -332,449 +423,566 @@ export default async function AdminProductDetailPage({
           {errorMessage}
         </div>
       ) : null}
-      <form
-        action={updateProductAction}
-        className="space-y-6 rounded-2xl border border-border bg-background p-6 shadow-sm"
-      >
-        <div className="grid gap-6 md:grid-cols-2">
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">Name</span>
-            <input
-              defaultValue={product.name}
-              name="name"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">Slug</span>
-            <input
-              defaultValue={product.slug}
-              name="slug"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">Brand</span>
-            <input
-              defaultValue={product.brand ?? ""}
-              name="brand"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">Status</span>
-            <select
-              defaultValue={product.status}
-              name="status"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            >
-              <option value="DRAFT">Draft</option>
-              <option value="ACTIVE">Active</option>
-              <option value="COMING_SOON">Coming soon</option>
-              <option value="SEASONAL">Seasonal</option>
-              <option value="SOLD_OUT">Sold out</option>
-              <option value="ARCHIVED">Archived</option>
-            </select>
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">Featured</span>
-            <input
-              defaultChecked={product.featured}
-              type="checkbox"
-              name="featured"
-              className="mt-2 h-4 w-4 rounded border-border"
-            />
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">Currency</span>
-            <input
-              defaultValue={product.currency}
-              name="currency"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">MRP</span>
-            <input
-              defaultValue={product.mrp ?? ""}
-              type="number"
-              name="mrp"
-              step="0.01"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">Selling Price</span>
-            <input
-              defaultValue={product.sellingPrice ?? ""}
-              type="number"
-              name="sellingPrice"
-              step="0.01"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-        </div>
-        <label className="space-y-2 text-sm text-muted">
-          <span className="text-foreground">Short Description</span>
-          <textarea
-            defaultValue={product.shortDescription ?? ""}
-            name="shortDescription"
-            rows={3}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-          />
-        </label>
-        <label className="space-y-2 text-sm text-muted">
-          <span className="text-foreground">Long Description</span>
-          <textarea
-            defaultValue={product.longDescription ?? ""}
-            name="longDescription"
-            rows={5}
-            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-          />
-        </label>
-        <div className="grid gap-6 md:grid-cols-2">
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">SEO Title</span>
-            <input
-              defaultValue={""}
-              name="seoTitle"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-          <label className="space-y-2 text-sm text-muted">
-            <span className="text-foreground">SEO Description</span>
-            <input
-              defaultValue={""}
-              name="seoDescription"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-            />
-          </label>
-        </div>
-        <button
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-          type="submit"
-        >
-          Save changes
-        </button>
-      </form>
 
-      <section className="space-y-4 rounded-2xl border border-border bg-background p-6 shadow-sm">
-        <div>
-          <h2 className="text-lg font-semibold text-foreground">
-            Product Images
-          </h2>
-          <p className="text-sm text-muted">
-            Add Cloudinary image URLs for this product.
-          </p>
-        </div>
+      <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
+        <h2 className="font-heading text-base font-semibold text-foreground">
+          Basic Information
+        </h2>
 
-        {media.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center gap-4 rounded-lg border border-border p-3"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={item.url}
-              alt={item.alt ?? ""}
-              className="h-16 w-16 rounded-lg object-cover"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm text-foreground">{item.url}</p>
-              <p className="text-xs text-muted">Sort order: {item.sortOrder}</p>
-            </div>
+        <form action={updateProductAction} className="space-y-4">
+          <HiddenProductFields
+            values={editValues}
+            exclude={["name", "slug", "brand", "status", "featured"]}
+          />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">Name</span>
+              <input
+                name="name"
+                type="text"
+                defaultValue={product.name}
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">Slug</span>
+              <input
+                name="slug"
+                type="text"
+                defaultValue={product.slug}
+                className={inputClassName}
+              />
+            </label>
           </div>
-        ))}
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">Brand</span>
+              <input
+                name="brand"
+                type="text"
+                defaultValue={product.brand ?? ""}
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                Category
+              </span>
+              <input
+                name="category"
+                type="text"
+                defaultValue={product.category?.name ?? ""}
+                placeholder="e.g. honey, ghee, shilajit"
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                Status
+              </span>
+              <select
+                name="status"
+                defaultValue={product.status}
+                className={inputClassName}
+              >
+                <option value="DRAFT">Draft</option>
+                <option value="ACTIVE">Active</option>
+                <option value="COMING_SOON">Coming soon</option>
+                <option value="SEASONAL">Seasonal</option>
+                <option value="SOLD_OUT">Sold out</option>
+                <option value="ARCHIVED">Archived</option>
+              </select>
+            </label>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                Valley / Origin
+              </span>
+              <select
+                name="primaryOriginText"
+                defaultValue={
+                  productExtras?.passport?.region ??
+                  product.primaryOrigin?.name ??
+                  ""
+                }
+                className={inputClassName}
+              >
+                <option value="">Select Valley</option>
+                <option value="Lahaul Valley, Himachal Pradesh">
+                  Lahaul Valley, Himachal Pradesh
+                </option>
+                <option value="Kullu Valley, Himachal Pradesh">
+                  Kullu Valley, Himachal Pradesh
+                </option>
+                <option value="Nubra Valley, Ladakh">
+                  Nubra Valley, Ladakh
+                </option>
+                <option value="Zanskar Valley, Ladakh">
+                  Zanskar Valley, Ladakh
+                </option>
+                <option value="Changthang Plateau, Ladakh">
+                  Changthang Plateau, Ladakh
+                </option>
+                <option value="Spiti Valley, Himachal Pradesh">
+                  Spiti Valley, Himachal Pradesh
+                </option>
+              </select>
+            </label>
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                Altitude
+              </span>
+              <input
+                name="altitude"
+                type="text"
+                defaultValue={productExtras?.passport?.altitude ?? ""}
+                placeholder="e.g. 3,050m above sea level"
+                className={inputClassName}
+              />
+            </label>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <input
+              name="featured"
+              type="checkbox"
+              id="featured"
+              defaultChecked={product.featured}
+              className="rounded border-border"
+            />
+            <label htmlFor="featured" className="text-sm text-foreground">
+              Featured product (shown on homepage)
+            </label>
+          </div>
+
+          <Button type="submit">Save Changes</Button>
+        </form>
+      </section>
+
+      <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
+        <h2 className="font-heading text-base font-semibold text-foreground">
+          Description
+        </h2>
+
+        <form action={updateProductAction} className="space-y-4">
+          <HiddenProductFields
+            values={editValues}
+            exclude={["shortDescription", "longDescription"]}
+          />
+
+          <label className="block space-y-1">
+            <span className="text-sm font-medium text-foreground">
+              Short Description
+            </span>
+            <textarea
+              name="shortDescription"
+              rows={2}
+              defaultValue={product.shortDescription ?? ""}
+              className={`${inputClassName} resize-none`}
+            />
+          </label>
+          <label className="block space-y-1">
+            <span className="text-sm font-medium text-foreground">
+              Long Description
+            </span>
+            <textarea
+              name="longDescription"
+              rows={5}
+              defaultValue={product.longDescription ?? ""}
+              className={`${inputClassName} resize-none`}
+            />
+          </label>
+
+          <Button type="submit">Save Changes</Button>
+        </form>
+      </section>
+
+      <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
+        <h2 className="font-heading text-base font-semibold text-foreground">
+          Images
+        </h2>
+
+        {media.length > 0 ? (
+          <div className="flex gap-3 overflow-x-auto pb-1">
+            {media.map((item) => (
+              <div key={item.id} className="relative shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.url}
+                  alt={item.alt ?? ""}
+                  className="h-20 w-20 rounded-lg object-cover"
+                />
+                <form
+                  action={deleteImageAction}
+                  className="absolute -top-1.5 -right-1.5"
+                >
+                  <input type="hidden" name="mediaId" value={item.id} />
+                  <button
+                    type="submit"
+                    className="flex h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-muted hover:border-red-400 hover:text-red-500"
+                    aria-label="Delete image"
+                  >
+                    ×
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-muted">No images yet.</p>
+        )}
 
         <form
           action={addImageAction}
           className="space-y-3 border-t border-border pt-4"
         >
           <div className="grid gap-3 md:grid-cols-2">
-            <label className="space-y-1 text-sm text-muted">
-              <span className="text-foreground">Image URL</span>
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                Image URL
+              </span>
               <input
                 name="url"
                 type="text"
                 required
                 placeholder="https://res.cloudinary.com/..."
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
+                className={inputClassName}
               />
             </label>
-            <label className="space-y-1 text-sm text-muted">
-              <span className="text-foreground">Alt text</span>
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                Alt text
+              </span>
               <input
                 name="alt"
                 type="text"
                 placeholder="Product image description"
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
+                className={inputClassName}
               />
             </label>
           </div>
-          <button
-            type="submit"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-          >
-            Add Image
-          </button>
+          <Button type="submit">Add Image</Button>
         </form>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-border bg-background p-6 shadow-sm">
-        <div>
-          <h2 className="text-lg font-semibold text-foreground">Variants</h2>
-          <p className="text-sm text-muted">
-            Manage variant records used by inventory, orders, and upcoming
-            storefront catalog surfaces.
-          </p>
-        </div>
+      <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
+        <h2 className="font-heading text-base font-semibold text-foreground">
+          Variants
+        </h2>
 
         {variants.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-border bg-muted/10 p-4 text-sm text-muted">
+          <p className="text-xs text-muted">
             No variants exist for this product yet.
-          </div>
+          </p>
         ) : (
-          <div className="space-y-3">
-            {variants.map((variant) => (
-              <details
-                key={variant.id}
-                className="rounded-xl border border-border bg-background p-4"
-              >
-                <summary className="cursor-pointer list-none">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {variant.name}
-                      </p>
-                      <p className="mt-1 text-xs text-muted">
-                        SKU: {variant.sku}
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs">
-                      <span className="rounded-full border border-border px-2.5 py-1 text-muted">
-                        {variant.status}
-                      </span>
-                      <span className="rounded-full border border-border px-2.5 py-1 text-muted">
-                        {formatCurrency(variant.sellingPrice, product.currency)}
-                      </span>
-                      <span className="rounded-full border border-border px-2.5 py-1 text-muted">
-                        On hand {variant.quantityOnHand.toLocaleString("en-IN")}
-                      </span>
-                      <span className="rounded-full border border-border px-2.5 py-1 text-muted">
-                        Available{" "}
-                        {variant.availableQuantity.toLocaleString("en-IN")}
-                      </span>
-                    </div>
-                  </div>
-                </summary>
-
-                <form action={updateVariantAction} className="mt-4 space-y-4">
-                  <input type="hidden" name="variantId" value={variant.id} />
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">Variant name</span>
-                      <input
-                        name="name"
-                        required
-                        defaultValue={variant.name}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                      />
-                    </label>
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">SKU</span>
-                      <input
-                        name="sku"
-                        required
-                        defaultValue={variant.sku}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                      />
-                    </label>
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">Price</span>
-                      <input
-                        type="number"
-                        name="sellingPrice"
-                        required
-                        step="0.01"
-                        min="0"
-                        defaultValue={variant.sellingPrice}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                      />
-                    </label>
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">Compare-at price</span>
-                      <input
-                        type="number"
-                        name="mrp"
-                        required
-                        step="0.01"
-                        min="0"
-                        defaultValue={variant.mrp}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                      />
-                    </label>
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">Net quantity</span>
-                      <input
-                        type="number"
-                        name="netQuantity"
-                        step="0.01"
-                        min="0"
-                        defaultValue={variant.netQuantity ?? ""}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                      />
-                    </label>
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">Unit</span>
-                      <input
-                        name="unit"
-                        defaultValue={variant.unit ?? ""}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                      />
-                    </label>
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">Status</span>
-                      <select
-                        name="status"
-                        defaultValue={variant.status}
-                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                      >
-                        <option value="ACTIVE">ACTIVE</option>
-                        <option value="INACTIVE">INACTIVE</option>
-                        <option value="DISCONTINUED">DISCONTINUED</option>
-                      </select>
-                    </label>
-                    <label className="space-y-2 text-sm text-muted">
-                      <span className="text-foreground">Default variant</span>
-                      <input
-                        type="checkbox"
-                        name="isDefault"
-                        defaultChecked={variant.isDefault}
-                        className="mt-2 h-4 w-4 rounded border-border"
-                      />
-                    </label>
-                  </div>
-
-                  <div className="text-xs text-muted">
-                    Reserved {variant.quantityReserved.toLocaleString("en-IN")}
-                    {" · "}
-                    Inventory locations{" "}
-                    {variant.inventoryItemCount.toLocaleString("en-IN")}
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-                      type="submit"
-                    >
-                      Save variant
-                    </button>
-                  </div>
-                </form>
-
-                <form action={deactivateVariantAction} className="mt-3">
-                  <input type="hidden" name="variantId" value={variant.id} />
-                  <button
-                    type="submit"
-                    className="rounded-lg border border-border px-4 py-2 text-sm text-muted hover:text-foreground"
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[720px] text-left text-sm">
+              <thead>
+                <tr className="border-b border-border text-xs text-muted">
+                  <th className="py-2 pr-3 font-medium">Label</th>
+                  <th className="py-2 pr-3 font-medium">Price</th>
+                  <th className="py-2 pr-3 font-medium">MRP</th>
+                  <th className="py-2 pr-3 font-medium">Qty</th>
+                  <th className="py-2 pr-3 font-medium">Status</th>
+                  <th className="py-2 pr-3 font-medium">Default</th>
+                  <th className="py-2 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {variants.map((variant) => (
+                  <tr
+                    key={variant.id}
+                    className="border-b border-border align-top"
                   >
-                    Deactivate variant
-                  </button>
-                </form>
-              </details>
-            ))}
+                    <td className="py-3 pr-3 text-foreground">
+                      {variant.name}
+                    </td>
+                    <td className="py-3 pr-3 text-foreground">
+                      {formatCurrency(variant.sellingPrice, product.currency)}
+                    </td>
+                    <td className="py-3 pr-3 text-foreground">
+                      {formatCurrency(variant.mrp, product.currency)}
+                    </td>
+                    <td className="py-3 pr-3 text-foreground">
+                      {variant.netQuantity != null
+                        ? `${variant.netQuantity}${variant.unit ? ` ${variant.unit}` : ""}`
+                        : "—"}
+                    </td>
+                    <td className="py-3 pr-3 text-muted">{variant.status}</td>
+                    <td className="py-3 pr-3 text-muted">
+                      {variant.isDefault ? "Yes" : "—"}
+                    </td>
+                    <td className="py-3">
+                      <div className="flex flex-col gap-2">
+                        <details>
+                          <summary className="cursor-pointer text-xs text-gold hover:underline">
+                            Edit
+                          </summary>
+                          <form
+                            action={updateVariantAction}
+                            className="mt-3 space-y-3 rounded-xl border border-border bg-surface p-3"
+                          >
+                            <input
+                              type="hidden"
+                              name="variantId"
+                              value={variant.id}
+                            />
+                            <div className="grid gap-3 md:grid-cols-3">
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-foreground">
+                                  Label
+                                </span>
+                                <input
+                                  name="name"
+                                  required
+                                  defaultValue={variant.name}
+                                  className={inputClassName}
+                                />
+                              </label>
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-foreground">
+                                  SKU
+                                </span>
+                                <input
+                                  name="sku"
+                                  required
+                                  defaultValue={variant.sku}
+                                  className={inputClassName}
+                                />
+                              </label>
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-foreground">
+                                  Price
+                                </span>
+                                <input
+                                  type="number"
+                                  name="sellingPrice"
+                                  required
+                                  step="0.01"
+                                  min="0"
+                                  defaultValue={variant.sellingPrice}
+                                  className={inputClassName}
+                                />
+                              </label>
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-foreground">
+                                  MRP
+                                </span>
+                                <input
+                                  type="number"
+                                  name="mrp"
+                                  required
+                                  step="0.01"
+                                  min="0"
+                                  defaultValue={variant.mrp}
+                                  className={inputClassName}
+                                />
+                              </label>
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-foreground">
+                                  Qty
+                                </span>
+                                <input
+                                  type="number"
+                                  name="netQuantity"
+                                  step="0.01"
+                                  min="0"
+                                  defaultValue={variant.netQuantity ?? ""}
+                                  className={inputClassName}
+                                />
+                              </label>
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-foreground">
+                                  Unit
+                                </span>
+                                <input
+                                  name="unit"
+                                  defaultValue={variant.unit ?? ""}
+                                  className={inputClassName}
+                                />
+                              </label>
+                              <label className="block space-y-1">
+                                <span className="text-xs font-medium text-foreground">
+                                  Status
+                                </span>
+                                <select
+                                  name="status"
+                                  defaultValue={variant.status}
+                                  className={inputClassName}
+                                >
+                                  <option value="ACTIVE">ACTIVE</option>
+                                  <option value="INACTIVE">INACTIVE</option>
+                                  <option value="DISCONTINUED">
+                                    DISCONTINUED
+                                  </option>
+                                </select>
+                              </label>
+                              <label className="flex items-center gap-2 pt-5 text-sm text-foreground">
+                                <input
+                                  type="checkbox"
+                                  name="isDefault"
+                                  defaultChecked={variant.isDefault}
+                                  className="rounded border-border"
+                                />
+                                Default
+                              </label>
+                            </div>
+                            <Button type="submit">Save variant</Button>
+                          </form>
+                        </details>
+                        <form action={deactivateVariantAction}>
+                          <input
+                            type="hidden"
+                            name="variantId"
+                            value={variant.id}
+                          />
+                          <button
+                            type="submit"
+                            className="text-xs text-muted hover:text-red-500"
+                          >
+                            Deactivate
+                          </button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 
-        <div className="rounded-xl border border-border bg-muted/10 p-4">
-          <h3 className="text-sm font-medium text-foreground">Add variant</h3>
-          <form action={createVariantAction} className="mt-3 space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">Variant name</span>
+        <form
+          action={createVariantAction}
+          className="space-y-4 border-t border-border pt-4"
+        >
+          <p className="text-xs text-muted">Add a new variant</p>
+          <input type="hidden" name="status" value="ACTIVE" />
+          <div className="grid gap-3 md:grid-cols-6">
+            <label className="block space-y-1 md:col-span-2">
+              <span className="text-xs font-medium text-foreground">
+                Label *
+              </span>
+              <input
+                name="name"
+                type="text"
+                required
+                placeholder="e.g. 250g, 500ml, 1kg"
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-xs font-medium text-foreground">SKU</span>
+              <input
+                name="sku"
+                type="text"
+                required
+                placeholder="TOR-HNY-250"
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-xs font-medium text-foreground">
+                Price *
+              </span>
+              <input
+                name="sellingPrice"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                placeholder="0.00"
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-xs font-medium text-foreground">MRP</span>
+              <input
+                name="mrp"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                placeholder="0.00"
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-xs font-medium text-foreground">
+                Qty & Unit
+              </span>
+              <div className="flex gap-1">
                 <input
-                  name="name"
-                  required
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                />
-              </label>
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">SKU</span>
-                <input
-                  name="sku"
-                  required
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                />
-              </label>
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">Price</span>
-                <input
-                  type="number"
-                  name="sellingPrice"
-                  required
-                  step="0.01"
-                  min="0"
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                />
-              </label>
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">Compare-at price</span>
-                <input
-                  type="number"
-                  name="mrp"
-                  required
-                  step="0.01"
-                  min="0"
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                />
-              </label>
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">Net quantity</span>
-                <input
-                  type="number"
                   name="netQuantity"
+                  type="number"
                   step="0.01"
                   min="0"
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
+                  placeholder="250"
+                  className="w-16 rounded-lg border border-border bg-background px-2 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
                 />
-              </label>
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">Unit</span>
                 <input
                   name="unit"
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
+                  type="text"
+                  placeholder="g"
+                  className="flex-1 rounded-lg border border-border bg-background px-2 py-2 text-sm text-foreground focus:border-gold focus:outline-none"
                 />
-              </label>
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">Status</span>
-                <select
-                  name="status"
-                  defaultValue="ACTIVE"
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground"
-                >
-                  <option value="ACTIVE">ACTIVE</option>
-                  <option value="INACTIVE">INACTIVE</option>
-                  <option value="DISCONTINUED">DISCONTINUED</option>
-                </select>
-              </label>
-              <label className="space-y-2 text-sm text-muted">
-                <span className="text-foreground">Default variant</span>
-                <input
-                  type="checkbox"
-                  name="isDefault"
-                  className="mt-2 h-4 w-4 rounded border-border"
-                />
-              </label>
-            </div>
+              </div>
+            </label>
+          </div>
+          <label className="flex items-center gap-2 text-sm text-foreground">
+            <input
+              type="checkbox"
+              name="isDefault"
+              className="rounded border-border"
+            />
+            Default variant
+          </label>
+          <Button type="submit">Add Variant</Button>
+        </form>
+      </section>
 
-            <button
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-              type="submit"
-            >
-              Add variant
-            </button>
-          </form>
-        </div>
+      <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
+        <h2 className="font-heading text-base font-semibold text-foreground">
+          SEO
+        </h2>
+
+        <form action={updateProductAction} className="space-y-4">
+          <HiddenProductFields
+            values={editValues}
+            exclude={["seoTitle", "seoDescription"]}
+          />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                SEO Title
+              </span>
+              <input
+                name="seoTitle"
+                type="text"
+                defaultValue={editValues.seoTitle}
+                className={inputClassName}
+              />
+            </label>
+            <label className="block space-y-1">
+              <span className="text-sm font-medium text-foreground">
+                SEO Description
+              </span>
+              <input
+                name="seoDescription"
+                type="text"
+                defaultValue={editValues.seoDescription}
+                className={inputClassName}
+              />
+            </label>
+          </div>
+
+          <Button type="submit">Save Changes</Button>
+        </form>
       </section>
     </div>
   );

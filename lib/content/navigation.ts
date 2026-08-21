@@ -29,11 +29,10 @@ export const navigationContent: NavigationContent = {
     href: "/",
   },
   primaryLinks: [
-    { label: "Journey", href: "#journey" },
-    { label: "Collection", href: "#collection" },
-    { label: "Origins", href: "#origins" },
-    { label: "Heritage", href: "#heritage" },
-    { label: "Contact", href: "#contact" },
+    { label: "Collection", href: "/products" },
+    { label: "Origins", href: "/#origins" },
+    { label: "Heritage", href: "/#heritage" },
+    { label: "Contact", href: "/#contact" },
   ],
   utility: {
     search: { label: "Search" },

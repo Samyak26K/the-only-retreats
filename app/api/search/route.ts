@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export async function GET(req: NextRequest) {
   const q = req.nextUrl.searchParams.get("q") ?? "";
 
-  if (q.trim().length < 2) {
+  if (q.trim().length < 3) {
     return NextResponse.json({ results: [] });
   }
 
@@ -15,7 +15,6 @@ export async function GET(req: NextRequest) {
       OR: [
         { name: { contains: q, mode: "insensitive" } },
         { shortDescription: { contains: q, mode: "insensitive" } },
-        { brand: { contains: q, mode: "insensitive" } },
       ],
     },
     select: {

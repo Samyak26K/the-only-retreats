@@ -44,12 +44,8 @@ export const valleys: Valley[] = [
     shortDescription: null, // TODO: Add approved editorial copy.
     products: [
       {
-        slug: "thyme-honey",
-        name: "Thyme Honey",
-      },
-      {
-        slug: "dew-honey",
-        name: "Dew Honey",
+        slug: "winter-white-honey",
+        name: "Winter White Honey",
       },
     ],
     shloka: {
@@ -71,12 +67,8 @@ export const valleys: Valley[] = [
     shortDescription: null, // TODO: Add approved editorial copy.
     products: [
       {
-        slug: "cow-ghee",
-        name: "Cow Ghee",
-      },
-      {
-        slug: "other-honey",
-        name: "Other Honey",
+        slug: "himalayan-badri-cow-ghee",
+        name: "Himalayan Badri Cow Ghee",
       },
     ],
     shloka: {
@@ -96,12 +88,7 @@ export const valleys: Valley[] = [
     altitude: null, // TODO: Add approved altitude.
     coverImage: "/images/valleys/nubra.webp", // Temporary AI review asset; replace with production photography.
     shortDescription: null, // TODO: Add approved editorial copy.
-    products: [
-      {
-        slug: "seabuckthorn",
-        name: "Seabuckthorn",
-      },
-    ],
+    products: [],
     shloka: {
       sanskrit: "आपो हि ष्ठा मयोभुवाः।",
       translation: null, // TODO: Add approved translation.
@@ -119,12 +106,7 @@ export const valleys: Valley[] = [
     altitude: null, // TODO: Add approved altitude.
     coverImage: "/images/valleys/zanskar.webp", // Temporary AI review asset; replace with production photography.
     shortDescription: null, // TODO: Add approved editorial copy.
-    products: [
-      {
-        slug: "yak-ghee",
-        name: "Yak Ghee",
-      },
-    ],
+    products: [],
     shloka: {
       sanskrit: "शरीरमाद्यं खलु धर्मसाधनम्।",
       translation: null, // TODO: Add approved translation.
@@ -142,16 +124,7 @@ export const valleys: Valley[] = [
     altitude: null, // TODO: Add approved altitude.
     coverImage: "/images/valleys/changthang.webp", // Temporary AI review asset; replace with production photography.
     shortDescription: null, // TODO: Add approved editorial copy.
-    products: [
-      {
-        slug: "shilajit",
-        name: "Shilajit",
-      },
-      {
-        slug: "yak-ghee",
-        name: "Yak Ghee",
-      },
-    ],
+    products: [],
     shloka: {
       sanskrit: "योगः कर्मसु कौशलम्।",
       translation: null, // TODO: Add approved translation.

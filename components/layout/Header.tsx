@@ -14,12 +14,11 @@ import { useCartStore } from "@/lib/cart";
 import { navigationContent } from "@/lib/content/navigation";
 import { cn } from "@/lib/utils";
 
-const utilityButtonClasses = (isScrolled: boolean) =>
+const utilityButtonClasses = (lightOnDesktop: boolean) =>
   cn(
     "flex size-12 items-center justify-center rounded-full transition-colors duration-fast",
-    isScrolled
-      ? "text-foreground hover:bg-surface"
-      : "text-background hover:bg-background/10",
+    "text-foreground hover:bg-surface",
+    lightOnDesktop && "md:text-white md:hover:bg-white/10",
   );
 
 export function Header() {
@@ -39,7 +38,7 @@ export function Header() {
   const pathname = usePathname();
   const isHomepage = pathname === "/";
   const isScrolled = useHeaderScroll(12);
-  const showScrolled = isScrolled || !isHomepage;
+  const isTransparentHero = isHomepage && !isScrolled;
   const itemCount = useCartStore((state) => state.getItemCount());
 
   useEffect(() => setMounted(true), []);
@@ -54,7 +53,7 @@ export function Header() {
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
-    if (query.trim().length < 2) {
+    if (query.trim().length < 3) {
       setSearchResults([]);
       return;
     }
@@ -73,9 +72,11 @@ export function Header() {
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-40 transition-colors duration-normal",
-        showScrolled
-          ? "bg-surface/95 shadow-md backdrop-blur-sm supports-backdrop-filter:bg-surface/85"
-          : "bg-transparent",
+        "border-b border-border bg-background",
+        isTransparentHero && "md:border-transparent md:bg-transparent",
+        isHomepage &&
+          isScrolled &&
+          "md:border-transparent md:bg-background/95 md:backdrop-blur",
       )}
     >
       <Container className="relative flex h-(--navbar-height-mobile) items-center justify-between gap-4 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
@@ -87,7 +88,7 @@ export function Header() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-drawer"
             onClick={() => setMobileOpen(true)}
-            className={cn(utilityButtonClasses(showScrolled), "md:hidden")}
+            className={cn(utilityButtonClasses(false), "md:hidden")}
           >
             <Menu className="size-6" />
           </button>
@@ -97,7 +98,7 @@ export function Header() {
             href={navigationContent.brand.href}
             className={cn(
               "hidden origin-left items-center gap-3 leading-tight transition-transform duration-normal md:flex",
-              showScrolled ? "scale-100" : "scale-110",
+              isTransparentHero ? "scale-110" : "scale-100",
             )}
           >
             <Image
@@ -111,7 +112,7 @@ export function Header() {
               <span
                 className={cn(
                   "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
-                  showScrolled ? "text-foreground" : "text-background",
+                  isTransparentHero ? "text-white" : "text-foreground",
                 )}
               >
                 {navigationContent.brand.name}
@@ -119,7 +120,7 @@ export function Header() {
               <span
                 className={cn(
                   "font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal",
-                  showScrolled ? "text-muted" : "text-background/80",
+                  isTransparentHero ? "text-white/80" : "text-muted",
                 )}
               >
                 {navigationContent.brand.tagline}
@@ -133,7 +134,7 @@ export function Header() {
           href={navigationContent.brand.href}
           className={cn(
             "absolute top-1/2 left-1/2 flex origin-center -translate-x-1/2 -translate-y-1/2 items-center gap-2 text-center leading-tight transition-transform duration-normal md:hidden",
-            showScrolled ? "scale-100" : "scale-110",
+            "scale-100",
           )}
         >
           <Image
@@ -147,7 +148,7 @@ export function Header() {
             <span
               className={cn(
                 "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
-                showScrolled ? "text-foreground" : "text-background",
+                "text-foreground",
               )}
             >
               {navigationContent.brand.name}
@@ -155,7 +156,7 @@ export function Header() {
             <span
               className={cn(
                 "hidden font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal sm:block",
-                showScrolled ? "text-muted" : "text-background/80",
+                "text-muted",
               )}
             >
               {navigationContent.brand.tagline}
@@ -163,14 +164,14 @@ export function Header() {
           </div>
         </Link>
 
-        <DesktopNavigation isScrolled={showScrolled} />
+        <DesktopNavigation isScrolled={!isTransparentHero} />
 
         <div className="flex items-center gap-1">
           <button
             type="button"
             aria-label="Search"
             onClick={() => setSearchOpen(true)}
-            className={utilityButtonClasses(showScrolled)}
+            className={utilityButtonClasses(isTransparentHero)}
           >
             <Search className="size-6" />
           </button>
@@ -178,7 +179,7 @@ export function Header() {
             href="/account"
             aria-label={navigationContent.utility.account.label}
             className={cn(
-              utilityButtonClasses(showScrolled),
+              utilityButtonClasses(isTransparentHero),
               "hidden md:inline-flex",
             )}
           >
@@ -187,10 +188,7 @@ export function Header() {
           <Link
             href="/cart"
             aria-label="Cart"
-            className={cn(
-              utilityButtonClasses(showScrolled),
-              "relative md:hidden",
-            )}
+            className={cn(utilityButtonClasses(false), "relative md:hidden")}
           >
             <ShoppingBag className="size-6" />
             {mounted && itemCount > 0 && (
@@ -203,7 +201,7 @@ export function Header() {
             href="/cart"
             aria-label={navigationContent.utility.cart.label}
             className={cn(
-              utilityButtonClasses(showScrolled),
+              utilityButtonClasses(isTransparentHero),
               "relative hidden md:inline-flex",
             )}
           >
@@ -270,7 +268,7 @@ export function Header() {
                 ))}
               </div>
             )}
-            {searchQuery.length >= 2 && searchResults.length === 0 && (
+            {searchQuery.trim().length >= 3 && searchResults.length === 0 && (
               <p className="mt-4 text-center text-sm text-muted/60">
                 No products found for &quot;{searchQuery}&quot;
               </p>

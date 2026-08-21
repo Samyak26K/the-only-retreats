@@ -38,8 +38,8 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
                     : cn(
                         "font-medium",
                         isScrolled
-                          ? "text-foreground/75 hover:text-foreground"
-                          : "text-background/85 hover:text-background",
+                          ? "text-foreground/70 hover:text-foreground"
+                          : "text-white/80 hover:text-white",
                       ),
                 )}
               >

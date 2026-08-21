@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum ProductStatus {
@@ -316,6 +317,8 @@ model ProductPassport {
   product                 Product  @relation(fields: [productId], references: [id])
   batchId                 String?  @unique
   batch                   Batch?   @relation(fields: [batchId], references: [id])
+  altitude                String?
+  region                  String?
   identitySummary         String?
   originSummary           String?
   landscapeSummary        String?
@@ -482,6 +485,7 @@ model Customer {
   lastName    String?
   email       String?           @unique
   phone       String?
+  newsletterSubscribed Boolean  @default(false)
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   addresses   CustomerAddress[]

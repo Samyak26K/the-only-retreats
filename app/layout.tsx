@@ -7,7 +7,10 @@ import {
 } from "next/font/google";
 
 import { AppShell } from "@/components/layout/AppShell";
+import { CartToast } from "@/components/shared/CartToast";
+import { PageLoader } from "@/components/shared/PageLoader";
 import { DEFAULT_SITE_URL, SITE_NAME } from "@/lib/constants";
+import { warmupDb } from "@/lib/db-warmup";
 import { AppProviders } from "@/providers/app-providers";
 
 import "@/styles/globals.css";
@@ -78,12 +81,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  warmupDb();
+
   return (
     <html
       lang="en"
       className={`${displayFont.variable} ${headingFont.variable} ${bodyFont.variable} ${sanskritFont.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
+        <PageLoader />
         <a
           href="#main-content"
           className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-50 focus-visible:rounded-lg focus-visible:bg-background focus-visible:px-4 focus-visible:py-2 focus-visible:text-sm focus-visible:font-medium focus-visible:text-foreground focus-visible:shadow-lg focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
@@ -93,6 +99,7 @@ export default function RootLayout({
         <AppProviders>
           <AppShell>{children}</AppShell>
         </AppProviders>
+        <CartToast />
       </body>
     </html>
   );

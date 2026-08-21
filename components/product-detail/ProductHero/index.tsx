@@ -3,12 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/lib/cart";
-import { getStartingPrice, type Product } from "@/lib/content/product";
+import { type Product } from "@/lib/content/product";
 import { cn } from "@/lib/utils";
 
 type ProductHeroProps = {
@@ -24,7 +24,6 @@ function formatPrice(price: number, currency: string) {
 }
 
 export function ProductHero({ product }: ProductHeroProps) {
-  const startingPrice = getStartingPrice(product);
   const imageMedia = product.media.filter((item) => item.type === "image");
   const { addItem, updateQuantity } = useCartStore();
   const [selectedVariantId, setSelectedVariantId] = useState(
@@ -34,6 +33,8 @@ export function ProductHero({ product }: ProductHeroProps) {
   );
   const [quantity, setQuantity] = useState(1);
   const [imageIndex, setImageIndex] = useState(0);
+  const [wishlisted, setWishlisted] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const selectedVariant = product.variants.find(
     (v) => v.id === selectedVariantId,
   );
@@ -153,6 +154,12 @@ export function ProductHero({ product }: ProductHeroProps) {
             <p className="mb-1 text-[0.6rem] uppercase tracking-[0.18em] text-muted">
               {product.origin}
             </p>
+            <p className="text-[0.6rem] uppercase tracking-[0.15em] text-gold/80 mb-2 flex items-center gap-1.5">
+              <span>▲</span>
+              <span>
+                {product.productPassport?.altitude ?? "High Himalayan Altitude"}
+              </span>
+            </p>
 
             <h1
               id="product-title"
@@ -181,21 +188,46 @@ export function ProductHero({ product }: ProductHeroProps) {
               </p>
             </div>
 
-            <p className="mb-4 text-sm leading-6 text-muted">
-              {product.tagline}
-            </p>
+            <div className="relative mb-4">
+              <p
+                className={cn(
+                  "text-sm leading-6 text-muted transition-all",
+                  !expanded && "line-clamp-2",
+                )}
+              >
+                {product.tagline}
+              </p>
+              {product.tagline && product.tagline.length > 100 ? (
+                <button
+                  type="button"
+                  onClick={() => setExpanded((e) => !e)}
+                  className="mt-1 text-xs text-gold hover:underline"
+                >
+                  {expanded ? "Read less" : "Read more"}
+                </button>
+              ) : null}
+            </div>
 
             <div className="mb-4">
-              {startingPrice !== undefined ? (
+              {selectedVariant && (
                 <>
                   <p className="font-heading text-xl font-medium text-foreground">
-                    {formatPrice(startingPrice, product.currency)}
+                    {formatPrice(selectedVariant.price, product.currency)}
                   </p>
+                  {selectedVariant.compareAtPrice &&
+                  selectedVariant.compareAtPrice > selectedVariant.price ? (
+                    <p className="mt-0.5 text-xs text-muted line-through">
+                      {formatPrice(
+                        selectedVariant.compareAtPrice,
+                        product.currency,
+                      )}
+                    </p>
+                  ) : null}
                   <p className="mt-0.5 text-[0.6rem] text-muted">
                     Inclusive of all taxes
                   </p>
                 </>
-              ) : null}
+              )}
             </div>
 
             <div className="mb-3">
@@ -250,39 +282,54 @@ export function ProductHero({ product }: ProductHeroProps) {
               </div>
             </div>
 
-            <Button
-              type="button"
-              disabled={!selectedVariant?.inStock}
-              onClick={() => {
-                if (!selectedVariant || !selectedVariant.inStock) {
-                  return;
-                }
+            <div className="mb-3 flex gap-2">
+              <Button
+                type="button"
+                disabled={!selectedVariant?.inStock}
+                onClick={() => {
+                  if (!selectedVariant || !selectedVariant.inStock) {
+                    return;
+                  }
 
-                addItem({
-                  variantId: selectedVariant.id,
-                  productId: product.id,
-                  productSlug: product.slug,
-                  productName: product.name,
-                  variantLabel: selectedVariant.label,
-                  price: selectedVariant.price,
-                  currency: product.currency,
-                  imageSrc:
-                    product.media.find((m) => m.type === "image")?.src ?? "",
-                  imageAlt: product.hero.media.alt,
-                });
+                  addItem({
+                    variantId: selectedVariant.id,
+                    productId: product.id,
+                    productSlug: product.slug,
+                    productName: product.name,
+                    variantLabel: selectedVariant.label,
+                    price: selectedVariant.price,
+                    currency: product.currency,
+                    imageSrc:
+                      product.media.find((m) => m.type === "image")?.src ?? "",
+                    imageAlt: product.hero.media.alt,
+                  });
 
-                if (quantity > 1) {
-                  updateQuantity(selectedVariant.id, quantity);
-                }
+                  if (quantity > 1) {
+                    updateQuantity(selectedVariant.id, quantity);
+                  }
 
-                setQuantity(1);
-              }}
-              className="mb-3 h-11 w-full text-xs uppercase tracking-[0.18em]"
-            >
-              {selectedVariant?.inStock === false
-                ? "Out of Stock"
-                : "Add to Ritual"}
-            </Button>
+                  setQuantity(1);
+                }}
+                className="h-11 flex-1 text-xs uppercase tracking-[0.18em]"
+              >
+                {selectedVariant?.inStock === false
+                  ? "Out of Stock"
+                  : "Add to Ritual"}
+              </Button>
+              <button
+                type="button"
+                onClick={() => setWishlisted((w) => !w)}
+                className={cn(
+                  "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border transition-colors",
+                  wishlisted
+                    ? "border-red-300 bg-red-50 text-red-500"
+                    : "border-border text-muted hover:border-gold hover:text-gold",
+                )}
+                aria-label="Add to wishlist"
+              >
+                <Heart className={cn("size-4", wishlisted && "fill-current")} />
+              </button>
+            </div>
 
             <div className="mb-3 flex gap-2">
               <input

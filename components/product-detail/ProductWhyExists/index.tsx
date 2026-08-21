@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 import { Container } from "@/components/ui/Container";
@@ -8,6 +11,7 @@ type Props = {
 };
 
 export function ProductWhyExists({ product }: Props) {
+  const [expanded, setExpanded] = useState(false);
   const isHoney = product.category === "honey";
 
   const whyText = {
@@ -34,32 +38,42 @@ export function ProductWhyExists({ product }: Props) {
   };
 
   return (
-    <section className="border-t border-border bg-background py-16 md:py-20">
+    <section className="border-t border-border bg-background py-10 md:py-14">
       <Container>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
           <div className="flex flex-col justify-center space-y-5">
-            <p className="text-[0.6rem] uppercase tracking-[0.2em] text-muted">
+            <p className="mb-2 text-[0.6rem] uppercase tracking-[0.2em] text-muted">
               {whyText.eyebrow}
             </p>
-            <h2 className="font-display text-2xl leading-tight tracking-[-0.02em] text-foreground md:text-3xl">
+            <h2 className="font-display text-xl leading-tight tracking-[-0.02em] text-foreground md:text-2xl">
               {whyText.heading}
             </h2>
             <div className="space-y-3">
-              {whyText.paragraphs.map((para, i) => (
-                <p key={i} className="text-sm leading-6 text-muted">
-                  {para}
-                </p>
-              ))}
+              <p className="text-sm leading-6 text-muted">
+                {whyText.paragraphs[0]}
+              </p>
+
+              {expanded ? (
+                <div className="animate-in fade-in space-y-3 duration-300">
+                  {whyText.paragraphs.slice(1).map((para, i) => (
+                    <p key={i} className="text-sm leading-6 text-muted">
+                      {para}
+                    </p>
+                  ))}
+                </div>
+              ) : null}
             </div>
-            <a
-              href="#product-story"
+
+            <button
+              type="button"
+              onClick={() => setExpanded((e) => !e)}
               className="mt-2 inline-flex items-center gap-1 text-[0.65rem] uppercase tracking-[0.15em] text-foreground transition-colors hover:text-gold"
             >
-              Know More →
-            </a>
+              {expanded ? "Show Less ↑" : "Know More →"}
+            </button>
           </div>
 
-          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl md:aspect-auto md:min-h-[280px]">
+          <div className="relative aspect-[3/2] overflow-hidden rounded-2xl md:aspect-auto md:min-h-[280px]">
             <Image
               src={whyText.valleyImage}
               alt="Himalayan valley"
@@ -67,7 +81,7 @@ export function ProductWhyExists({ product }: Props) {
               className="object-cover"
               sizes="(min-width: 768px) 33vw, 100vw"
             />
-            <div className="absolute bottom-4 left-4 flex h-20 w-20 flex-col items-center justify-center rounded-full border border-border bg-background/90 p-2 text-center">
+            <div className="absolute bottom-4 left-4 flex h-16 w-16 flex-col items-center justify-center rounded-full border border-border bg-background/90 p-2 text-center">
               <span className="font-display text-xl leading-none text-foreground">
                 {whyText.badgeNumber}
               </span>
@@ -77,7 +91,7 @@ export function ProductWhyExists({ product }: Props) {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center space-y-4 rounded-2xl border border-gold/20 bg-[#f5f0e4] p-6 text-center">
+          <div className="flex flex-col items-center justify-center space-y-4 rounded-2xl border border-gold/20 bg-[#f5f0e4] p-4 text-center">
             <p className="text-[0.55rem] uppercase tracking-[0.2em] text-muted">
               — श्लोक / SLOKA —
             </p>
