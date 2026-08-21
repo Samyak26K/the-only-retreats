@@ -44,7 +44,7 @@ export function CollectionSection() {
   };
 
   return (
-    <section id="collection" className="bg-background py-20 md:py-28">
+    <section id="collection" className="bg-background py-12 md:py-28">
       <Container>
         {/* Header */}
         <div className="mb-12 flex items-end justify-between">

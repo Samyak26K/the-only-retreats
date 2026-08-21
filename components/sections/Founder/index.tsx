@@ -5,11 +5,11 @@ import { founderContent } from "@/lib/content/founder";
 
 export function FounderSection() {
   return (
-    <section id="founder" className="py-20 md:py-28 bg-background">
+    <section id="founder" className="bg-background pt-20 pb-12 md:py-28">
       <Container>
         <div className="grid items-stretch gap-0 lg:grid-cols-2 lg:gap-16 xl:gap-24">
           {/* Left: Image — full bleed on mobile */}
-          <div className="relative aspect-[3/4] overflow-hidden rounded-2xl lg:aspect-auto lg:min-h-[500px]">
+          <div className="relative aspect-[4/5] max-h-[70svh] overflow-hidden rounded-2xl lg:aspect-auto lg:min-h-[500px]">
             <Image
               src={founderContent.image}
               alt={founderContent.name}

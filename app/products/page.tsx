@@ -5,7 +5,9 @@ import { prisma } from "@/lib/prisma";
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
     where: {
-      status: { in: ["ACTIVE", "COMING_SOON", "SEASONAL", "SOLD_OUT"] },
+      status: {
+        in: ["ACTIVE", "COMING_SOON", "SEASONAL", "SOLD_OUT", "DRAFT"],
+      },
     },
     orderBy: { name: "asc" },
     select: {

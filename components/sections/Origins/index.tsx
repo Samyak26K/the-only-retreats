@@ -97,7 +97,7 @@ export function OriginsSection() {
                     <button
                       type="button"
                       onClick={handleClose}
-                      className="-mt-1 -mr-1 p-1 text-muted transition-colors hover:text-foreground"
+                      className="-mt-1 -mr-1 flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-foreground"
                       aria-label="Close valley details"
                     >
                       <X className="size-4" />
@@ -126,14 +126,14 @@ export function OriginsSection() {
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link
                     href={`/valleys/${selectedValley.slug}`}
-                    className="inline-flex items-center gap-2 rounded-lg bg-forest px-5 py-2.5 text-sm font-medium text-background transition-colors hover:bg-forest/80"
+                    className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-forest px-5 py-3 text-sm font-medium text-background transition-colors hover:bg-forest/80"
                   >
                     View Story
                   </Link>
                   <button
                     type="button"
                     onClick={() => setShowProducts(true)}
-                    className="inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-background"
+                    className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-background"
                   >
                     View Products
                     <ArrowRight className="size-3.5" />
@@ -152,7 +152,7 @@ export function OriginsSection() {
                   <button
                     type="button"
                     onClick={() => setShowProducts(false)}
-                    className="text-sm text-muted transition-colors hover:text-foreground"
+                    className="inline-flex min-h-11 items-center text-sm text-muted transition-colors hover:text-foreground"
                   >
                     ← {selectedValley.name}
                   </button>
@@ -166,7 +166,7 @@ export function OriginsSection() {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="p-1 text-muted transition-colors hover:text-foreground"
+                  className="flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-foreground"
                   aria-label="Close"
                 >
                   <X className="size-4" />
@@ -225,7 +225,7 @@ export function OriginsSection() {
                   type="button"
                   onClick={() => handleSelectValley(valley)}
                   className={cn(
-                    "group relative h-[160px] w-[260px] shrink-0 overflow-hidden rounded-xl transition-transform duration-300 hover:scale-105",
+                    "group relative h-[160px] w-[260px] shrink-0 overflow-hidden rounded-xl transition-transform duration-300 md:hover:scale-105",
                     isSelected
                       ? "border-2 border-gold"
                       : "border-2 border-transparent",

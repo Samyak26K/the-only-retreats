@@ -31,7 +31,7 @@ export function HeritageSection() {
   return (
     <section
       id="heritage"
-      className="pt-20 md:pt-28 pb-12 md:pb-16"
+      className="pt-12 md:pt-28 pb-12 md:pb-16"
       style={{
         backgroundColor: "#1a2a1f",
         backgroundImage: "url('/topo.svg')",
@@ -55,7 +55,7 @@ export function HeritageSection() {
         {/* Main content grid */}
         <div className="mb-12 grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           {/* Left: Two stacked images */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="relative aspect-[3/4] min-h-[200px] overflow-hidden rounded-2xl">
               <Image
                 src="https://res.cloudinary.com/k7cipxug/image/upload/v1787128317/yak_Greazing.png"
@@ -113,7 +113,7 @@ export function HeritageSection() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-8">
+            <div className="grid grid-cols-1 gap-6 border-t border-white/10 pt-8 sm:grid-cols-3">
               <div>
                 <p className="font-display text-3xl text-white/90">12k</p>
                 <p className="mt-1 text-xs tracking-wider text-white/30 uppercase">
@@ -144,7 +144,7 @@ export function HeritageSection() {
         </div>
 
         {/* Process steps */}
-        <div className="grid grid-cols-2 gap-6 border-t border-white/10 pt-16 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 border-t border-white/10 pt-16 sm:grid-cols-2 md:grid-cols-4">
           {processSteps.map((step, index) => (
             <div key={step.number} className="space-y-3">
               <div className="flex items-center gap-3">

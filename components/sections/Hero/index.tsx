@@ -56,7 +56,7 @@ export function HeroSection() {
 
       <div className="relative z-10 w-full pt-[calc(var(--navbar-height-mobile)+2rem)] pb-16 sm:pb-20 md:pt-[calc(var(--navbar-height-tablet)+3rem)] md:pb-24 lg:pt-[calc(var(--navbar-height-desktop)+4rem)]">
         <Container>
-          <div className="flex max-w-2xl flex-col gap-6">
+          <div className="flex max-w-2xl flex-col gap-4 md:gap-6">
             <div
               className={`flex flex-col gap-2 motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 ${entranceDelays[0]}`}
             >
@@ -82,7 +82,7 @@ export function HeroSection() {
             </h1>
 
             <p
-              className={`max-w-md text-base leading-7 text-background/85 sm:text-lg md:max-w-lg lg:max-w-xl motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 ${entranceDelays[2]}`}
+              className={`max-w-md text-sm leading-7 text-background/85 sm:text-lg md:max-w-lg lg:max-w-xl motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 ${entranceDelays[2]}`}
             >
               {heroContent.supporting}
             </p>
@@ -101,7 +101,7 @@ export function HeroSection() {
           </div>
         </Container>
 
-        <div className="mt-12 flex justify-center md:mt-16">
+        <div className="mt-6 flex justify-center md:mt-16">
           <span className="text-xs uppercase tracking-[0.3em] text-background/70">
             {heroContent.scrollCue}
           </span>

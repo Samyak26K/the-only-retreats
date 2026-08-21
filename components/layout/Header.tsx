@@ -147,7 +147,7 @@ export function Header() {
           <div className="flex flex-col items-center leading-tight">
             <span
               className={cn(
-                "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
+                "max-w-[160px] truncate font-heading text-sm font-semibold uppercase tracking-[0.15em] transition-colors duration-normal",
                 "text-foreground",
               )}
             >
@@ -237,7 +237,7 @@ export function Header() {
               <button
                 type="button"
                 onClick={() => setSearchOpen(false)}
-                className="absolute top-1/2 right-4 -translate-y-1/2 text-muted transition-colors hover:text-foreground"
+                className="absolute top-1/2 right-4 flex h-11 w-11 -translate-y-1/2 items-center justify-center text-muted transition-colors hover:text-foreground"
               >
                 <X className="size-5" />
               </button>
@@ -256,7 +256,7 @@ export function Header() {
                     }}
                     className="flex w-full items-center justify-between border-b border-border/20 px-4 py-3 text-left transition-colors last:border-0 hover:bg-background/50"
                   >
-                    <span className="font-heading text-sm text-foreground">
+                    <span className="min-w-0 flex-1 truncate font-heading text-sm text-foreground">
                       {result.name}
                     </span>
                     {result.origin && (

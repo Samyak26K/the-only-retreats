@@ -418,7 +418,7 @@ export default function CheckoutPage() {
             </fieldset>
 
             <div>
-              <div className="fixed right-0 bottom-0 left-0 border-t border-border bg-background p-4 md:relative md:right-auto md:bottom-auto md:left-auto md:border-0 md:bg-transparent md:p-0">
+              <div className="fixed right-0 bottom-0 left-0 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:relative md:right-auto md:bottom-auto md:left-auto md:border-0 md:bg-transparent md:p-0">
                 <Button
                   type="button"
                   disabled={isLoading}
@@ -442,7 +442,7 @@ export default function CheckoutPage() {
             </div>
           </form>
 
-          <aside className="sticky top-24 space-y-4 rounded-2xl border border-border bg-surface p-6">
+          <aside className="sticky top-24 space-y-4 rounded-2xl border border-border bg-surface px-6 pt-6 pb-24 lg:p-6">
             <div className="mb-4 h-0.5 w-8 bg-gold" />
 
             <h2 className="font-heading text-sm font-medium uppercase tracking-[0.15em] text-foreground">

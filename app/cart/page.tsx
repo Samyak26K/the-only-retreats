@@ -131,11 +131,11 @@ export default function CartPage() {
                                   item.quantity - 1,
                                 )
                               }
-                              className="flex h-8 w-8 items-center justify-center text-sm text-muted hover:bg-surface"
+                              className="flex h-11 w-11 items-center justify-center text-sm text-muted hover:bg-surface"
                             >
                               −
                             </button>
-                            <span className="flex h-8 w-8 items-center justify-center border-x border-border text-xs font-medium">
+                            <span className="flex h-11 w-11 items-center justify-center border-x border-border text-xs font-medium">
                               {item.quantity}
                             </span>
                             <button
@@ -147,7 +147,7 @@ export default function CartPage() {
                                   item.quantity + 1,
                                 )
                               }
-                              className="flex h-8 w-8 items-center justify-center text-sm text-muted hover:bg-surface"
+                              className="flex h-11 w-11 items-center justify-center text-sm text-muted hover:bg-surface"
                             >
                               +
                             </button>
@@ -155,7 +155,7 @@ export default function CartPage() {
                           <button
                             type="button"
                             onClick={() => removeItem(item.variantId)}
-                            className="text-xs text-muted underline underline-offset-2 transition-colors hover:text-foreground"
+                            className="inline-flex min-h-11 items-center text-xs text-muted underline underline-offset-2 transition-colors hover:text-foreground"
                           >
                             Remove
                           </button>
@@ -212,7 +212,7 @@ export default function CartPage() {
                 ))}
               </ul>
 
-              <div className="mt-6 flex items-center justify-between border-t border-border pt-6">
+              <div className="mt-6 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row">
                 <Link
                   href="/products"
                   className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground"
@@ -304,7 +304,7 @@ export default function CartPage() {
                     <input
                       type="text"
                       placeholder="Enter code"
-                      className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-xs placeholder:text-muted/40 focus:border-gold focus:outline-none"
+                      className="flex-1 rounded-lg border border-border bg-background px-3 py-3 text-base placeholder:text-muted/40 focus:border-gold focus:outline-none"
                     />
                     <button
                       type="button"
