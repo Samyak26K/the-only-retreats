@@ -122,16 +122,50 @@ export function ProductsGrid({ products }: { products: Product[] }) {
           {featured ? (
             <Link
               href={`/products/${featured.slug}`}
-              className="group mb-6 flex flex-col overflow-hidden rounded-2xl bg-surface lg:grid lg:grid-cols-[55%_45%]"
+              className="group relative mb-6 flex flex-col overflow-hidden rounded-2xl border border-border transition-all duration-500 hover:border-gold/50 lg:flex-row"
             >
-              <div className="relative aspect-[4/3] overflow-hidden lg:aspect-auto lg:h-full">
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface lg:aspect-auto lg:min-h-[400px] lg:w-[55%]">
                 <ProductImage
                   product={featured}
                   sizes="(min-width: 1024px) 55vw, 100vw"
                 />
+                <div className="absolute top-4 left-4">
+                  <span className="font-display text-6xl leading-none text-white/10 select-none">
+                    01
+                  </span>
+                </div>
+                {featured.status !== "ACTIVE" ? (
+                  <div className="absolute top-4 right-4">
+                    <span className="rounded-full border border-border bg-background/80 px-3 py-1 text-[0.6rem] tracking-wide text-muted uppercase backdrop-blur-sm">
+                      {featured.status === "COMING_SOON"
+                        ? "Coming Soon"
+                        : featured.status === "SEASONAL"
+                          ? "Seasonal"
+                          : featured.status}
+                    </span>
+                  </div>
+                ) : null}
               </div>
-              <div className="flex flex-col justify-center p-6 md:p-8">
-                <ProductCopy product={featured} featured />
+
+              <div className="flex flex-col justify-between p-6 md:p-8 lg:w-[45%]">
+                <div className="space-y-3">
+                  <p className="text-[0.6rem] tracking-[0.2em] text-gold uppercase">
+                    Featured
+                  </p>
+                  <p className="text-[0.6rem] tracking-[0.15em] text-muted uppercase">
+                    {featured.primaryOrigin?.name ?? ""}
+                  </p>
+                  <h2 className="font-display text-2xl leading-tight tracking-[-0.02em] text-foreground transition-colors group-hover:text-forest md:text-3xl">
+                    {featured.name}
+                  </h2>
+                  <ProductPrice product={featured} className="text-base" />
+                </div>
+                <div className="mt-6 flex items-center gap-2 text-xs tracking-[0.15em] text-muted uppercase transition-colors group-hover:text-foreground">
+                  <span>Discover</span>
+                  <span className="transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </div>
               </div>
             </Link>
           ) : null}
@@ -146,15 +180,31 @@ export function ProductsGrid({ products }: { products: Product[] }) {
                       href={`/products/${product.slug}`}
                       className="group block"
                     >
-                      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-surface">
+                      <div className="relative mb-4 aspect-[3/4] overflow-hidden rounded-2xl bg-surface">
                         <ProductImage
                           product={product}
                           sizes="(min-width: 1024px) 33vw, 50vw"
                         />
+                        <div className="absolute top-3 left-3">
+                          <span className="font-display text-4xl leading-none text-white/10 select-none">
+                            0{rest.indexOf(product) + 2}
+                          </span>
+                        </div>
+                        <div className="absolute inset-0 bg-forest/0 transition-colors duration-300 group-hover:bg-forest/10" />
+                        <div className="absolute right-0 bottom-4 left-0 flex justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                          <span className="rounded-full bg-forest/80 px-4 py-1.5 text-[0.6rem] tracking-[0.2em] text-white uppercase backdrop-blur-sm">
+                            Discover →
+                          </span>
+                        </div>
                       </div>
-                      <div className="mt-4">
-                        <ProductCopy product={product} />
-                      </div>
+
+                      <p className="mb-1 text-[0.55rem] tracking-[0.15em] text-muted uppercase">
+                        {product.primaryOrigin?.name ?? ""}
+                      </p>
+                      <h3 className="mb-2 font-display text-lg leading-tight tracking-[-0.02em] text-foreground transition-colors group-hover:text-forest">
+                        {product.name}
+                      </h3>
+                      <ProductPrice product={product} className="text-sm" />
                     </Link>
                   </li>
                 ))}
@@ -194,48 +244,24 @@ function ProductImage({ product, sizes }: { product: Product; sizes: string }) {
   );
 }
 
-function ProductCopy({
+function ProductPrice({
   product,
-  featured = false,
+  className = "",
 }: {
   product: Product;
-  featured?: boolean;
+  className?: string;
 }) {
   const prices = product.variants
-    .map((variant) => toNumber(variant.sellingPrice))
-    .filter((price) => Number.isFinite(price));
-  const startingPrice = prices.length === 0 ? undefined : Math.min(...prices);
-  const priceLabel =
-    startingPrice === undefined
-      ? null
-      : product.variants.length > 1
-        ? `From ₹${startingPrice.toLocaleString("en-IN")}`
-        : `₹${startingPrice.toLocaleString("en-IN")}`;
+    .map((v) => toNumber(v.sellingPrice))
+    .filter((p) => Number.isFinite(p) && p > 0);
 
-  return (
-    <>
-      <p className="text-[0.65rem] uppercase tracking-wide text-muted">
-        {product.primaryOrigin?.name ?? ""}
-      </p>
-      <h2
-        className={`font-display tracking-tight text-foreground ${
-          featured ? "mt-2 text-2xl md:text-3xl" : "mt-1.5 text-lg md:text-xl"
-        }`}
-      >
-        {product.name}
-      </h2>
-      {priceLabel ? (
-        <p
-          className={`mt-2 font-heading text-gold ${
-            featured ? "text-base" : "text-sm"
-          }`}
-        >
-          {priceLabel}
-        </p>
-      ) : null}
-      <p className="mt-3 text-[0.65rem] uppercase tracking-wide text-muted opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        Discover →
-      </p>
-    </>
-  );
+  if (prices.length === 0) return null;
+
+  const min = Math.min(...prices);
+  const label =
+    prices.length > 1
+      ? `From ₹${min.toLocaleString("en-IN")}`
+      : `₹${min.toLocaleString("en-IN")}`;
+
+  return <p className={`font-heading text-gold ${className}`}>{label}</p>;
 }

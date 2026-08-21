@@ -35,12 +35,45 @@ export function ProductHero({ product }: ProductHeroProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const [wishlisted, setWishlisted] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [pincode, setPincode] = useState("");
+  const [pincodeStatus, setPincodeStatus] = useState<
+    "idle" | "loading" | "serviceable" | "not-serviceable"
+  >("idle");
+  const [deliveryDays, setDeliveryDays] = useState("");
   const selectedVariant = product.variants.find(
     (v) => v.id === selectedVariantId,
   );
   const currentImage = imageMedia[imageIndex] ?? {
     src: product.hero.media.desktop,
     alt: product.hero.media.alt,
+  };
+
+  const checkPincode = async () => {
+    if (pincode.length !== 6) return;
+    setPincodeStatus("loading");
+    try {
+      const res = await fetch(
+        `https://api.postalpincode.in/pincode/${pincode}`,
+      );
+      const data = await res.json();
+      if (data[0]?.Status === "Success") {
+        const state = data[0].PostOffice[0]?.State ?? "";
+        const isMetro = [
+          "Maharashtra",
+          "Delhi",
+          "Karnataka",
+          "Tamil Nadu",
+          "West Bengal",
+          "Telangana",
+        ].includes(state);
+        setDeliveryDays(isMetro ? "3-5 business days" : "5-7 business days");
+        setPincodeStatus("serviceable");
+      } else {
+        setPincodeStatus("not-serviceable");
+      }
+    } catch {
+      setPincodeStatus("not-serviceable");
+    }
   };
 
   return (
@@ -331,19 +364,53 @@ export function ProductHero({ product }: ProductHeroProps) {
               </button>
             </div>
 
-            <div className="mb-3 flex gap-2">
-              <input
-                type="text"
-                placeholder="Enter PIN code"
-                maxLength={6}
-                className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-xs placeholder:text-muted/50 focus:border-gold focus:outline-none"
-              />
-              <button
-                type="button"
-                className="rounded-lg border border-border px-3 py-2 text-xs uppercase tracking-wide text-muted transition-colors hover:border-gold"
-              >
-                Check
-              </button>
+            <div className="mb-3 space-y-2">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={pincode}
+                  onChange={(e) => {
+                    setPincode(e.target.value.replace(/\D/g, ""));
+                    setPincodeStatus("idle");
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && checkPincode()}
+                  placeholder="Enter PIN code"
+                  maxLength={6}
+                  className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-xs placeholder:text-muted/50 focus:border-gold focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={checkPincode}
+                  disabled={pincode.length !== 6 || pincodeStatus === "loading"}
+                  className="rounded-lg border border-border px-3 py-2 text-xs uppercase tracking-wide text-muted transition-colors hover:border-gold hover:text-gold disabled:opacity-50"
+                >
+                  {pincodeStatus === "loading" ? "..." : "Check"}
+                </button>
+              </div>
+
+              {pincodeStatus === "serviceable" ? (
+                <div className="flex items-center gap-2 rounded-lg border border-green-100 bg-green-50 px-3 py-2">
+                  <span className="text-xs text-green-600">✓</span>
+                  <p className="text-xs text-green-700">
+                    Delivery available · {deliveryDays}
+                  </p>
+                </div>
+              ) : null}
+
+              {pincodeStatus === "not-serviceable" ? (
+                <div className="flex items-center gap-2 rounded-lg border border-red-100 bg-red-50 px-3 py-2">
+                  <span className="text-xs text-red-500">✕</span>
+                  <p className="text-xs text-red-600">
+                    Delivery not available for this pincode
+                  </p>
+                </div>
+              ) : null}
+
+              {pincodeStatus === "idle" ? (
+                <p className="px-1 text-[0.6rem] text-muted">
+                  Check delivery time & COD availability
+                </p>
+              ) : null}
             </div>
 
             <div className="grid grid-cols-5 gap-1 border-t border-border pt-3">
