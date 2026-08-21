@@ -74,6 +74,10 @@ export const metadata: Metadata = {
     description,
     images: ["/images/og/og-homepage.webp"],
   },
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
