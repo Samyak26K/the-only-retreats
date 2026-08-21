@@ -1,4 +1,6 @@
 const items = [
+  "The Only Retreats",
+  "Not Mass Produced. Only Preserved.",
   "Organic Certified",
   "Fair Trade",
   "Traceable Source",
@@ -9,6 +11,8 @@ const items = [
   "Lab Tested",
   "Single Origin",
   "Ancient Methods",
+  "The Only Retreats",
+  "Not Mass Produced. Only Preserved.",
 ];
 
 const separator = "✦";

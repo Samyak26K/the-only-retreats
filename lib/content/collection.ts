@@ -22,7 +22,7 @@ export const collectionContent: Product[] = [
     featured: true,
     tagline: "The Flagship",
     editorialDescription:
-      "Most honey in the market is blended, heated, and filtered multiple times. This honey is none of those things. Raw, unheated, harvested from a single Himalayan region during one flowering season. Pure, rare, and true to its origin.",
+      "Most honey is blended from multiple regions, heated and filtered until it loses everything that made it remarkable. This honey is none of those things. Harvested once. From one valley. Not mass produced. Only preserved.",
   },
   {
     id: "raw-honey",

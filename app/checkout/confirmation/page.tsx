@@ -31,6 +31,10 @@ function ConfirmationContent() {
           <p className="mt-4 font-body text-base text-muted">
             Thank you for your order.
           </p>
+          <p className="mt-2 text-xs text-muted">
+            Thank you for choosing The Only Retreats. Your order has been
+            preserved with care.
+          </p>
 
           <div className="mt-8 rounded-lg border border-border bg-surface p-4">
             <p className="text-xs uppercase tracking-wide text-muted">

@@ -67,6 +67,9 @@ export function OriginsSection() {
           >
             उपत्यका:
           </h2>
+          <p className="mt-3 text-[0.6rem] tracking-[0.15em] text-white/20 uppercase">
+            The Only Retreats — Sourced with intention. Preserved with care.
+          </p>
         </div>
 
         {selectedValley && !showProducts && (

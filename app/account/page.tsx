@@ -2,6 +2,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { AccountNav } from "@/components/account/AccountNav";
 import { AddressSection } from "@/components/account/AddressSection";
 import { WishlistSection } from "@/components/account/WishlistSection";
 import { SignOutButton } from "@/components/shared/SignOutButton";
@@ -75,24 +76,7 @@ export default async function AccountPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr] lg:gap-12">
-          <nav className="space-y-1">
-            {[
-              { label: "Orders", href: "#orders", icon: "📦" },
-              { label: "Edit Profile", href: "#profile", icon: "✎" },
-              { label: "Saved Addresses", href: "#addresses", icon: "◎" },
-              { label: "Wishlist", href: "#wishlist", icon: "♡" },
-              { label: "Rewards", href: "#rewards", icon: "✦" },
-            ].map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-muted transition-colors hover:bg-surface hover:text-foreground"
-              >
-                <span className="text-base">{item.icon}</span>
-                {item.label}
-              </a>
-            ))}
-          </nav>
+          <AccountNav />
 
           <div className="space-y-10">
             <section id="orders">

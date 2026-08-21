@@ -207,6 +207,9 @@ export function ProductHero({ product }: ProductHeroProps) {
             >
               {product.name}
             </h1>
+            <p className="mt-1 text-[0.55rem] tracking-[0.2em] text-muted/50 uppercase">
+              The Only Retreats · Not Mass Produced. Only Preserved.
+            </p>
 
             <div className="mb-2 flex items-center gap-2">
               <div className="flex gap-0.5">

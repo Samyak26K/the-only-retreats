@@ -33,7 +33,7 @@ export interface FooterContent {
 export const footerContent: FooterContent = {
   brand: {
     name: "The Only Retreats",
-    mission: "Preserving Himalayan heritage through intentional commerce.",
+    mission: "Not Mass Produced. Only Preserved.",
   },
   explore: {
     title: "Explore",
@@ -48,7 +48,7 @@ export const footerContent: FooterContent = {
     title: "Contact",
     links: [
       { label: "Instagram", href: "https://instagram.com/theonlyretreats" },
-      { label: "WhatsApp", href: "https://wa.me/91XXXXXXXXXX" },
+      { label: "WhatsApp", href: "https://wa.me/919172778258" },
     ],
   },
   newsletter: {

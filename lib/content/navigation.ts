@@ -25,7 +25,7 @@ export interface NavigationContent {
 export const navigationContent: NavigationContent = {
   brand: {
     name: "The Only Retreats",
-    tagline: "Ancient Himalayan Nourishment",
+    tagline: "Not Mass Produced. Only Preserved.",
     href: "/",
   },
   primaryLinks: [

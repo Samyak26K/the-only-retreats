@@ -51,7 +51,7 @@ export default async function ProductsPage() {
             From the Valleys
           </h1>
           <p className="mt-3 max-w-md font-body text-sm text-muted md:text-base">
-            Each product carries the story of its origin.
+            Each product is a preservation of place, practice and time.
           </p>
         </header>
 

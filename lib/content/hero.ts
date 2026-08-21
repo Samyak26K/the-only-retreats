@@ -34,7 +34,7 @@ export const heroContent: HeroContent = {
   },
   title: "The Himalayas are not a destination.",
   titleEmphasis: "They are a source.",
-  supporting: "From the purest origins comes the truest nourishment.",
+  supporting: "Not mass produced. Only preserved.",
   cta: {
     label: "Enter the Source",
     href: "#origins",

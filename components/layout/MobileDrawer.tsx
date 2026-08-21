@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ShoppingBag, UserRound, X } from "lucide-react";
+import { ChevronDown, ShoppingBag, UserRound, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,6 +25,7 @@ const drawerUtilityRowClasses =
 export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
 
   useFocusTrap(panelRef, open, onClose);
 
@@ -103,16 +104,45 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
         </div>
 
         <div className="mt-6 flex flex-col gap-1 border-t border-border pt-4">
-          <Link
-            href="/account"
-            onClick={onClose}
-            className={drawerUtilityRowClasses}
-          >
-            <UserRound className="size-5 text-muted" aria-hidden="true" />
-            <span className="text-sm font-medium text-foreground">
-              My Account
-            </span>
-          </Link>
+          <div>
+            <button
+              type="button"
+              onClick={() => setAccountOpen((o) => !o)}
+              className={drawerUtilityRowClasses + " w-full"}
+            >
+              <UserRound className="size-5 text-muted" aria-hidden="true" />
+              <span className="flex-1 text-left text-sm font-medium text-foreground">
+                My Account
+              </span>
+              <ChevronDown
+                className={cn(
+                  "size-4 text-muted transition-transform",
+                  accountOpen && "rotate-180",
+                )}
+              />
+            </button>
+
+            {accountOpen ? (
+              <div className="mt-1 ml-9 space-y-1">
+                {[
+                  { label: "Orders", href: "/account#orders" },
+                  { label: "Wishlist", href: "/account#wishlist" },
+                  { label: "Saved Addresses", href: "/account#addresses" },
+                  { label: "Rewards", href: "/account#rewards" },
+                  { label: "Edit Profile", href: "/account#profile" },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={onClose}
+                    className="block py-2 text-sm text-muted transition-colors hover:text-foreground"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            ) : null}
+          </div>
           <Link
             href="/cart"
             onClick={onClose}

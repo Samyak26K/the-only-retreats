@@ -26,8 +26,10 @@ export default function OurStoryPage() {
               The origin comes before the product.
             </h1>
             <p className="max-w-2xl font-body text-lg leading-8 text-muted">
-              The Only Retreats was built on a single conviction — that the
-              place a product comes from matters more than the product itself.
+              We did not set out to build another wellness brand. We set out to
+              preserve something — the traditions, landscapes and wisdom that
+              most of the world is losing to speed, convenience and mass
+              production.
             </p>
           </div>
         </Container>

@@ -91,9 +91,9 @@ export function HeritageSection() {
           {/* Right: Story */}
           <div className="space-y-8">
             <p className="font-body text-lg leading-8 text-white/70">
-              From the milk of free-grazing yaks to the golden goodness in every
-              jar — our ghee is crafted using the ancient Bilona method, in
-              small batches, the way it has been for centuries.
+              Most ghee is industrially produced. Ours is not. From free-grazing
+              yaks at 12,000 feet to the ancient Bilona method — every jar
+              carries a tradition that cannot be mass produced.
             </p>
 
             <p className="font-body text-base leading-7 text-white/50">

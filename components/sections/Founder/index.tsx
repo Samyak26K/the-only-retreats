@@ -39,15 +39,16 @@ export function FounderSection() {
 
             {/* Story — shortened, most powerful paragraph */}
             <p className="max-w-lg font-body text-base leading-7 text-muted sm:text-lg sm:leading-8">
-              I spent seasons in Spiti, Lahaul, and Zanskar. I lived with
-              herding families. What I found was not a product opportunity. It
-              was a responsibility.
+              I spent seasons living with herding families in Spiti, Lahaul and
+              Zanskar. I saw how they tended land, animals and traditions with a
+              patience that modern commerce has no room for. What I brought back
+              was not a business plan. It was a responsibility.
             </p>
 
             <p className="max-w-lg font-body text-base leading-7 text-muted/70">
-              The Only Retreats exists to carry that responsibility forward — to
-              bring what the Himalayas offer in its truest form, to people who
-              are ready to receive it.
+              The Only Retreats exists because some things should not be scaled.
+              Some traditions deserve to be preserved, not disrupted. We are
+              here to make that possible — one intentional product at a time.
             </p>
 
             {/* Signature */}

@@ -39,9 +39,22 @@ export default function CartPage() {
             <h1 className="font-display text-3xl tracking-[-0.03em] text-foreground md:text-4xl">
               Shopping Cart
             </h1>
-            <p className="text-sm text-muted">
-              {items.length} {items.length === 1 ? "item" : "items"}
-            </p>
+            <div className="flex items-center gap-4">
+              <p className="text-sm text-muted">
+                {items.length} {items.length === 1 ? "item" : "items"}
+              </p>
+              {items.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    items.forEach((item) => removeItem(item.variantId))
+                  }
+                  className="text-xs text-muted underline underline-offset-2 transition-colors hover:text-red-500"
+                >
+                  Clear
+                </button>
+              ) : null}
+            </div>
           </div>
         </header>
 
@@ -56,6 +69,9 @@ export default function CartPage() {
               </h2>
               <p className="max-w-xs text-sm text-muted">
                 Discover products sourced from Himalayan valleys
+              </p>
+              <p className="mt-4 text-[0.6rem] tracking-[0.2em] text-muted/40 uppercase">
+                The Only Retreats · Not Mass Produced. Only Preserved.
               </p>
             </div>
             <Link
@@ -218,15 +234,6 @@ export default function CartPage() {
                 >
                   ← Continue Shopping
                 </Link>
-                <button
-                  type="button"
-                  onClick={() =>
-                    items.forEach((item) => removeItem(item.variantId))
-                  }
-                  className="text-xs text-muted underline underline-offset-2 transition-colors hover:text-foreground"
-                >
-                  Clear Cart
-                </button>
               </div>
             </div>
 

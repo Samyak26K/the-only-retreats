@@ -38,6 +38,10 @@ export function FooterSection() {
             <p className="max-w-sm font-body text-base leading-7 text-white/40">
               {footerContent.brand.mission}
             </p>
+            <p className="mt-2 max-w-xs text-xs leading-5 text-white/30">
+              Dedicated to preserving the world&apos;s most meaningful
+              traditions of nourishment, wellness and intentional living.
+            </p>
           </div>
 
           {/* Three column grid */}
