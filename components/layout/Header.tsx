@@ -226,7 +226,7 @@ export function Header() {
                 placeholder="Search products, valleys, origins..."
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-surface py-4 pr-12 pl-12 text-lg text-foreground placeholder:text-muted/50 focus:border-gold focus:outline-none"
+                className="w-full rounded-2xl border border-border bg-surface py-4 pr-12 pl-12 text-lg text-foreground placeholder:text-muted/50 focus:border-gold focus:outline-none [&::-webkit-search-cancel-button]:hidden"
               />
               <button
                 type="button"
