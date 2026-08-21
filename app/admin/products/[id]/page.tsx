@@ -83,7 +83,18 @@ function HiddenProductFields({
       {(Object.keys(values) as Array<keyof ProductEditValues>)
         .filter((key) => key !== "featured" && !skip.has(key))
         .map((key) => (
-          <input key={key} type="hidden" name={key} value={values[key]} />
+          <input
+            key={key}
+            type="hidden"
+            name={key}
+            value={
+              values[key] === false
+                ? "false"
+                : values[key] === true
+                  ? "true"
+                  : (values[key] ?? "")
+            }
+          />
         ))}
       {!skip.has("featured") && values.featured ? (
         <input type="hidden" name="featured" value="on" />
