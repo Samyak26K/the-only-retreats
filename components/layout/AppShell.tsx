@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 import { Header } from "@/components/layout/Header";
 
-const HIDDEN_HEADER_PREFIXES = ["/admin", "/sign-in", "/sign-up"];
+const HIDDEN_HEADER_PREFIXES = ["/admin", "/sign-in", "/sign-up", "/dhatu"];
 
 function shouldShowHeader(pathname: string) {
   return !HIDDEN_HEADER_PREFIXES.some(

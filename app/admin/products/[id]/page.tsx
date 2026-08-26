@@ -81,7 +81,10 @@ function HiddenProductFields({
   return (
     <>
       {(Object.keys(values) as Array<keyof ProductEditValues>)
-        .filter((key) => key !== "featured" && !skip.has(key))
+        .filter(
+          (key): key is Exclude<keyof ProductEditValues, "featured"> =>
+            key !== "featured" && !skip.has(key),
+        )
         .map((key) => (
           <input
             key={key}

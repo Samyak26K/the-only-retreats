@@ -33,6 +33,7 @@ export const navigationContent: NavigationContent = {
     { label: "Origins", href: "/#origins" },
     { label: "Heritage", href: "/#heritage" },
     { label: "Contact", href: "/#contact" },
+    { label: "Dhatu", href: "/dhatu" },
   ],
   utility: {
     search: { label: "Search" },
