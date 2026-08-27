@@ -121,6 +121,43 @@ export function FooterSection() {
                 Returns & Refunds
               </Link>
             </div>
+            <div
+              className="mt-6 border-t pt-6"
+              style={{ borderColor: "rgba(255,255,255,0.08)" }}
+            >
+              {/* FSSAI */}
+              <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="https://res.cloudinary.com/k7cipxug/image/upload/v1787843837/FSSAI-License-Mandatory-for-Small-Business-300x232-removebg-preview.png"
+                  alt="FSSAI Licensed"
+                  className="h-10 w-auto object-contain opacity-80"
+                />
+                <div>
+                  <p className="text-[0.6rem] tracking-wide text-white/30 uppercase">
+                    FSSAI License No.
+                  </p>
+                  <p className="mt-0.5 text-xs text-white/50">
+                    [To be added] · License pending update
+                  </p>
+                </div>
+              </div>
+
+              {/* Company details */}
+              <div className="space-y-1">
+                <p className="text-[0.6rem] leading-5 text-white/25">
+                  Marketed by: The Only Retreats (Brand of Rugvedic Ventures)
+                </p>
+                <p className="text-[0.6rem] leading-5 text-white/25">
+                  Packed & Procured by: Rugvedic Ventures Pvt. Ltd, GAT 458,
+                  Highland Spaces, Maharashtra, Pune 412105
+                </p>
+                <p className="text-[0.6rem] leading-5 text-white/25">
+                  Consumer Care: customer@theonlyretreats.com · +91 9225181202 ·
+                  www.theonlyretreats.com
+                </p>
+              </div>
+            </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-white/20">
                 {footerContent.bottom.copyright}
