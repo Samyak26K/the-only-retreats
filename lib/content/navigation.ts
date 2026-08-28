@@ -34,6 +34,7 @@ export const navigationContent: NavigationContent = {
     { label: "Heritage", href: "/#heritage" },
     { label: "Contact", href: "/#contact" },
     { label: "Dhatu", href: "/dhatu" },
+    { label: "Divya", href: "/divya" },
   ],
   utility: {
     search: { label: "Search" },

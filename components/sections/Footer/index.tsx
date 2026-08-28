@@ -120,6 +120,24 @@ export function FooterSection() {
               >
                 Returns & Refunds
               </Link>
+              <Link
+                href="/shipping"
+                className="text-xs text-white/30 hover:text-white/60 transition-colors"
+              >
+                Shipping Policy
+              </Link>
+              <Link
+                href="/cancellation"
+                className="text-xs text-white/30 hover:text-white/60 transition-colors"
+              >
+                Cancellation Policy
+              </Link>
+              <Link
+                href="/cookies"
+                className="text-xs text-white/30 hover:text-white/60 transition-colors"
+              >
+                Cookie Policy
+              </Link>
             </div>
             <div
               className="mt-6 border-t pt-6"
@@ -137,9 +155,7 @@ export function FooterSection() {
                   <p className="text-[0.6rem] tracking-wide text-white/30 uppercase">
                     FSSAI License No.
                   </p>
-                  <p className="mt-0.5 text-xs text-white/50">
-                    [To be added] · License pending update
-                  </p>
+                  <p className="mt-0.5 text-xs text-white/50">10924006000044</p>
                 </div>
               </div>
 

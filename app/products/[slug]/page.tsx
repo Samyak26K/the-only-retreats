@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ProductCompliance } from "@/components/product-detail/ProductCompliance";
+import { ProductComplianceHoney } from "@/components/product-detail/ProductComplianceHoney";
 import { ProductHero } from "@/components/product-detail/ProductHero";
 import { ProductInfoGrid } from "@/components/product-detail/ProductInfoGrid";
 import { ProductJourney } from "@/components/product-detail/ProductJourney";
@@ -60,6 +61,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <ProductJourney steps={product.originJourney} />
       <ProductInfoGrid product={product} />
       <ProductCompliance product={product} />
+      <ProductComplianceHoney product={product} />
       <ProductRelatedProducts product={product} />
       <FooterSection />
     </>

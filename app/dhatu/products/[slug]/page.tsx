@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { DhatuProductHero } from "@/components/dhatu/DhatuProductHero";
+import { DhatuProductSections } from "@/components/dhatu/DhatuProductSections";
 import { prisma } from "@/lib/prisma";
 
 type Props = {
@@ -135,6 +136,21 @@ export default async function DhatuProductPage({ params }: Props) {
 
           {/* Product hero */}
           <DhatuProductHero product={productData} />
+
+          <DhatuProductSections
+            productName={product.name}
+            category={
+              product.brand === "Dhatu"
+                ? product.name.toLowerCase().includes("copper")
+                  ? "Copper"
+                  : product.name.toLowerCase().includes("brass")
+                    ? "Brass"
+                    : product.name.toLowerCase().includes("kansa")
+                      ? "Kansa"
+                      : "Dhatu"
+                : "Dhatu"
+            }
+          />
 
           {/* Related products */}
           {related.length > 0 ? (

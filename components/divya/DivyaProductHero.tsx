@@ -20,15 +20,15 @@ type Props = {
     name: string;
     slug: string;
     shortDescription: string | null;
+    longDescription?: string | null;
     currency: string;
+    status: string;
     variants: Variant[];
-    images: Array<{ url: string; alt: string | null }>;
-    altitude: string | null;
-    region: string | null;
+    images: Array<{ url: string | null; alt: string | null }>;
   };
 };
 
-export function DhatuProductHero({ product }: Props) {
+export function DivyaProductHero({ product }: Props) {
   const [selectedVariant, setSelectedVariant] = useState(
     product.variants.find((v) => v.isDefault) ?? product.variants[0],
   );
@@ -36,6 +36,7 @@ export function DhatuProductHero({ product }: Props) {
   const [imageIndex, setImageIndex] = useState(0);
   const [added, setAdded] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [descExpanded, setDescExpanded] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
@@ -72,14 +73,16 @@ export function DhatuProductHero({ product }: Props) {
 
   return (
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
-      {/* LEFT: Images */}
+      {/* LEFT: Image */}
       <div>
-        {/* Main image */}
         <div
-          className="relative mb-3 flex aspect-square items-center justify-center overflow-hidden rounded-2xl"
-          style={{ backgroundColor: "#241812" }}
+          className="relative mb-3 aspect-square overflow-hidden rounded-2xl"
+          style={{
+            backgroundColor: "#F0E8D8",
+            border: "1px solid #D4B896",
+          }}
         >
-          {currentImage ? (
+          {currentImage?.url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={currentImage.url}
@@ -87,12 +90,14 @@ export function DhatuProductHero({ product }: Props) {
               className="h-full w-full object-cover"
             />
           ) : (
-            <p
-              className="font-display text-6xl opacity-10"
-              style={{ color: "#B25B32" }}
-            >
-              ✦
-            </p>
+            <div className="flex h-full w-full items-center justify-center">
+              <p
+                className="font-display text-6xl opacity-10"
+                style={{ color: "#B07428" }}
+              >
+                ✦
+              </p>
+            </div>
           )}
         </div>
 
@@ -106,13 +111,13 @@ export function DhatuProductHero({ product }: Props) {
                 onClick={() => setImageIndex(i)}
                 className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition-colors"
                 style={{
-                  borderColor: i === imageIndex ? "#B25B32" : "#5A3A2A",
+                  borderColor: i === imageIndex ? "#6A2434" : "#D4B896",
                 }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={img.url}
-                  alt={img.alt ?? ""}
+                  src={img.url ?? ""}
+                  alt=""
                   className="h-full w-full object-cover"
                 />
               </button>
@@ -122,58 +127,70 @@ export function DhatuProductHero({ product }: Props) {
       </div>
 
       {/* RIGHT: Info */}
-      <div className="space-y-5">
-        {/* Category / origin */}
+      <div className="space-y-4 md:space-y-5">
         <p
           className="text-[0.6rem] uppercase tracking-[0.3em]"
-          style={{ color: "#B25B32" }}
+          style={{ color: "#B07428" }}
         >
-          Dhatu · Handcrafted Heritage
+          Divya · Sacred & Wellness
         </p>
 
-        {/* Name */}
         <h1
           className="font-display text-3xl leading-tight md:text-4xl"
-          style={{ color: "#F2EBE0" }}
+          style={{ color: "#2C1810" }}
         >
           {product.name}
         </h1>
 
-        {/* Region + altitude */}
-        {product.region || product.altitude ? (
-          <p
-            className="text-[0.6rem] uppercase tracking-[0.15em]"
-            style={{ color: "#B8A98F" }}
-          >
-            {[product.region, product.altitude].filter(Boolean).join(" · ")}
-          </p>
-        ) : null}
-
         {/* Price */}
-        <div>
-          <p className="font-display text-2xl" style={{ color: "#C89B4A" }}>
-            ₹{selectedVariant?.sellingPrice.toLocaleString("en-IN")}
-          </p>
-          <p className="mt-1 text-[0.6rem]" style={{ color: "#B8A98F" }}>
-            Inclusive of all taxes
-          </p>
-        </div>
+        {selectedVariant ? (
+          <div>
+            <p className="font-display text-2xl" style={{ color: "#6A2434" }}>
+              ₹{selectedVariant.sellingPrice.toLocaleString("en-IN")}
+            </p>
+            <p className="mt-1 text-[0.6rem]" style={{ color: "#8A7560" }}>
+              Inclusive of all taxes
+            </p>
+          </div>
+        ) : null}
 
         {/* Description */}
-        {product.shortDescription ? (
-          <p className="text-sm leading-7" style={{ color: "#B8A98F" }}>
-            {product.shortDescription}
-          </p>
-        ) : null}
+        {product.shortDescription && (
+          <div>
+            <p className="text-sm leading-7" style={{ color: "#8A7560" }}>
+              {product.shortDescription}
+            </p>
+            {product.longDescription && (
+              <>
+                {descExpanded && (
+                  <p
+                    className="text-sm leading-7 mt-3"
+                    style={{ color: "#8A7560" }}
+                  >
+                    {product.longDescription}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setDescExpanded((e) => !e)}
+                  className="text-xs mt-2 underline underline-offset-2"
+                  style={{ color: "#B07428" }}
+                >
+                  {descExpanded ? "Read less" : "Read more"}
+                </button>
+              </>
+            )}
+          </div>
+        )}
 
-        {/* Variants - only show if more than 1 */}
+        {/* Variants */}
         {product.variants.length > 1 ? (
           <div>
             <p
               className="mb-3 text-[0.6rem] uppercase tracking-[0.2em]"
-              style={{ color: "#B25B32" }}
+              style={{ color: "#B07428" }}
             >
-              Size / Variant
+              Variant
             </p>
             <div className="flex flex-wrap gap-2">
               {product.variants.map((variant) => (
@@ -185,16 +202,16 @@ export function DhatuProductHero({ product }: Props) {
                   style={{
                     borderColor:
                       selectedVariant?.id === variant.id
-                        ? "#B25B32"
-                        : "#5A3A2A",
+                        ? "#6A2434"
+                        : "#B07428",
                     backgroundColor:
                       selectedVariant?.id === variant.id
-                        ? "#B25B32"
+                        ? "#6A2434"
                         : "transparent",
                     color:
                       selectedVariant?.id === variant.id
-                        ? "#F2EBE0"
-                        : "#B8A98F",
+                        ? "#FAF5EC"
+                        : "#8A7560",
                   }}
                 >
                   {variant.label}
@@ -208,25 +225,25 @@ export function DhatuProductHero({ product }: Props) {
         <div>
           <p
             className="mb-3 text-[0.6rem] uppercase tracking-[0.2em]"
-            style={{ color: "#B25B32" }}
+            style={{ color: "#B07428" }}
           >
             Quantity
           </p>
           <div
             className="flex w-fit items-center overflow-hidden rounded-full border"
-            style={{ borderColor: "#5A3A2A" }}
+            style={{ borderColor: "#B07428" }}
           >
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               className="flex h-11 w-11 items-center justify-center"
-              style={{ color: "#B8A98F" }}
+              style={{ color: "#8A7560" }}
             >
               <Minus className="size-3.5" />
             </button>
             <span
               className="w-10 text-center text-sm"
-              style={{ color: "#F2EBE0" }}
+              style={{ color: "#2C1810" }}
             >
               {quantity}
             </span>
@@ -234,7 +251,7 @@ export function DhatuProductHero({ product }: Props) {
               type="button"
               onClick={() => setQuantity((q) => q + 1)}
               className="flex h-11 w-11 items-center justify-center"
-              style={{ color: "#B8A98F" }}
+              style={{ color: "#8A7560" }}
             >
               <Plus className="size-3.5" />
             </button>
@@ -242,17 +259,17 @@ export function DhatuProductHero({ product }: Props) {
         </div>
 
         {/* Add to cart + wishlist */}
-        <div className="flex gap-3 pt-2">
+        <div className="flex gap-3 pt-1">
           <button
             type="button"
             onClick={handleAddToCart}
             className="h-12 flex-1 rounded-full text-xs font-medium tracking-[0.25em] uppercase transition-all"
             style={{
-              backgroundColor: added ? "#5A3A2A" : "#B25B32",
-              color: "#F2EBE0",
+              backgroundColor: added ? "#8A7560" : "#6A2434",
+              color: "#FAF5EC",
             }}
           >
-            {added ? "Added to Cart ✓" : "Add to Cart"}
+            {added ? "Added ✓" : "Add to Cart"}
           </button>
           <button
             type="button"
@@ -270,8 +287,8 @@ export function DhatuProductHero({ product }: Props) {
             }
             className="flex h-12 w-12 items-center justify-center rounded-full border transition-colors"
             style={{
-              borderColor: wishlisted ? "#B25B32" : "#5A3A2A",
-              color: wishlisted ? "#B25B32" : "#B8A98F",
+              borderColor: wishlisted ? "#6A2434" : "#B07428",
+              color: wishlisted ? "#6A2434" : "#8A7560",
             }}
           >
             <Heart className={`size-4 ${wishlisted ? "fill-current" : ""}`} />
@@ -281,21 +298,21 @@ export function DhatuProductHero({ product }: Props) {
         {/* Feature badges */}
         <div
           className="grid grid-cols-2 gap-3 pt-4"
-          style={{ borderTop: "1px solid #5A3A2A" }}
+          style={{ borderTop: "1px solid #D4B896" }}
         >
           {[
-            "Handcrafted",
-            "Traditional Method",
-            "No Machine Replication",
-            "Ayurvedic Benefits",
+            "Natural Ingredients",
+            "Traditional Recipe",
+            "No Chemicals",
+            "Vedic Tradition",
           ].map((badge) => (
             <div key={badge} className="flex items-center gap-2">
-              <span className="text-xs" style={{ color: "#B8A98F" }}>
-                +
+              <span className="text-xs" style={{ color: "#B07428" }}>
+                ✦
               </span>
               <p
                 className="text-[0.65rem] uppercase tracking-[0.1em]"
-                style={{ color: "#B8A98F" }}
+                style={{ color: "#8A7560" }}
               >
                 {badge}
               </p>

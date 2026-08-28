@@ -4,17 +4,13 @@ type Props = {
   product: Product;
 };
 
-export function ProductCompliance({ product }: Props) {
-  const isGhee =
-    product.slug.includes("ghee") ||
-    product.slug.includes("badri") ||
-    product.name.toLowerCase().includes("ghee");
-  if (!isGhee) return null;
+export function ProductComplianceHoney({ product }: Props) {
+  const isHoney = product.slug.includes("honey");
+  if (!isHoney) return null;
 
   return (
     <section className="border-t border-border bg-background py-12 md:py-16">
       <div className="mx-auto max-w-4xl px-4 md:px-8">
-        {/* Header */}
         <div className="mb-8">
           <p className="mb-2 text-[0.6rem] tracking-[0.24em] text-muted uppercase">
             Product Information
@@ -27,25 +23,28 @@ export function ProductCompliance({ product }: Props) {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* Left column */}
           <div className="space-y-6">
-            {/* Veg mark + Ingredients */}
+            {/* Ingredients */}
             <div className="rounded-xl border border-border p-5">
-              <div className="mb-4 flex items-center gap-3">
-                {/* Green veg dot */}
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm border-2 border-green-600">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-600" />
-                </div>
-                <p className="text-xs font-medium tracking-[0.15em] text-foreground uppercase">
-                  Vegetarian Product
-                </p>
-              </div>
-              <div>
-                <p className="mb-1 text-[0.6rem] tracking-[0.15em] text-muted uppercase">
-                  Ingredients
-                </p>
-                <p className="text-sm text-foreground">
-                  Milk fat (made from Badri cow milk)
-                </p>
-              </div>
+              <p className="mb-2 text-[0.6rem] tracking-[0.15em] text-muted uppercase">
+                Ingredients
+              </p>
+              <p className="text-sm text-foreground">
+                Pure Natural Himalayan Honey
+              </p>
+              <p className="mt-2 text-[0.6rem] leading-5 text-muted">
+                Naturally contains microscopic amounts of Fe, Zn, K, Mg, Ca and
+                B Vitamin
+              </p>
+            </div>
+
+            {/* Warning */}
+            <div className="rounded-xl border border-red-100 bg-red-50/50 p-5">
+              <p className="mb-2 text-[0.6rem] font-semibold tracking-[0.15em] text-red-600 uppercase">
+                ⚠ Important Warning
+              </p>
+              <p className="text-sm font-medium text-red-700">
+                Do not feed to infants under one year of age.
+              </p>
             </div>
 
             {/* Shelf life & storage */}
@@ -57,22 +56,22 @@ export function ProductCompliance({ product }: Props) {
                 Best before 18 months from date of packaging
               </p>
               <p className="text-xs leading-5 text-muted">
-                Store in a cool, dry place away from direct heat and sunlight,
-                lid tightly closed. Seasonal changes may appear in colour &
-                flavour. Do not refrigerate.
+                Store at room temperature in a dry place. Keep away from direct
+                sunlight. Crystallization is a natural process of pure honey —
+                it does not mean it has gone bad. Do not refrigerate.
               </p>
               <div
                 className="space-y-1 pt-2"
                 style={{ borderTop: "1px solid var(--border)" }}
               >
                 <p className="text-[0.6rem] text-muted">
-                  Batch No: TOR-PRH-JUN-001-26
+                  Batch No: TOR-KJ-HJUN-001-26
                 </p>
                 <p className="text-[0.6rem] text-muted">
                   Packed on: 08-AUG-2026
                 </p>
                 <p className="text-[0.6rem] text-muted">
-                  Best Before: 08-FEB-2028
+                  Use Before: 08-FEB-2028
                 </p>
               </div>
             </div>
@@ -80,16 +79,18 @@ export function ProductCompliance({ product }: Props) {
             {/* Facility & Contact */}
             <div className="space-y-2 rounded-xl border border-border p-5">
               <p className="mb-2 text-[0.6rem] tracking-[0.15em] text-muted uppercase">
-                Manufactured & Contact
+                Source & Contact
               </p>
               <p className="text-xs text-foreground">
-                Sourced from Himalayan villages, Kullu Valley, Himachal Pradesh
+                Sourced from Deendayal Bee Farm, VPO Kararsu Village, Kullu,
+                Himachal Pradesh
               </p>
               <p className="text-xs text-muted">
-                Packed by: Rugvedic Ventures Pvt. Ltd, Pune
+                Villages: Kararsu, Jana · Altitude: 2200m (7260ft)
               </p>
               <p className="text-xs text-muted">
-                Villages: Pulag, Rumsu, Hallan · Altitude: 2460m
+                Packed & Marketed by: Rugvedic Ventures Pvt. Ltd, GAT 458,
+                Highland Spaces, Pune 412105
               </p>
               <div
                 className="space-y-1 pt-2"
@@ -109,7 +110,7 @@ export function ProductCompliance({ product }: Props) {
               Nutrition Facts
             </p>
             <p className="mb-4 text-[0.55rem] text-muted">
-              Per serving 14g (1 Tbsp) · 32 servings per pack
+              Per serving 21g (1 Tbsp) · 35 servings per pack
             </p>
 
             <table className="w-full text-xs">
@@ -128,19 +129,16 @@ export function ProductCompliance({ product }: Props) {
               </thead>
               <tbody>
                 {[
-                  { name: "Energy", per100: "898.4 kcal", rda: "6.29%" },
-                  { name: "Protein", per100: "0g", rda: "0%" },
-                  { name: "Carbohydrate", per100: "0g", rda: "0%" },
-                  { name: "Total Sugar", per100: "0g", rda: "—" },
+                  { name: "Energy", per100: "313 kcal", rda: "3.28%" },
+                  { name: "Protein", per100: "0.60g", rda: "<0.1%" },
+                  { name: "Carbohydrate", per100: "81.8g", rda: "5.8%" },
+                  {
+                    name: "Total Natural Sugar",
+                    per100: "82.4g",
+                    rda: "—",
+                  },
                   { name: "Added Sugar", per100: "0g", rda: "—" },
-                  { name: "Total Fat", per100: "99.8g", rda: "20.8%" },
-                  { name: "Saturated Fat", per100: "67.8g", rda: "43.1%" },
-                  { name: "Trans Fat", per100: "0g", rda: "—" },
-                  { name: "PUFA", per100: "2.9g", rda: "—" },
-                  { name: "MUFA", per100: "28.2g", rda: "—" },
-                  { name: "Omega 3", per100: "0.36g", rda: "—" },
-                  { name: "Omega 6", per100: "2.4g", rda: "—" },
-                  { name: "Cholesterol", per100: "128.4mg", rda: "—" },
+                  { name: "Sodium", per100: "6.70mg", rda: "0.07%" },
                 ].map((row, i) => (
                   <tr
                     key={row.name}
@@ -159,8 +157,7 @@ export function ProductCompliance({ product }: Props) {
             </table>
 
             <p className="mt-3 text-[0.55rem] leading-4 text-muted">
-              *%RDA values are based on a 2000 kcal diet. Your daily values may
-              be higher or lower depending on your calorie needs.
+              *%RDA values are based on a 2000 kcal diet.
             </p>
 
             {/* FSSAI */}
@@ -175,7 +172,7 @@ export function ProductCompliance({ product }: Props) {
                 className="h-8 w-auto object-contain opacity-70"
               />
               <p className="text-[0.55rem] text-muted">
-                FSSAI License No. [To be updated]
+                FSSAI License No. 10924006000044
               </p>
             </div>
           </div>
