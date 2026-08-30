@@ -76,8 +76,7 @@ export const metadata: Metadata = {
     images: ["/images/og/og-homepage.webp"],
   },
   icons: {
-    icon: "/favicon-96x96.png",
-    shortcut: "/favicon.ico",
+    icon: "/favicon.svg",
   },
 };
 
