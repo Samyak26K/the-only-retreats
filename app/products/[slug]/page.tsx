@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { ProductCompliance } from "@/components/product-detail/ProductCompliance";
 import { ProductComplianceHoney } from "@/components/product-detail/ProductComplianceHoney";
@@ -72,15 +73,34 @@ export default async function ProductPage({ params }: ProductPageProps) {
     product.name.toLowerCase().includes("ghee");
 
   return (
-    <>
-      <ProductHero product={product} />
-      <ProductWhyExists product={product} />
-      {showJourney && <ProductJourney steps={product.originJourney} />}
-      <ProductInfoGrid product={product} />
-      <ProductCompliance product={product} />
-      <ProductComplianceHoney product={product} />
-      <ProductRelatedProducts product={product} />
-      <FooterSection />
-    </>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-background animate-pulse">
+          <div className="h-(--navbar-height-mobile) md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)" />
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="aspect-square rounded-2xl bg-surface" />
+              <div className="space-y-4">
+                <div className="h-4 bg-surface rounded w-1/3" />
+                <div className="h-8 bg-surface rounded w-2/3" />
+                <div className="h-4 bg-surface rounded w-1/2" />
+                <div className="h-12 bg-surface rounded w-full mt-8" />
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <>
+        <ProductHero product={product} />
+        <ProductWhyExists product={product} />
+        {showJourney && <ProductJourney steps={product.originJourney} />}
+        <ProductInfoGrid product={product} />
+        <ProductCompliance product={product} />
+        <ProductComplianceHoney product={product} />
+        <ProductRelatedProducts product={product} />
+        <FooterSection />
+      </>
+    </Suspense>
   );
 }
