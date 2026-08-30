@@ -1,4 +1,9 @@
+import os from "node:os";
+import path from "node:path";
 import type { NextConfig } from "next";
+
+const windowsHomeTraceIgnore = "C:**";
+const homeSegmentTraceIgnore = `**/${path.basename(os.homedir())}/**`;
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -11,6 +16,24 @@ const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
     serverComponentsExternalPackages: ["@prisma/client"],
+  },
+  // Next applies outputFileTracingExcludes after webpack compile. The webpack
+  // TraceEntryPointsPlugin still globs os.homedir() during compile (NFT), which
+  // hits Windows user-profile junctions like Cookies / Application Data.
+  outputFileTracingExcludes: {
+    "*": [windowsHomeTraceIgnore, homeSegmentTraceIgnore],
+  },
+  webpack: (config) => {
+    for (const plugin of config.plugins ?? []) {
+      if (plugin?.constructor?.name === "TraceEntryPointsPlugin") {
+        plugin.traceIgnores = [
+          ...(plugin.traceIgnores ?? []),
+          windowsHomeTraceIgnore,
+          homeSegmentTraceIgnore,
+        ];
+      }
+    }
+    return config;
   },
   images: {
     remotePatterns: [
