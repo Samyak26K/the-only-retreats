@@ -75,6 +75,10 @@ export const metadata: Metadata = {
     description,
     images: ["/images/og/og-homepage.webp"],
   },
+  icons: {
+    icon: "/favicon-96x96.png",
+    shortcut: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
