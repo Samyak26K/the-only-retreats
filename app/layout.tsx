@@ -9,6 +9,7 @@ import {
 import { AppShell } from "@/components/layout/AppShell";
 import { CartToast } from "@/components/shared/CartToast";
 import { PageLoader } from "@/components/shared/PageLoader";
+import { SmoothScroll } from "@/components/shared/SmoothScroll";
 import { DEFAULT_SITE_URL, SITE_NAME } from "@/lib/constants";
 import { warmupDb } from "@/lib/db-warmup";
 import { AppProviders } from "@/providers/app-providers";
@@ -101,6 +102,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <AppProviders>
+          <SmoothScroll />
           <AppShell>{children}</AppShell>
         </AppProviders>
         <CartToast />

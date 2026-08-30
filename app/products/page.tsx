@@ -8,6 +8,12 @@ export default async function ProductsPage() {
       status: {
         in: ["ACTIVE", "COMING_SOON", "SEASONAL", "SOLD_OUT", "DRAFT"],
       },
+      OR: [
+        { brand: "Himalayan" },
+        { brand: "The Only Retreats" },
+        { brand: null },
+        { brand: "" },
+      ],
     },
     orderBy: { name: "asc" },
     select: {

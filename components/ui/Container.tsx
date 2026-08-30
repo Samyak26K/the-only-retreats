@@ -13,7 +13,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(function Container(
     <div
       ref={ref}
       className={cn(
-        "mx-auto w-full max-w-(--container-max-width) px-6 md:px-12 lg:px-20",
+        "mx-auto w-full max-w-screen-2xl px-6 md:px-10 lg:px-16",
         className,
       )}
       {...props}

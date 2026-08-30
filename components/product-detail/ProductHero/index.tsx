@@ -9,6 +9,9 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/lib/cart";
 import { type Product } from "@/lib/content/product";
+import { formatPrice as formatCurrencyPrice } from "@/lib/currency";
+import type { CurrencyCode } from "@/lib/currency";
+import { useCurrencyStore } from "@/lib/currency-store";
 import { cn } from "@/lib/utils";
 import { useWishlistStore } from "@/lib/wishlist";
 
@@ -16,15 +19,13 @@ type ProductHeroProps = {
   product: Product;
 };
 
-function formatPrice(price: number, currency: string) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(price);
-}
-
 export function ProductHero({ product }: ProductHeroProps) {
+  const { currency, rate } = useCurrencyStore();
+
+  function formatPrice(price: number) {
+    return formatCurrencyPrice(price, currency as CurrencyCode, rate);
+  }
+
   const imageMedia = product.media.filter((item) => item.type === "image");
   const { addItem, updateQuantity } = useCartStore();
   const [selectedVariantId, setSelectedVariantId] = useState(
@@ -93,7 +94,7 @@ export function ProductHero({ product }: ProductHeroProps) {
       />
 
       <Container className="py-6 md:py-10">
-        <div className="grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:items-start lg:gap-10">
+        <div className="grid gap-6 md:grid-cols-2 md:items-start md:gap-8 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] lg:gap-10">
           <div className="min-w-0">
             <nav className="mb-3 flex items-center gap-1.5 text-[0.6rem] uppercase tracking-wide text-muted">
               <Link href="/" className="hover:text-foreground">
@@ -104,22 +105,20 @@ export function ProductHero({ product }: ProductHeroProps) {
                 Collection
               </Link>
               <span>/</span>
-              <span className="max-w-[120px] truncate text-foreground">
+              <span className="max-w-[160px] md:max-w-[220px] truncate text-foreground">
                 {product.name}
               </span>
             </nav>
             <figure className="min-w-0">
               <div className="min-w-0 rounded-(--radius-panel) border border-border/80 bg-surface p-2 shadow-lg sm:p-3">
-                <div
-                  className="relative overflow-hidden rounded-xl bg-cloud"
-                  style={{ height: "420px" }}
-                >
+                <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-cloud md:aspect-square md:max-h-[520px] lg:aspect-auto lg:h-[560px]">
                   <Image
                     src={currentImage.src}
                     alt={currentImage.alt}
                     fill
                     priority
-                    className="object-cover object-center"
+                    className="object-contain object-center"
+                    style={{ backgroundColor: "#f5f0e8" }}
                     sizes="(min-width: 1024px) 55vw, 100vw"
                   />
                   {imageMedia.length > 1 ? (
@@ -255,15 +254,12 @@ export function ProductHero({ product }: ProductHeroProps) {
               {selectedVariant && (
                 <>
                   <p className="font-heading text-xl font-medium text-foreground">
-                    {formatPrice(selectedVariant.price, product.currency)}
+                    {formatPrice(selectedVariant.price)}
                   </p>
                   {selectedVariant.compareAtPrice &&
                   selectedVariant.compareAtPrice > selectedVariant.price ? (
                     <p className="mt-0.5 text-xs text-muted line-through">
-                      {formatPrice(
-                        selectedVariant.compareAtPrice,
-                        product.currency,
-                      )}
+                      {formatPrice(selectedVariant.compareAtPrice)}
                     </p>
                   ) : null}
                   <p className="mt-0.5 text-[0.6rem] text-muted">
@@ -438,7 +434,7 @@ export function ProductHero({ product }: ProductHeroProps) {
               ) : null}
             </div>
 
-            <div className="grid grid-cols-5 gap-1 border-t border-border pt-3">
+            <div className="grid grid-cols-3 md:grid-cols-5 gap-2 border-t border-border pt-3">
               {[
                 "Raw",
                 "Single Origin",

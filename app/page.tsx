@@ -5,16 +5,27 @@ import { FounderSection } from "@/components/sections/Founder";
 import { HeritageSection } from "@/components/sections/Heritage";
 import { HeroSection } from "@/components/sections/Hero";
 import { OriginsSection } from "@/components/sections/Origins";
+import { RevealOnScroll } from "@/components/shared/RevealOnScroll";
 
 export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <OriginsSection />
-      <CertificationBandSection />
-      <CollectionSection />
-      <HeritageSection />
-      <FounderSection />
+      <RevealOnScroll delay={0}>
+        <OriginsSection />
+      </RevealOnScroll>
+      <RevealOnScroll delay={100}>
+        <CertificationBandSection />
+      </RevealOnScroll>
+      <RevealOnScroll delay={0}>
+        <CollectionSection />
+      </RevealOnScroll>
+      <RevealOnScroll delay={0}>
+        <HeritageSection />
+      </RevealOnScroll>
+      <RevealOnScroll delay={0}>
+        <FounderSection />
+      </RevealOnScroll>
       <FooterSection />
     </>
   );

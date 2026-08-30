@@ -53,7 +53,7 @@ export default async function DivyaProductsPage() {
         </Link>
         <Link
           href="/divya"
-          className="font-display text-lg tracking-[0.3em] uppercase"
+          className="absolute left-1/2 -translate-x-1/2 text-center font-display text-lg tracking-[0.3em] uppercase"
           style={{ color: "#2C1810" }}
         >
           Divya

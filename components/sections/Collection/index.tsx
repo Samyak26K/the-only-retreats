@@ -1,173 +1,206 @@
-"use client";
-
-import { useRef } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
-import { collectionContent } from "@/lib/content/collection";
+import { prisma } from "@/lib/prisma";
+import { PriceDisplay } from "./PriceDisplay";
 
-const productShlokas: Record<
-  string,
-  { sanskrit: string; translation: string }
-> = {
-  "winter-white-honey": {
-    sanskrit: "मधु वाता ऋतायते",
-    translation: "May the winds bring sweetness",
-  },
-  "yak-ghee-premium": {
-    sanskrit: "गावो विश्वस्य मातरः",
-    translation: "The cow is the mother of the world",
-  },
-  "raw-honey": {
-    sanskrit: "मधु नक्तमुतोषसि",
-    translation: "Sweet be the night and sweet the dawn",
-  },
-};
+export async function CollectionSection() {
+  const products = await prisma.product.findMany({
+    where: {
+      status: "ACTIVE",
+      OR: [
+        { brand: "Himalayan" },
+        { brand: "The Only Retreats" },
+        { brand: null },
+        { brand: "" },
+      ],
+    },
+    take: 6,
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      shortDescription: true,
+      media: {
+        orderBy: { sortOrder: "asc" },
+        take: 1,
+        select: { url: true, alt: true },
+      },
+      variants: {
+        where: { status: "ACTIVE" },
+        orderBy: { sellingPrice: "asc" },
+        take: 1,
+        select: { sellingPrice: true },
+      },
+      passport: {
+        select: { region: true, altitude: true },
+      },
+    },
+  });
 
-const productAltitudes: Record<string, string> = {
-  "winter-white-honey": "3,050 m",
-  "yak-ghee-premium": "3,650 m",
-  "raw-honey": "2,800 m",
-};
+  if (products.length === 0) return null;
 
-export function CollectionSection() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (direction: "left" | "right") => {
-    if (!scrollRef.current) return;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -400 : 400,
-      behavior: "smooth",
-    });
+  const productShlokas: Record<
+    string,
+    { sanskrit: string; translation: string }
+  > = {
+    "himalayan-wild-forest-honey": {
+      sanskrit: "मधु वाता ऋतायते",
+      translation: "May the winds bring sweetness",
+    },
+    "himalayan-thyme-honey": {
+      sanskrit: "मधु नक्तमुतोषसि",
+      translation: "Sweet be the night and sweet the dawn",
+    },
+    "himalayan-winter-white-honey": {
+      sanskrit: "मधु वाता ऋतायते",
+      translation: "May the winds bring sweetness",
+    },
+    "himalayan-chestnut-honey": {
+      sanskrit: "मधु नक्तमुतोषसि",
+      translation: "Sweet be the night and sweet the dawn",
+    },
+    "himalayan-honeydew-honey": {
+      sanskrit: "मधु वाता ऋतायते",
+      translation: "May the winds bring sweetness",
+    },
+    "himalayan-vedic-ghee": {
+      sanskrit: "गावो विश्वस्य मातरः",
+      translation: "The cow is the mother of the world",
+    },
+    "himalayan-vedic-yak-ghee": {
+      sanskrit: "गावो विश्वस्य मातरः",
+      translation: "The cow is the mother of the world",
+    },
+    "himalayan-ladakhi-shilajit": {
+      sanskrit: "शिलाजतु हिमालयः",
+      translation: "The exudate of the Himalayas",
+    },
+    "himalayan-coffee": {
+      sanskrit: "प्रकृतिः सर्वस्य",
+      translation: "Nature is everything",
+    },
+    "himalayan-sea-buckthorn-pulp": {
+      sanskrit: "अमृतं हिमालयात्",
+      translation: "Nectar from the Himalayas",
+    },
   };
 
   return (
-    <section id="collection" className="bg-background py-12 md:py-28">
+    <section id="collection" className="py-12 md:py-20 bg-background">
       <Container>
         {/* Header */}
-        <div className="mb-12 flex items-end justify-between">
+        <div className="flex items-end justify-between mb-10">
           <div>
-            <p className="mb-3 text-xs uppercase tracking-[0.24em] text-muted">
+            <p className="text-xs uppercase tracking-[0.24em] text-muted mb-2">
               FEATURED COLLECTION
             </p>
-            <h2 className="font-display text-4xl leading-[0.95] tracking-[-0.03em] text-foreground md:text-5xl">
+            <h2 className="font-display text-4xl md:text-5xl tracking-[-0.03em] text-foreground leading-[0.95]">
               विशिष्ट संग्रह
             </h2>
-            <p className="mt-2 font-display text-lg text-muted italic">
+            <p className="font-display text-base text-muted italic mt-2">
               Nourishment crafted by nature, honoured by tradition.
             </p>
           </div>
-
-          {/* Scroll arrows */}
-          <div className="hidden gap-2 md:flex">
-            <button
-              type="button"
-              onClick={() => scroll("left")}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-gold hover:text-gold"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => scroll("right")}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-gold hover:text-gold"
-            >
-              <ChevronRight className="size-4" />
-            </button>
-          </div>
+          <Link
+            href="/products"
+            className="hidden md:block text-xs uppercase tracking-[0.2em] text-muted hover:text-foreground transition-colors border-b border-border pb-0.5"
+          >
+            View All
+          </Link>
         </div>
 
-        {/* Horizontal scroll container */}
+        {/* Horizontal scroll */}
         <div
-          ref={scrollRef}
-          className="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-4 md:mx-0 md:px-0"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0"
+          style={{ scrollbarWidth: "none" }}
         >
-          {collectionContent.map((product, index) => {
-            const shloka = productShlokas[product.id];
-            const altitude = productAltitudes[product.id];
+          {products.map((product, index) => {
+            const shloka = productShlokas[product.slug];
+            const image = product.media[0]?.url;
+            const price = product.variants[0]?.sellingPrice;
+            const origin = product.passport?.region;
+            const altitude = product.passport?.altitude;
 
             return (
               <div
                 key={product.id}
-                className="w-[80vw] flex-none snap-start md:w-[400px]"
+                className="flex-none w-[80vw] md:w-[380px] snap-start"
               >
-                <Link href={`/products/${product.id}`} className="group block">
-                  {/* Product image */}
-                  <div className="relative mb-6 aspect-[3/4] overflow-hidden rounded-2xl bg-surface">
-                    {product.image ? (
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(min-width: 768px) 400px, 80vw"
+                <Link
+                  href={`/products/${product.slug}`}
+                  className="group block"
+                >
+                  {/* Image */}
+                  <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-surface mb-5">
+                    {image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={image}
+                        alt={product.media[0]?.alt ?? product.name}
+                        className="w-full h-full object-contain object-center transition-transform duration-700 group-hover:scale-105"
+                        style={{ backgroundColor: "#f5f0e8" }}
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center bg-surface/50">
-                        <div className="space-y-2 p-6 text-center">
-                          <p className="font-display text-2xl text-foreground/20">
-                            {product.name}
-                          </p>
-                          <p className="text-xs uppercase tracking-widest text-muted/40">
-                            Coming Soon
-                          </p>
-                        </div>
+                      <div className="w-full h-full bg-surface flex items-center justify-center">
+                        <p className="text-xs text-muted uppercase tracking-widest">
+                          {product.name}
+                        </p>
                       </div>
                     )}
 
                     {/* Number overlay */}
                     <div className="absolute top-4 left-4">
-                      <span className="font-display text-5xl leading-none text-white/20">
+                      <span className="font-display text-5xl text-white/10 leading-none select-none">
                         0{index + 1}
                       </span>
                     </div>
 
                     {/* Altitude badge */}
                     {altitude && (
-                      <div className="absolute right-4 bottom-4 rounded-full bg-black/40 px-3 py-1 backdrop-blur-sm">
-                        <p className="text-xs tracking-wider text-white/80">
+                      <div className="absolute bottom-4 right-4 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1">
+                        <p className="text-xs text-white/80 tracking-wider">
                           ▲ {altitude}
                         </p>
                       </div>
                     )}
                   </div>
 
-                  {/* Product info */}
-                  <div className="space-y-3 px-1">
-                    {/* Shloka */}
+                  {/* Info */}
+                  <div className="space-y-2 px-1">
                     {shloka && (
                       <div className="border-l-2 border-gold/40 pl-3">
                         <p
                           lang="sa"
-                          className="font-sanskrit text-sm leading-relaxed text-gold"
+                          className="font-sanskrit text-sm text-gold leading-relaxed"
                         >
                           {shloka.sanskrit}
                         </p>
-                        <p className="mt-0.5 text-xs text-muted italic">
+                        <p className="text-xs text-muted italic mt-0.5">
                           {shloka.translation}
                         </p>
                       </div>
                     )}
 
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted">
-                      {product.origin}
-                    </p>
+                    {origin && (
+                      <p className="text-[0.6rem] uppercase tracking-[0.2em] text-muted">
+                        {origin}
+                      </p>
+                    )}
 
-                    <h3 className="font-display text-2xl tracking-[-0.02em] text-foreground transition-colors group-hover:text-forest">
+                    <h3 className="font-display text-xl text-foreground tracking-[-0.02em] group-hover:text-forest transition-colors">
                       {product.name}
                     </h3>
 
-                    <div className="flex items-center justify-between pt-1">
-                      <p className="font-heading text-lg text-foreground">
-                        ₹{product.price.toLocaleString("en-IN")}
-                      </p>
-                      <span className="text-xs tracking-[0.15em] text-muted uppercase transition-colors group-hover:text-forest">
-                        Discover →
-                      </span>
-                    </div>
+                    {price && (
+                      <div className="flex items-center justify-between pt-1">
+                        <PriceDisplay priceINR={Number(price)} />
+                        <span className="text-xs uppercase tracking-[0.15em] text-muted group-hover:text-forest transition-colors">
+                          Discover →
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </Link>
               </div>
@@ -175,11 +208,11 @@ export function CollectionSection() {
           })}
         </div>
 
-        {/* View all link */}
-        <div className="mt-10 text-center">
+        {/* View all */}
+        <div className="mt-8 text-center">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 border-b border-border pb-1 text-sm tracking-[0.2em] text-muted uppercase transition-colors hover:border-foreground hover:text-foreground"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted hover:text-foreground transition-colors border-b border-border hover:border-foreground pb-1"
           >
             View Full Collection
           </Link>

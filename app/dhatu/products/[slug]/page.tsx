@@ -102,7 +102,7 @@ export default async function DhatuProductPage({ params }: Props) {
         </Link>
         <Link
           href="/dhatu"
-          className="font-display text-lg tracking-[0.3em] uppercase"
+          className="absolute left-1/2 -translate-x-1/2 text-center font-display text-lg tracking-[0.3em] uppercase"
           style={{ color: "#F2EBE0" }}
         >
           Dhatu

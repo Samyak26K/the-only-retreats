@@ -9,15 +9,10 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/button";
 import { useAddressStore } from "@/lib/addresses";
 import { useCartStore } from "@/lib/cart";
+import { formatPrice as formatCurrencyPrice } from "@/lib/currency";
+import type { CurrencyCode } from "@/lib/currency";
+import { useCurrencyStore } from "@/lib/currency-store";
 import { cn } from "@/lib/utils";
-
-function formatPrice(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 const inputClassName =
   "w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-foreground outline-none placeholder:text-muted/50 focus:border-gold";
@@ -26,6 +21,12 @@ const labelClassName =
   "mb-2 block text-xs font-semibold uppercase tracking-wide text-muted";
 
 export default function CheckoutPage() {
+  const { currency: selectedCurrency, rate } = useCurrencyStore();
+
+  function formatPrice(amount: number) {
+    return formatCurrencyPrice(amount, selectedCurrency as CurrencyCode, rate);
+  }
+
   const router = useRouter();
   const { user } = useUser();
   const items = useCartStore((state) => state.items);
@@ -63,7 +64,6 @@ export default function CheckoutPage() {
   };
 
   const subtotal = getSubtotal();
-  const summaryCurrency = items[0]?.currency ?? "INR";
 
   useEffect(() => {
     if (user) {
@@ -254,12 +254,12 @@ export default function CheckoutPage() {
         className="h-(--navbar-height-mobile) md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)"
       />
 
-      <div className="flex items-center justify-between border-b border-border bg-surface px-4 py-3 md:hidden">
+      <div className="flex items-center justify-between border-b border-border bg-surface px-4 py-3 lg:hidden">
         <p className="text-xs uppercase tracking-[0.15em] text-muted">
           Order Summary
         </p>
         <p className="font-heading text-sm text-foreground">
-          {formatPrice(getSubtotal(), items[0]?.currency ?? "INR")}
+          {formatPrice(getSubtotal())}
         </p>
       </div>
 
@@ -273,9 +273,9 @@ export default function CheckoutPage() {
           </h1>
         </header>
 
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,11fr)_minmax(0,5fr)] lg:items-start lg:gap-12">
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,280px)] md:items-start lg:grid-cols-[minmax(0,11fr)_minmax(0,5fr)] lg:gap-12">
           <form
-            className="space-y-8 pb-24 lg:pb-0"
+            className="space-y-8 pb-24 md:pb-0"
             onSubmit={(event) => event.preventDefault()}
           >
             <p className="mb-6 rounded-lg border border-border bg-surface p-3 text-xs text-muted">
@@ -468,7 +468,7 @@ export default function CheckoutPage() {
             </fieldset>
 
             <div>
-              <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:relative md:right-auto md:bottom-auto md:left-auto md:border-0 md:bg-transparent md:p-0">
+              <div className="fixed right-0 bottom-0 left-0 z-40 border-t border-border bg-background px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:relative lg:right-auto lg:bottom-auto lg:left-auto lg:border-0 lg:bg-transparent lg:p-0">
                 <Button
                   type="button"
                   disabled={isLoading}
@@ -492,7 +492,7 @@ export default function CheckoutPage() {
             </div>
           </form>
 
-          <aside className="sticky top-24 hidden space-y-4 rounded-2xl border border-border bg-surface px-6 pt-6 pb-24 lg:block lg:p-6">
+          <aside className="sticky top-24 hidden space-y-4 rounded-2xl border border-border bg-surface px-6 pt-6 pb-24 md:block lg:p-6">
             <div className="mb-4 h-0.5 w-8 bg-gold" />
 
             <h2 className="font-heading text-sm font-medium uppercase tracking-[0.15em] text-foreground">
@@ -514,7 +514,7 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                   <p className="shrink-0 text-xs font-medium text-foreground">
-                    {formatPrice(item.price * item.quantity, item.currency)}
+                    {formatPrice(item.price * item.quantity)}
                   </p>
                 </div>
               ))}
@@ -525,7 +525,7 @@ export default function CheckoutPage() {
                 Subtotal
               </p>
               <p className="text-xs font-medium text-foreground">
-                {formatPrice(subtotal, summaryCurrency)}
+                {formatPrice(subtotal)}
               </p>
             </div>
 
@@ -541,7 +541,7 @@ export default function CheckoutPage() {
                 Total
               </p>
               <p className="font-heading text-base font-medium text-foreground">
-                {formatPrice(subtotal, summaryCurrency)}
+                {formatPrice(subtotal)}
               </p>
             </div>
 

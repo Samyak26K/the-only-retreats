@@ -5,23 +5,23 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/Container";
 import { useCartStore } from "@/lib/cart";
-
-function formatPrice(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
+import { formatPrice as formatCurrencyPrice } from "@/lib/currency";
+import type { CurrencyCode } from "@/lib/currency";
+import { useCurrencyStore } from "@/lib/currency-store";
 
 export default function CartPage() {
+  const { currency: selectedCurrency, rate } = useCurrencyStore();
+
+  function formatPrice(amount: number) {
+    return formatCurrencyPrice(amount, selectedCurrency as CurrencyCode, rate);
+  }
+
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const getSubtotal = useCartStore((state) => state.getSubtotal);
 
   const subtotal = getSubtotal();
-  const summaryCurrency = items[0]?.currency ?? "INR";
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,9 +82,9 @@ export default function CartPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px] lg:items-start lg:gap-12">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_300px] md:items-start lg:grid-cols-[1fr_360px] lg:gap-12">
             <div>
-              <div className="mb-2 hidden grid-cols-[1fr_auto_auto_auto] gap-4 border-b border-border pb-3 md:grid">
+              <div className="mb-2 hidden grid-cols-[1fr_auto_auto_auto] gap-4 border-b border-border pb-3 lg:grid">
                 <p className="text-[0.6rem] uppercase tracking-[0.15em] text-muted">
                   Product
                 </p>
@@ -102,7 +102,7 @@ export default function CartPage() {
               <ul className="divide-y divide-border">
                 {items.map((item) => (
                   <li key={item.variantId} className="py-5">
-                    <div className="grid grid-cols-[auto_1fr] items-center gap-4 md:grid-cols-[auto_1fr_auto_auto_auto]">
+                    <div className="grid grid-cols-[auto_1fr] items-center gap-4 lg:grid-cols-[auto_1fr_auto_auto_auto]">
                       <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-surface md:h-24 md:w-24">
                         {item.imageSrc ? (
                           <Image
@@ -132,10 +132,10 @@ export default function CartPage() {
                           {item.variantLabel}
                         </p>
                         <p className="mt-1 text-xs text-muted md:hidden">
-                          {formatPrice(item.price, item.currency)}
+                          {formatPrice(item.price)}
                         </p>
 
-                        <div className="mt-3 flex items-center gap-3 md:hidden">
+                        <div className="mt-3 flex items-center gap-3 lg:hidden">
                           <div className="flex items-center overflow-hidden rounded-lg border border-border">
                             <button
                               type="button"
@@ -177,7 +177,7 @@ export default function CartPage() {
                         </div>
                       </div>
 
-                      <div className="hidden w-24 overflow-hidden rounded-lg border border-border md:flex md:items-center">
+                      <div className="hidden w-24 overflow-hidden rounded-lg border border-border lg:flex lg:items-center">
                         <button
                           type="button"
                           aria-label={`Decrease quantity of ${item.productName}`}
@@ -203,16 +203,13 @@ export default function CartPage() {
                         </button>
                       </div>
 
-                      <p className="hidden w-20 text-right text-xs text-muted md:block">
-                        {formatPrice(item.price, item.currency)}
+                      <p className="hidden w-20 text-right text-xs text-muted lg:block">
+                        {formatPrice(item.price)}
                       </p>
 
-                      <div className="hidden w-20 flex-col items-end gap-1 md:flex">
+                      <div className="hidden w-20 flex-col items-end gap-1 lg:flex">
                         <p className="text-sm font-medium text-foreground">
-                          {formatPrice(
-                            item.price * item.quantity,
-                            item.currency,
-                          )}
+                          {formatPrice(item.price * item.quantity)}
                         </p>
                         <button
                           type="button"
@@ -251,7 +248,7 @@ export default function CartPage() {
                     {items.reduce((sum, item) => sum + item.quantity, 0)} items)
                   </p>
                   <p className="text-xs font-medium text-foreground">
-                    {formatPrice(subtotal, summaryCurrency)}
+                    {formatPrice(subtotal)}
                   </p>
                 </div>
 
@@ -269,7 +266,7 @@ export default function CartPage() {
                     Estimated Total
                   </p>
                   <p className="font-heading text-base font-semibold text-foreground">
-                    {formatPrice(subtotal, summaryCurrency)}
+                    {formatPrice(subtotal)}
                   </p>
                 </div>
 

@@ -8,6 +8,7 @@ import { useRouter, usePathname } from "next/navigation";
 
 import { DesktopNavigation } from "@/components/layout/DesktopNavigation";
 import { MobileDrawer } from "@/components/layout/MobileDrawer";
+import { CurrencySelector } from "@/components/shared/CurrencySelector";
 import { Container } from "@/components/ui/Container";
 import { useHeaderScroll } from "@/hooks/useHeaderScroll";
 import { useCartStore } from "@/lib/cart";
@@ -154,6 +155,12 @@ export function Header() {
         <DesktopNavigation isScrolled={!isTransparentHero} />
 
         <div className="flex items-center gap-1">
+          <div className="md:hidden">
+            <CurrencySelector />
+          </div>
+          <div className="hidden md:flex items-center gap-1">
+            <CurrencySelector />
+          </div>
           <button
             type="button"
             aria-label="Search"

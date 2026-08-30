@@ -1,6 +1,5 @@
 import { getImageProps } from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 import { Container } from "@/components/ui/Container";
 import { heroContent } from "@/lib/content/hero";
@@ -34,7 +33,7 @@ export function HeroSection() {
     <section
       id="journey"
       aria-label="Hero"
-      className="relative flex min-h-svh w-full items-end overflow-hidden bg-linear-to-b from-[#3f3a30] to-[#211e19]"
+      className="relative flex min-h-svh w-full items-center overflow-hidden bg-linear-to-b from-[#3f3a30] to-[#211e19]"
     >
       <picture>
         <source
@@ -54,7 +53,7 @@ export function HeroSection() {
         className="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-black/10"
       />
 
-      <div className="relative z-10 w-full pt-[calc(var(--navbar-height-mobile)+2rem)] pb-16 sm:pb-20 md:pt-[calc(var(--navbar-height-tablet)+3rem)] md:pb-24 lg:pt-[calc(var(--navbar-height-desktop)+4rem)]">
+      <div className="relative z-10 w-full py-16 pt-[calc(var(--navbar-height-mobile)+2rem)] md:pt-[calc(var(--navbar-height-tablet)+2rem)] lg:pt-[calc(var(--navbar-height-desktop)+2rem)]">
         <Container>
           <div className="flex max-w-2xl flex-col gap-4 md:gap-6">
             <div
@@ -90,21 +89,39 @@ export function HeroSection() {
             <div
               className={`motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 ${entranceDelays[3]}`}
             >
-              <Link
-                href={heroContent.cta.href}
-                className="inline-flex h-12 items-center gap-2 rounded-lg bg-background px-6 text-sm font-medium uppercase tracking-[0.2em] text-forest transition-colors duration-fast hover:bg-background/90"
-              >
-                {heroContent.cta.label}
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4 items-start mt-2">
+                {/* Primary CTA */}
+                <Link
+                  href="/products"
+                  className="group inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm px-7 py-3.5 text-xs uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-white hover:text-foreground hover:border-white"
+                >
+                  <span>Discover the Source</span>
+                  <span className="transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                </Link>
+
+                {/* Secondary CTA */}
+                <Link
+                  href="/our-story"
+                  className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors duration-300 pt-3.5"
+                >
+                  <span className="w-6 h-px bg-white/40 group-hover:w-10 transition-all" />
+                  Our Story
+                </Link>
+              </div>
             </div>
           </div>
         </Container>
 
-        <div className="mt-6 flex justify-center md:mt-16">
-          <span className="text-xs uppercase tracking-[0.3em] text-background/70">
-            {heroContent.scrollCue}
-          </span>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3 motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 motion-safe:[animation-delay:800ms]">
+          <p className="text-[0.55rem] uppercase tracking-[0.4em] text-white/40">
+            Begin the descent
+          </p>
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-px h-6 bg-white/20 animate-pulse" />
+            <div className="w-px h-3 bg-white/10" />
+          </div>
         </div>
       </div>
     </section>

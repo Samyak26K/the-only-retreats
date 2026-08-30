@@ -54,11 +54,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
+  const showJourney =
+    product.slug.includes("honey") ||
+    product.slug.includes("ghee") ||
+    product.name.toLowerCase().includes("honey") ||
+    product.name.toLowerCase().includes("ghee");
+
   return (
     <>
       <ProductHero product={product} />
       <ProductWhyExists product={product} />
-      <ProductJourney steps={product.originJourney} />
+      {showJourney && <ProductJourney steps={product.originJourney} />}
       <ProductInfoGrid product={product} />
       <ProductCompliance product={product} />
       <ProductComplianceHoney product={product} />

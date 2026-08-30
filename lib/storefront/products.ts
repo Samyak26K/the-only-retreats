@@ -299,6 +299,96 @@ export async function getPublishedProductBySlug(
   const storyBody =
     product.longDescription?.trim() || product.shortDescription?.trim() || "";
 
+  const isGhee =
+    product.slug.includes("ghee") ||
+    product.name.toLowerCase().includes("ghee");
+
+  const honeyJourney = [
+    {
+      id: "forage",
+      title: "The Bees Forage",
+      description:
+        "Wild bees collect nectar from alpine flowers blooming at 10,000 feet — thyme, rhododendron, and wild herbs found nowhere else.",
+      image: "/images/valleys/lahaul.webp",
+      location: "Lahaul Valley, 3,050m",
+    },
+    {
+      id: "harvest",
+      title: "Single Harvest",
+      description:
+        "Harvested once a year during the brief flowering season. No second harvest. No blending with other regions.",
+      image: "/images/valleys/kullu.webp",
+      location: "Himachal Pradesh",
+    },
+    {
+      id: "raw",
+      title: "Raw & Unfiltered",
+      description:
+        "Never heated above ambient temperature. Coarsely filtered only to remove debris. All enzymes, pollen and propolis intact.",
+      image: "/images/valleys/nubra.webp",
+      location: "Small batch processing",
+    },
+    {
+      id: "bottled",
+      title: "Glass Bottled",
+      description:
+        "Filled into amber glass jars to protect from light. No plastic. No additives. Sealed and dated by batch.",
+      image: "/images/valleys/zanskar.webp",
+      location: "Artisan packing",
+    },
+    {
+      id: "delivered",
+      title: "From Himalayas",
+      description:
+        "Shipped directly from source to your home. No middlemen. Traceable to the beekeeper family and valley of origin.",
+      image: "/images/valleys/changthang.webp",
+      location: "Direct to you",
+    },
+  ];
+
+  const gheeJourney = [
+    {
+      id: "graze",
+      title: "The Herd Grazes",
+      description:
+        "Indigenous cows graze freely on Himalayan pastures at 2,400–4,000 metres. The altitude, herbs and open grazing define the milk.",
+      image: "/images/valleys/kullu.webp",
+      location: "Kullu & Spiti Valley",
+    },
+    {
+      id: "milk",
+      title: "Morning Milking",
+      description:
+        "Milk is collected by hand each morning by herding families. No machines, no industrial process. Just the relationship between family and animal.",
+      image: "/images/valleys/lahaul.webp",
+      location: "Village farms",
+    },
+    {
+      id: "curd",
+      title: "Curd & Culture",
+      description:
+        "Fresh milk is cultured into curd using traditional starters passed down through families. This step is what separates Bilona ghee from all others.",
+      image: "/images/valleys/zanskar.webp",
+      location: "Artisan processing",
+    },
+    {
+      id: "churn",
+      title: "Hand Churned",
+      description:
+        "Curd is hand-churned the traditional way — slowly, by hand — to separate butter. This is the Bilona method, unchanged for centuries.",
+      image: "/images/valleys/nubra.webp",
+      location: "Traditional method",
+    },
+    {
+      id: "clarify",
+      title: "Slow Clarified",
+      description:
+        "Butter is slow-cooked over a wood fire until golden and pure. No shortcuts. The result is ghee that carries the memory of every step before it.",
+      image: "/images/valleys/changthang.webp",
+      location: "Direct to you",
+    },
+  ];
+
   return {
     id: product.id,
     slug: product.slug,
@@ -330,48 +420,7 @@ export async function getPublishedProductBySlug(
       transliteration: "",
       translation: "",
     },
-    originJourney: [
-      {
-        id: "forage",
-        title: "The Bees Forage",
-        description:
-          "Wild bees collect nectar from alpine flowers blooming at 10,000 feet — thyme, rhododendron, and wild herbs found nowhere else.",
-        image: "/images/valleys/lahaul.webp",
-        location: "Lahaul Valley, 3,050m",
-      },
-      {
-        id: "harvest",
-        title: "Single Harvest",
-        description:
-          "Harvested once a year during the brief flowering season. No second harvest. No blending with other regions.",
-        image: "/images/valleys/kullu.webp",
-        location: "Himachal Pradesh",
-      },
-      {
-        id: "raw",
-        title: "Raw & Unfiltered",
-        description:
-          "Never heated above ambient temperature. Coarsely filtered only to remove debris. All enzymes, pollen and propolis intact.",
-        image: "/images/valleys/nubra.webp",
-        location: "Small batch processing",
-      },
-      {
-        id: "bottled",
-        title: "Glass Bottled",
-        description:
-          "Filled into amber glass jars to protect from light. No plastic. No additives. Sealed and dated by batch.",
-        image: "/images/valleys/zanskar.webp",
-        location: "Artisan packing",
-      },
-      {
-        id: "delivered",
-        title: "From Himalayas",
-        description:
-          "Shipped directly from source to your home. No middlemen. Traceable to the beekeeper family and valley of origin.",
-        image: "/images/valleys/changthang.webp",
-        location: "Direct to you",
-      },
-    ],
+    originJourney: isGhee ? gheeJourney : honeyJourney,
     productPassport: {
       originId: product.primaryOrigin?.id ?? "",
       region: product.passport?.originSummary?.trim() || origin,

@@ -30,11 +30,10 @@ export const navigationContent: NavigationContent = {
   },
   primaryLinks: [
     { label: "Collection", href: "/products" },
-    { label: "Origins", href: "/#origins" },
-    { label: "Heritage", href: "/#heritage" },
-    { label: "Contact", href: "/#contact" },
+    { label: "Our Story", href: "/our-story" },
     { label: "Dhatu", href: "/dhatu" },
     { label: "Divya", href: "/divya" },
+    { label: "Contact", href: "/#contact" },
   ],
   utility: {
     search: { label: "Search" },

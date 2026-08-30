@@ -25,7 +25,7 @@ export default function DivyaPage() {
           backdropFilter: scrolled ? "blur(8px)" : "none",
         }}
       >
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="relative flex items-center justify-between px-6 py-4">
           <Link
             href="/"
             className="text-[0.6rem] uppercase tracking-[0.2em]"
@@ -33,7 +33,10 @@ export default function DivyaPage() {
           >
             ← The Only Retreats
           </Link>
-          <Link href="/divya" className="text-center">
+          <Link
+            href="/divya"
+            className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-auto"
+          >
             <p
               className="font-display text-lg tracking-[0.4em] uppercase"
               style={{ color: "#2C1810" }}
@@ -41,7 +44,7 @@ export default function DivyaPage() {
               Divya
             </p>
             <p
-              className="text-[0.45rem] uppercase tracking-[0.25em]"
+              className="hidden sm:block text-[0.45rem] uppercase tracking-[0.25em]"
               style={{ color: "#B07428" }}
             >
               by The Only Retreats
@@ -87,7 +90,7 @@ export default function DivyaPage() {
           className="absolute inset-0 z-[1]"
           style={{
             background:
-              "linear-gradient(to right, rgba(250,245,236,0.85) 0%, rgba(250,245,236,0.5) 40%, rgba(250,245,236,0.1) 65%, transparent 100%)",
+              "linear-gradient(to right, rgba(250,245,236,0.96) 0%, rgba(250,245,236,0.90) 35%, rgba(250,245,236,0.5) 60%, transparent 85%)",
           }}
         />
 
@@ -108,7 +111,7 @@ export default function DivyaPage() {
 
             <p
               className="relative z-10 mb-6 text-[0.6rem] uppercase tracking-[0.35em]"
-              style={{ color: "#B07428" }}
+              style={{ color: "#8A5A1C" }}
             >
               The Only Retreats · Divya
             </p>
@@ -124,7 +127,7 @@ export default function DivyaPage() {
             </h1>
             <p
               className="relative z-10 mb-10 max-w-sm text-sm leading-7"
-              style={{ color: "#5A3D28" }}
+              style={{ color: "#3D2510" }}
             >
               Puja essentials, Ayurvedic wellness and aromatic rituals rooted in
               Vedic tradition. Brought to your home with the same intention they

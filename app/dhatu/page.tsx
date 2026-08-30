@@ -47,7 +47,7 @@ export default function DhatuPage() {
           backdropFilter: scrolled ? "blur(8px)" : "none",
         }}
       >
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="relative flex items-center justify-between px-6 py-4">
           {/* Left: hamburger */}
           <button
             type="button"
@@ -58,7 +58,10 @@ export default function DhatuPage() {
           </button>
 
           {/* Center: wordmark */}
-          <Link href="/dhatu" className="text-center">
+          <Link
+            href="/dhatu"
+            className="absolute left-1/2 -translate-x-1/2 text-center"
+          >
             <p
               className="font-display text-lg tracking-[0.4em] uppercase"
               style={{ color: "#F2EBE0" }}
@@ -66,7 +69,7 @@ export default function DhatuPage() {
               Dhatu
             </p>
             <p
-              className="text-[0.45rem] uppercase tracking-[0.25em]"
+              className="hidden sm:block text-[0.45rem] uppercase tracking-[0.25em]"
               style={{ color: "#B8A98F" }}
             >
               by The Only Retreats
@@ -175,7 +178,15 @@ export default function DhatuPage() {
           className="absolute inset-0 z-[1]"
           style={{
             background:
-              "linear-gradient(to right, rgba(20,14,10,0.75) 0%, rgba(20,14,10,0.5) 35%, rgba(20,14,10,0.15) 55%, transparent 75%)",
+              "linear-gradient(to right, rgba(20,14,10,0.92) 0%, rgba(20,14,10,0.85) 30%, rgba(20,14,10,0.4) 60%, transparent 85%)",
+          }}
+        />
+
+        <div
+          className="absolute inset-0 z-[1] md:hidden"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(20,14,10,0.5) 0%, transparent 50%)",
           }}
         />
 

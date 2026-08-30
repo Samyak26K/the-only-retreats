@@ -9,12 +9,12 @@ export function FounderSection() {
       <Container>
         <div className="grid items-stretch gap-0 lg:grid-cols-2 lg:gap-16 xl:gap-24">
           {/* Left: Image — full bleed on mobile */}
-          <div className="relative aspect-[4/5] max-h-[70svh] overflow-hidden rounded-2xl lg:aspect-auto lg:min-h-[500px]">
+          <div className="relative aspect-[4/5] md:aspect-[3/4] max-h-[70svh] overflow-hidden rounded-2xl lg:aspect-auto lg:min-h-[500px]">
             <Image
               src={founderContent.image}
               alt={founderContent.name}
               fill
-              className="object-cover object-[center_20%]"
+              className="object-cover object-[center_60%]"
               sizes="(min-width: 1024px) 50vw, 100vw"
             />
             {/* Subtle gradient at bottom */}

@@ -155,7 +155,7 @@ export function ProductsGrid({ products }: { products: Product[] }) {
                   <p className="text-[0.6rem] tracking-[0.15em] text-muted uppercase">
                     {featured.primaryOrigin?.name ?? ""}
                   </p>
-                  <h2 className="font-display text-2xl leading-tight tracking-[-0.02em] text-foreground transition-colors group-hover:text-forest md:text-3xl">
+                  <h2 className="font-display text-2xl leading-tight tracking-[-0.02em] text-foreground transition-colors duration-300 group-hover:text-forest md:text-3xl">
                     {featured.name}
                   </h2>
                   <ProductPrice product={featured} className="text-base" />
@@ -201,7 +201,7 @@ export function ProductsGrid({ products }: { products: Product[] }) {
                       <p className="mb-1 text-[0.55rem] tracking-[0.15em] text-muted uppercase">
                         {product.primaryOrigin?.name ?? ""}
                       </p>
-                      <h3 className="mb-2 font-display text-lg leading-tight tracking-[-0.02em] text-foreground transition-colors group-hover:text-forest">
+                      <h3 className="mb-2 font-display text-lg leading-tight tracking-[-0.02em] text-foreground transition-colors duration-300 group-hover:text-forest">
                         {product.name}
                       </h3>
                       <ProductPrice product={product} className="text-sm" />
@@ -227,7 +227,7 @@ function ProductImage({ product, sizes }: { product: Product; sizes: string }) {
         src={src}
         alt={product.media[0]?.alt || product.name}
         fill
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         sizes={sizes}
       />
       {!heroImage ? (
