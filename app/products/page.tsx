@@ -2,6 +2,8 @@ import { Container } from "@/components/ui/Container";
 import { ProductsGrid } from "@/components/product/ProductsGrid";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 3600;
+
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
     where: {

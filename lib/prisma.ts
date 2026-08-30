@@ -7,14 +7,12 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    // Query logging is opt-in — verbose prisma:query spam adds overhead in
-    // development and obscures useful ADMIN_DEV_TIMING spans.
-    log:
-      process.env.PRISMA_LOG_QUERIES === "1"
-        ? ["query", "error", "warn"]
-        : process.env.NODE_ENV === "development"
-          ? ["error", "warn"]
-          : ["error"],
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   });
 
 if (process.env.NODE_ENV !== "production") {

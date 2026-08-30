@@ -10,6 +10,7 @@ import { ProductRelatedProducts } from "@/components/product-detail/ProductRelat
 import { ProductWhyExists } from "@/components/product-detail/ProductWhyExists";
 import { FooterSection } from "@/components/sections/Footer";
 import { getProductBySlug } from "@/lib/content/product";
+import { prisma } from "@/lib/prisma";
 import { getPublishedProductBySlug } from "@/lib/storefront/products";
 
 type ProductPageProps = {
@@ -44,6 +45,16 @@ export async function generateMetadata({
     },
   };
 }
+
+export async function generateStaticParams() {
+  const products = await prisma.product.findMany({
+    where: { status: { in: ["ACTIVE", "SEASONAL"] } },
+    select: { slug: true },
+  });
+  return products.map((p) => ({ slug: p.slug }));
+}
+
+export const revalidate = 3600;
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;

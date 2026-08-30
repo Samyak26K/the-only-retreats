@@ -7,8 +7,10 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  serverExternalPackages: ["@prisma/client"],
   experimental: {
     viewTransition: true,
+    serverComponentsExternalPackages: ["@prisma/client"],
   },
   images: {
     remotePatterns: [
