@@ -5,7 +5,9 @@ import { NewsletterForm } from "@/components/sections/Footer/NewsletterForm";
 import { Container } from "@/components/ui/Container";
 import { footerContent } from "@/lib/content/footer";
 
-export function FooterSection() {
+export function FooterSection({
+  hideFssai = false,
+}: { hideFssai?: boolean } = {}) {
   return (
     <footer
       id="contact"
@@ -144,20 +146,24 @@ export function FooterSection() {
               style={{ borderColor: "rgba(255,255,255,0.08)" }}
             >
               {/* FSSAI */}
-              <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="https://res.cloudinary.com/k7cipxug/image/upload/v1787843837/FSSAI-License-Mandatory-for-Small-Business-300x232-removebg-preview.png"
-                  alt="FSSAI Licensed"
-                  className="h-10 w-auto object-contain opacity-80"
-                />
-                <div>
-                  <p className="text-[0.6rem] tracking-wide text-white/30 uppercase">
-                    FSSAI License No.
-                  </p>
-                  <p className="mt-0.5 text-xs text-white/50">10924006000044</p>
+              {!hideFssai ? (
+                <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://res.cloudinary.com/k7cipxug/image/upload/v1787843837/FSSAI-License-Mandatory-for-Small-Business-300x232-removebg-preview.png"
+                    alt="FSSAI Licensed"
+                    className="h-10 w-auto object-contain opacity-80"
+                  />
+                  <div>
+                    <p className="text-[0.6rem] tracking-wide text-white/30 uppercase">
+                      FSSAI License No.
+                    </p>
+                    <p className="mt-0.5 text-xs text-white/50">
+                      10924006000044
+                    </p>
+                  </div>
                 </div>
-              </div>
+              ) : null}
 
               {/* Company details */}
               <div className="space-y-1">
@@ -169,8 +175,8 @@ export function FooterSection() {
                   Highland Spaces, Maharashtra, Pune 412105
                 </p>
                 <p className="text-[0.6rem] leading-5 text-white/25">
-                  Consumer Care: customer@theonlyretreats.com · +91 9225181202 ·
-                  www.theonlyretreats.com
+                  Consumer Care: customer@theonlyretreats.com · +91 9172778248 /
+                  +91 9225181202 · www.theonlyretreats.com
                 </p>
               </div>
             </div>

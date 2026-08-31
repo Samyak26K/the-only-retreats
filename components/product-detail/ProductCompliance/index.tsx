@@ -175,7 +175,7 @@ export function ProductCompliance({ product }: Props) {
                 className="h-8 w-auto object-contain opacity-70"
               />
               <p className="text-[0.55rem] text-muted">
-                FSSAI License No. [To be updated]
+                FSSAI License No. 21526037004345
               </p>
             </div>
           </div>

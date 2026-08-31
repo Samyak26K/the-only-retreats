@@ -128,7 +128,7 @@ export function DhatuProductHero({ product }: Props) {
           className="text-[0.6rem] uppercase tracking-[0.3em]"
           style={{ color: "#B25B32" }}
         >
-          Dhatu · Handcrafted Heritage
+          Tridhatu Kosh · Handcrafted Heritage
         </p>
 
         {/* Name */}

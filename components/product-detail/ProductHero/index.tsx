@@ -56,6 +56,32 @@ export function ProductHero({ product }: ProductHeroProps) {
   };
   const wishlisted = mounted && isWishlisted;
 
+  const isHoney =
+    product.slug.includes("honey") ||
+    product.name.toLowerCase().includes("honey");
+  const isGhee =
+    product.slug.includes("ghee") ||
+    product.name.toLowerCase().includes("ghee");
+  const ownShloka = product.shloka?.devanagari?.trim();
+  const shloka = isGhee
+    ? {
+        sanskrit: "गावो विश्वस्य मातरः",
+        translation: "The cow is the mother of the world.",
+      }
+    : isHoney
+      ? {
+          sanskrit: ownShloka || "मधु वाता ऋतायते",
+          translation:
+            product.shloka?.translation?.trim() ||
+            "May the winds bring sweetness",
+        }
+      : ownShloka
+        ? {
+            sanskrit: product.shloka.devanagari,
+            translation: product.shloka.translation,
+          }
+        : null;
+
   useEffect(() => setMounted(true), []);
 
   const checkPincode = async () => {
@@ -221,14 +247,16 @@ export function ProductHero({ product }: ProductHeroProps) {
               <span className="text-[0.65rem] text-muted">(24 reviews)</span>
             </div>
 
-            <div className="mb-3 border-l-2 border-gold/40 pl-3">
-              <p lang="sa" className="font-sanskrit text-sm text-gold">
-                {product.shloka.devanagari}
-              </p>
-              <p className="mt-0.5 text-[0.65rem] text-muted italic">
-                {product.shloka.translation}
-              </p>
-            </div>
+            {shloka ? (
+              <div className="mb-3 border-l-2 border-gold/40 pl-3">
+                <p lang="sa" className="font-sanskrit text-sm text-gold">
+                  {shloka.sanskrit}
+                </p>
+                <p className="mt-0.5 text-[0.65rem] text-muted italic">
+                  {shloka.translation}
+                </p>
+              </div>
+            ) : null}
 
             <div className="relative mb-4">
               <p

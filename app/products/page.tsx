@@ -17,7 +17,6 @@ export default async function ProductsPage() {
         { brand: "" },
       ],
     },
-    orderBy: { name: "asc" },
     select: {
       id: true,
       name: true,
@@ -43,6 +42,19 @@ export default async function ProductsPage() {
     },
   });
 
+  const sorted = products.sort((a, b) => {
+    const order = (name: string) => {
+      const n = name.toLowerCase();
+      if (n.includes("ghee")) return 0;
+      if (n.includes("honey")) return 1;
+      if (n.includes("shilajit")) return 2;
+      if (n.includes("coffee")) return 3;
+      if (n.includes("sea buckthorn")) return 4;
+      return 5;
+    };
+    return order(a.name) - order(b.name);
+  });
+
   return (
     <section className="bg-background">
       <div
@@ -64,7 +76,7 @@ export default async function ProductsPage() {
         </header>
 
         <ProductsGrid
-          products={products.map((product) => ({
+          products={sorted.map((product) => ({
             ...product,
             variants: product.variants.map((variant) => ({
               sellingPrice: Number(variant.sellingPrice),

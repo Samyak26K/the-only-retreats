@@ -75,7 +75,10 @@ export function HeroSection() {
               className={`mt-2 font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.98] tracking-[-0.02em] text-background motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 sm:mt-3 ${entranceDelays[1]}`}
             >
               {heroContent.title}{" "}
-              <span className="block italic text-background/90">
+              <span
+                className="block font-sanskrit text-background/90"
+                style={{ fontStyle: "italic", letterSpacing: "0.02em" }}
+              >
                 {heroContent.titleEmphasis}
               </span>
             </h1>

@@ -66,7 +66,7 @@ export default function DhatuPage() {
               className="font-display text-lg tracking-[0.4em] uppercase"
               style={{ color: "#F2EBE0" }}
             >
-              Dhatu
+              Tridhatu Kosh
             </p>
             <p
               className="hidden sm:block text-[0.45rem] uppercase tracking-[0.25em]"
@@ -106,7 +106,7 @@ export default function DhatuPage() {
                 className="font-display text-lg tracking-[0.3em]"
                 style={{ color: "#F2EBE0" }}
               >
-                Dhatu
+                Tridhatu Kosh
               </p>
               <button type="button" onClick={() => setMenuOpen(false)}>
                 <X className="size-5" style={{ color: "#B8A98F" }} />
@@ -164,7 +164,7 @@ export default function DhatuPage() {
         {/* Hero image */}
         <Image
           src="https://res.cloudinary.com/k7cipxug/image/upload/v1787836966/Dhatu-Cook.png"
-          alt="Dhatu — Handcrafted Heritage"
+          alt="Tridhatu Kosh — Handcrafted Heritage"
           fill
           priority
           fetchPriority="high"
@@ -207,7 +207,7 @@ export default function DhatuPage() {
               className="text-[0.6rem] uppercase tracking-[0.35em] mb-6"
               style={{ color: "#F2EBE0", opacity: 0.7 }}
             >
-              The Only Retreats · Dhatu
+              The Only Retreats · Tridhatu Kosh
             </p>
             <h1
               className="font-display text-5xl md:text-6xl lg:text-7xl leading-[0.92] tracking-[-0.02em] mb-6"
@@ -385,7 +385,7 @@ export default function DhatuPage() {
             className="mb-2 text-[0.6rem] uppercase tracking-[0.3em]"
             style={{ color: "#B25B32" }}
           >
-            Why Dhatu
+            Why Tridhatu Kosh
           </p>
           <h2
             className="font-display text-3xl md:text-4xl"
@@ -490,9 +490,9 @@ export default function DhatuPage() {
                 </p>
                 <p className="text-sm leading-7" style={{ color: "#B8A98F" }}>
                   Somewhere along the way, we replaced them with plastic and
-                  stainless steel. Dhatu exists to reverse that — to bring
-                  Indian metalcraft back into the modern home, with the quality
-                  and intention it has always deserved.
+                  stainless steel. Tridhatu Kosh exists to reverse that — to
+                  bring Indian metalcraft back into the modern home, with the
+                  quality and intention it has always deserved.
                 </p>
                 <div
                   className="border-l-2 pt-4 pl-5"
@@ -546,7 +546,7 @@ export default function DhatuPage() {
                   className="mt-1 text-[0.6rem] uppercase tracking-[0.15em]"
                   style={{ color: "#B8A98F" }}
                 >
-                  Handcrafted Heritage · Dhatu
+                  Handcrafted Heritage · Tridhatu Kosh
                 </p>
               </div>
             </div>
@@ -668,7 +668,7 @@ export default function DhatuPage() {
         )}
       </section>
 
-      <FooterSection />
+      <FooterSection hideFssai />
     </div>
   );
 }

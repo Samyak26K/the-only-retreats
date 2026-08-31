@@ -286,6 +286,46 @@ export default async function AdminProductDetailPage({
       redirect(`/admin/products/${id}?error=variant_create_failed`);
     }
 
+    const location =
+      (await prisma.inventoryLocation.findFirst({
+        where: { isActive: true },
+      })) ??
+      (await prisma.inventoryLocation.create({
+        data: {
+          name: "Main Warehouse",
+          type: "warehouse",
+          isActive: true,
+        },
+      }));
+
+    const variants = await prisma.productVariant.findMany({
+      where: {
+        product: { id },
+        name: parsed.data.name,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 1,
+    });
+
+    if (variants[0]) {
+      await prisma.inventoryItem.upsert({
+        where: {
+          productVariantId_inventoryLocationId: {
+            productVariantId: variants[0].id,
+            inventoryLocationId: location.id,
+          },
+        },
+        update: {},
+        create: {
+          productVariantId: variants[0].id,
+          inventoryLocationId: location.id,
+          quantityOnHand: 50,
+          quantityReserved: 0,
+          status: "ACTIVE",
+        },
+      });
+    }
+
     redirect(`/admin/products/${id}?success=variant_created`);
   }
 

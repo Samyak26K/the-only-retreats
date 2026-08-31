@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@prisma/client"],
   experimental: {
     viewTransition: true,
-    serverComponentsExternalPackages: ["@prisma/client"],
   },
   // Next applies outputFileTracingExcludes after webpack compile. The webpack
   // TraceEntryPointsPlugin still globs os.homedir() during compile (NFT), which

@@ -15,8 +15,6 @@ export async function CollectionSection() {
         { brand: "" },
       ],
     },
-    take: 6,
-    orderBy: { createdAt: "desc" },
     select: {
       id: true,
       name: true,
@@ -38,6 +36,22 @@ export async function CollectionSection() {
       },
     },
   });
+
+  const sorted = products
+    .sort((a, b) => {
+      if (a.slug === "himalayan-vedic-yak-ghee") return -1;
+      if (b.slug === "himalayan-vedic-yak-ghee") return 1;
+      const order = (name: string) => {
+        const n = name.toLowerCase();
+        if (n.includes("ghee")) return 0;
+        if (n.includes("honey")) return 1;
+        if (n.includes("shilajit")) return 2;
+        if (n.includes("coffee")) return 3;
+        return 4;
+      };
+      return order(a.name) - order(b.name);
+    })
+    .slice(0, 6);
 
   if (products.length === 0) return null;
 
@@ -116,7 +130,7 @@ export async function CollectionSection() {
           className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0"
           style={{ scrollbarWidth: "none" }}
         >
-          {products.map((product, index) => {
+          {sorted.map((product, index) => {
             const shloka = productShlokas[product.slug];
             const image = product.media[0]?.url;
             const price = product.variants[0]?.sellingPrice;

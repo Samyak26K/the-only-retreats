@@ -12,30 +12,144 @@ type Props = {
 
 export function ProductWhyExists({ product }: Props) {
   const [expanded, setExpanded] = useState(false);
-  const isHoney = product.category === "honey";
+  const isGhee =
+    product.slug.includes("ghee") ||
+    product.name.toLowerCase().includes("ghee");
+  const isHoney =
+    product.slug.includes("honey") ||
+    product.name.toLowerCase().includes("honey");
+  const isCoffee = product.slug.includes("coffee");
+  const isShilajit = product.slug.includes("shilajit");
+  const isSeabuckthorn =
+    product.slug.includes("sea-buckthorn") ||
+    product.slug.includes("buckthorn");
 
-  const whyText = {
-    heading: isHoney
-      ? "Why This Honey Exists"
-      : `Why This ${product.name} Exists`,
-    eyebrow: "FROM THE HIMALAYAS",
-    paragraphs: [
-      product.story.body ||
-        "Most products in the market are blended, processed, and filtered multiple times.",
-      `Our ${product.name} is raw, unprocessed, and sourced from a single Himalayan region.`,
-      "Pure, rare and true to its origin.",
-    ],
-    valleyImage: "/images/valleys/lahaul.webp",
-    badgeNumber: "18",
-    badgeText: "HIMALAYAN BEEKEEPER FAMILIES",
-    shloka: {
-      devanagari: product.shloka.devanagari || "मधु वाता ऋतायते",
-      translation: product.shloka.translation || "May the winds be sweet.",
-      reference: "RIG VEDA (MADHU SUKTA)",
-      wisdom:
-        "For the Vedic seers, sweetness was not merely a taste — it was a way of describing harmony between nature, seasons, rivers, forests, and life itself.",
-    },
-  };
+  const whyText = isGhee
+    ? {
+        heading: "Why This Ghee Exists",
+        eyebrow: "FROM THE HIMALAYAS",
+        paragraphs: [
+          "Most ghee in the market is made from commercial dairy — pasteurised milk, industrial churning, mass production.",
+          "Our ghee is made the Bilona way. Curd churned by hand. Butter slow-clarified over wood fire. From cows that graze freely at altitude.",
+          "The process takes five days. The difference is in every spoonful.",
+        ],
+        valleyImage: "/images/valleys/kullu.webp",
+        badgeNumber: "5",
+        badgeText: "DAY PROCESS",
+        shloka: {
+          devanagari: product.shloka?.devanagari ?? "गावो विश्वस्य मातरः",
+          translation:
+            product.shloka?.translation ??
+            "The cow is the mother of the world.",
+          reference: "ATHARVA VEDA",
+          wisdom:
+            "In Vedic tradition, the cow is considered sacred not for religious reasons alone — but because she gives life. Milk, curd, ghee, fuel, medicine. The ancient economy of a village flowed through her.",
+        },
+      }
+    : isHoney
+      ? {
+          heading: "Why This Honey Exists",
+          eyebrow: "FROM THE HIMALAYAS",
+          paragraphs: [
+            product.story.body ||
+              "Most products in the market are blended, processed, and filtered multiple times.",
+            `Our ${product.name} is raw, unprocessed, and sourced from a single Himalayan region.`,
+            "Pure, rare and true to its origin.",
+          ],
+          valleyImage: "/images/valleys/lahaul.webp",
+          badgeNumber: "18",
+          badgeText: "HIMALAYAN BEEKEEPER FAMILIES",
+          shloka: {
+            devanagari: product.shloka.devanagari || "मधु वाता ऋतायते",
+            translation:
+              product.shloka.translation || "May the winds be sweet.",
+            reference: "RIG VEDA (MADHU SUKTA)",
+            wisdom:
+              "For the Vedic seers, sweetness was not merely a taste — it was a way of describing harmony between nature, seasons, rivers, forests, and life itself.",
+          },
+        }
+      : isCoffee
+        ? {
+            heading: "Why This Coffee Exists",
+            eyebrow: "FROM THE HIMALAYAS",
+            paragraphs: [
+              "Coffee grown at altitude develops more slowly. The cold nights, the thin air, the mineral-rich soil — all of it concentrates in the bean.",
+              "Himalayan coffee is not mass cultivated. It grows in small plots, at elevations where most crops cannot survive.",
+              "Each batch is small. Each cup carries the character of where it was grown.",
+            ],
+            valleyImage: "/images/valleys/kullu.webp",
+            badgeNumber: "∞",
+            badgeText: "SMALL BATCH",
+            shloka: {
+              devanagari: "प्रकृतिः सर्वस्य",
+              translation: "Nature is the source of everything.",
+              reference: "VEDIC TRADITION",
+              wisdom:
+                "The mountains do not rush. Neither does good coffee. Patience is the only ingredient that cannot be manufactured.",
+            },
+          }
+        : isShilajit
+          ? {
+              heading: "Why This Shilajit Exists",
+              eyebrow: "FROM THE HIMALAYAS",
+              paragraphs: [
+                "Shilajit is not manufactured. It is collected — slowly exuding from Himalayan rock faces over thousands of years.",
+                "Most shilajit on the market is adulterated, diluted or improperly purified. Ours is collected from high-altitude Ladakhi rock faces and purified using traditional methods.",
+                "The result is resin that is genuinely potent — not a powder pressed into a capsule.",
+              ],
+              valleyImage: "/images/valleys/changthang.webp",
+              badgeNumber: "∞",
+              badgeText: "YEARS IN FORMATION",
+              shloka: {
+                devanagari: "शिलाजतु हिमालयः",
+                translation: "The exudate of the Himalayan rock.",
+                reference: "CHARAKA SAMHITA",
+                wisdom:
+                  "Shilajit was documented in ancient Ayurvedic texts as a rasayana — a substance that promotes longevity and restores what time takes away. The Himalayas have been producing it for longer than any civilization has existed.",
+              },
+            }
+          : isSeabuckthorn
+            ? {
+                heading: "Why This Seabuckthorn Exists",
+                eyebrow: "FROM NUBRA VALLEY",
+                paragraphs: [
+                  "Seabuckthorn grows wild in the cold desert valleys of Ladakh — one of the few plants that thrives where almost nothing else can.",
+                  "The berries are harvested once a year, at peak ripeness, by hand. No chemicals. No irrigation. Pure cold-desert nutrition.",
+                  "It is one of the most nutrient-dense fruits on earth. The Himalayas have known this for centuries.",
+                ],
+                valleyImage: "/images/valleys/nubra.webp",
+                badgeNumber: "1",
+                badgeText: "ANNUAL HARVEST",
+                shloka: {
+                  devanagari: "अमृतं हिमालयात्",
+                  translation: "Nectar from the Himalayas.",
+                  reference: "VEDIC TRADITION",
+                  wisdom:
+                    "The cold-desert ecology of Nubra Valley produces plants of extraordinary resilience. That resilience — the ability to thrive in extreme conditions — is what makes their fruit so nutritionally potent.",
+                },
+              }
+            : {
+                heading: `Why This ${product.name} Exists`,
+                eyebrow: "FROM THE HIMALAYAS",
+                paragraphs: [
+                  product.story?.body ||
+                    "Most products in the market are blended, processed, and filtered multiple times.",
+                  `Our ${product.name} is raw, unprocessed, and sourced from a single Himalayan region.`,
+                  "Pure, rare and true to its origin.",
+                ],
+                valleyImage: "/images/valleys/lahaul.webp",
+                badgeNumber: "1",
+                badgeText: "HIMALAYAN SOURCE",
+                shloka: {
+                  devanagari: product.shloka?.devanagari ?? "मधु वाता ऋतायते",
+                  translation:
+                    product.shloka?.translation ??
+                    "May the winds bring sweetness.",
+                  reference: "RIG VEDA",
+                  wisdom:
+                    "For the Vedic seers, sweetness was not merely a taste — it was a way of describing harmony between nature, seasons, rivers, forests, and life itself.",
+                },
+              };
 
   return (
     <section className="border-t border-border bg-background py-10 md:py-14">

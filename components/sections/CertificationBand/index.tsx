@@ -1,7 +1,6 @@
 const items = [
   "The Only Retreats",
   "Not Mass Produced. Only Preserved.",
-  "Organic Certified",
   "Fair Trade",
   "Traceable Source",
   "Sustainable",

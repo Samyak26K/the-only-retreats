@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
   if (!product) return {};
   return {
-    title: `${product.name} — Dhatu | The Only Retreats`,
+    title: `${product.name} — Tridhatu Kosh | The Only Retreats`,
     description: product.shortDescription ?? "",
   };
 }
@@ -105,7 +105,7 @@ export default async function DhatuProductPage({ params }: Props) {
           className="absolute left-1/2 -translate-x-1/2 text-center font-display text-lg tracking-[0.3em] uppercase"
           style={{ color: "#F2EBE0" }}
         >
-          Dhatu
+          Tridhatu Kosh
         </Link>
         <Link
           href="/cart"
@@ -124,7 +124,7 @@ export default async function DhatuProductPage({ params }: Props) {
             style={{ color: "#5A3A2A" }}
           >
             <Link href="/dhatu" style={{ color: "#5A3A2A" }}>
-              Dhatu
+              Tridhatu Kosh
             </Link>
             <span>/</span>
             <Link href="/dhatu/products" style={{ color: "#5A3A2A" }}>
@@ -168,7 +168,7 @@ export default async function DhatuProductPage({ params }: Props) {
                 className="font-display mb-8 text-2xl"
                 style={{ color: "#F2EBE0" }}
               >
-                More from Dhatu
+                More from Tridhatu Kosh
               </h2>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                 {related.map((r) => (

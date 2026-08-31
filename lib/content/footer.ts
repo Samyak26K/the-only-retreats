@@ -48,7 +48,7 @@ export const footerContent: FooterContent = {
     title: "Contact",
     links: [
       { label: "Instagram", href: "https://instagram.com/theonlyretreats" },
-      { label: "WhatsApp", href: "https://wa.me/919172778258" },
+      { label: "WhatsApp", href: "https://wa.me/919172778248" },
     ],
   },
   newsletter: {

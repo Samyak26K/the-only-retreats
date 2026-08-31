@@ -62,7 +62,7 @@ export const valleys: Valley[] = [
     name: "Kullu Valley",
     editorialTitle: "The Valley of Sacred Meadows",
     state: "Himachal Pradesh",
-    altitude: null, // TODO: Add approved altitude.
+    altitude: "2000m",
     coverImage: "/images/valleys/kullu.webp", // Temporary AI review asset; replace with production photography.
     shortDescription: null, // TODO: Add approved editorial copy.
     products: [

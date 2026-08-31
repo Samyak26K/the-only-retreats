@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "Collection — Dhatu | The Only Retreats",
+  title: "Collection — Tridhatu Kosh | The Only Retreats",
   description:
     "Handcrafted copper and brass products from Indian artisan traditions.",
 };
@@ -51,14 +51,14 @@ export default async function DhatuProductsPage() {
           className="text-[0.6rem] uppercase tracking-[0.2em]"
           style={{ color: "#B8A98F" }}
         >
-          ← Dhatu
+          ← Tridhatu Kosh
         </Link>
         <Link
           href="/dhatu"
           className="absolute left-1/2 -translate-x-1/2 text-center font-display text-lg tracking-[0.3em] uppercase"
           style={{ color: "#F2EBE0" }}
         >
-          Dhatu
+          Tridhatu Kosh
         </Link>
         <Link
           href="/cart"
