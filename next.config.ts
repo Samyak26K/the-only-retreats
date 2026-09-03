@@ -6,6 +6,7 @@ const windowsHomeTraceIgnore = "C:**";
 const homeSegmentTraceIgnore = `**/${path.basename(os.homedir())}/**`;
 
 const nextConfig: NextConfig = {
+  staticPageGenerationTimeout: 120,
   eslint: {
     ignoreDuringBuilds: true,
   },

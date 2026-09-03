@@ -8,6 +8,9 @@ import { FooterSection } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
 import { valleys } from "@/lib/content/valleys";
 
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 type ValleyPageProps = {
   params: Promise<{ slug: string }>;
 };
