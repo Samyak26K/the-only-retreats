@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
-import { Container } from "@/components/ui/Container";
 import { requireAdmin } from "@/lib/server/auth";
 
 export const metadata: Metadata = {
@@ -29,22 +29,7 @@ export default async function AdminLayout({
   const adminContext = await requireAdmin().catch(() => null);
 
   if (!adminContext) {
-    return (
-      <div className="min-h-screen bg-background px-6 py-16">
-        <Container className="max-w-2xl rounded-2xl border border-border bg-card p-10 shadow-sm">
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-muted">
-            Access restricted
-          </p>
-          <h1 className="mt-4 font-display text-3xl text-foreground">
-            You need admin access to view this area.
-          </h1>
-          <p className="mt-4 text-sm leading-7 text-muted">
-            The admin console is protected server-side and only available to
-            authorized personnel.
-          </p>
-        </Container>
-      </div>
-    );
+    return <AdminAccessRequired />;
   }
 
   return (

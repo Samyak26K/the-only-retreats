@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Heading } from "@/components/ui/Heading";
 import { requirePermission } from "@/lib/server/auth";
 import { getOrigin, updateOrigin } from "@/lib/services/origins";
@@ -16,7 +17,7 @@ export default async function AdminOriginDetailPage({
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   const origin = await getOrigin(id);

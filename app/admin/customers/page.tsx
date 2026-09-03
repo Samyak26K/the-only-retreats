@@ -1,3 +1,4 @@
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
@@ -17,7 +18,7 @@ export default async function AdminCustomersPage() {
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   let customers: CustomerListItem[] = [];

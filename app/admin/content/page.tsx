@@ -1,3 +1,4 @@
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Heading } from "@/components/ui/Heading";
 import { requirePermission } from "@/lib/server/auth";
 import { prisma } from "@/lib/prisma";
@@ -8,7 +9,7 @@ export default async function AdminContentPage() {
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   let entries: Awaited<ReturnType<typeof prisma.contentEntry.findMany>> = [];

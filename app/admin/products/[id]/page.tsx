@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { z } from "zod";
 
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
@@ -116,7 +117,7 @@ export default async function AdminProductDetailPage({
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   const product = await getProductById(id);

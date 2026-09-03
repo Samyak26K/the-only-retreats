@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
 import { getInventory } from "@/lib/services/inventory";
@@ -225,7 +226,7 @@ export default async function AdminDashboardPage() {
   const adminContext = await requireAdmin().catch(() => null);
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   let summary: DashboardSummary | null = null;

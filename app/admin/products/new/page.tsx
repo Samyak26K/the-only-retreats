@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
@@ -22,7 +23,7 @@ export default async function NewProductPage() {
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   async function createProductAction(formData: FormData) {
@@ -130,18 +131,6 @@ export default async function NewProductPage() {
       ),
     );
 
-    const inventoryLocation =
-      (await prisma.inventoryLocation.findFirst({
-        where: { isActive: true },
-      })) ??
-      (await prisma.inventoryLocation.create({
-        data: {
-          name: "Main Warehouse",
-          type: "warehouse",
-          isActive: true,
-        },
-      }));
-
     for (const i of variantIndices) {
       const variantLabel = (
         (formData.get(`variant_${i}_label`) as string) ?? ""
@@ -164,7 +153,7 @@ export default async function NewProductPage() {
       const sellingPrice = parseFloat(variantPrice);
       const mrp = variantMrp ? parseFloat(variantMrp) : sellingPrice;
 
-      const variant = await prisma.productVariant.create({
+      const createdVariant = await prisma.productVariant.create({
         data: {
           productId: createdProduct.id,
           name: variantLabel,
@@ -180,10 +169,29 @@ export default async function NewProductPage() {
         },
       });
 
-      await prisma.inventoryItem.create({
-        data: {
-          productVariantId: variant.id,
-          inventoryLocationId: inventoryLocation.id,
+      const location =
+        (await prisma.inventoryLocation.findFirst({
+          where: { isActive: true },
+        })) ??
+        (await prisma.inventoryLocation.create({
+          data: {
+            name: "Main Warehouse",
+            type: "warehouse",
+            isActive: true,
+          },
+        }));
+
+      await prisma.inventoryItem.upsert({
+        where: {
+          productVariantId_inventoryLocationId: {
+            productVariantId: createdVariant.id,
+            inventoryLocationId: location.id,
+          },
+        },
+        update: {},
+        create: {
+          productVariantId: createdVariant.id,
+          inventoryLocationId: location.id,
           quantityOnHand: 50,
           quantityReserved: 0,
           status: "ACTIVE",

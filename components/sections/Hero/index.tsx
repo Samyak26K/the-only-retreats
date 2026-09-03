@@ -61,7 +61,7 @@ export function HeroSection() {
             >
               <p
                 lang="sa"
-                className="font-sanskrit text-lg tracking-wide text-gold sm:text-xl"
+                className="font-sanskrit text-lg tracking-wide text-white/70 sm:text-xl"
               >
                 {heroContent.shloka.devanagari}
               </p>

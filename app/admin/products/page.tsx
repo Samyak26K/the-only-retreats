@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { requirePermission } from "@/lib/server/auth";
@@ -11,7 +12,7 @@ export default async function AdminProductsPage() {
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   let products: Awaited<ReturnType<typeof listProducts>> = [];

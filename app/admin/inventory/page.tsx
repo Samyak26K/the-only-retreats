@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Fragment } from "react";
 
 import { Button } from "@/components/ui/button";
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
@@ -29,7 +30,7 @@ export default async function AdminInventoryPage({
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   const currentAdminContext = adminContext;

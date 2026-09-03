@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
@@ -13,7 +14,7 @@ export default async function NewOriginPage() {
   );
 
   if (!adminContext) {
-    return null;
+    return <AdminAccessRequired />;
   }
 
   async function createOriginAction(formData: FormData) {
