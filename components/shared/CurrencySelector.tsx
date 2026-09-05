@@ -84,9 +84,9 @@ export function CurrencySelector() {
 
       {open && (
         <div
-          className="absolute right-0 top-full mt-2 w-48 
+          className="absolute left-0 top-full mt-2 w-48
           rounded-xl border border-border bg-background shadow-lg 
-          z-50 overflow-hidden"
+          z-50 overflow-hidden md:left-auto md:right-0"
         >
           {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
             <button

@@ -83,21 +83,25 @@ export function Header() {
     >
       <Container className="relative flex h-(--navbar-height-mobile) items-center justify-between gap-4 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
         <div className="flex items-center">
-          <button
-            type="button"
-            aria-label={navigationContent.menu.openLabel}
-            aria-haspopup="dialog"
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-drawer"
-            onClick={() => setMobileOpen(true)}
-            className={cn(
-              utilityButtonClasses(false),
-              "md:hidden",
-              isTransparentHero && "text-white hover:bg-white/10",
-            )}
-          >
-            <Menu className="size-6" />
-          </button>
+          <div className="flex items-center gap-1 md:hidden">
+            {/* Hamburger */}
+            <button
+              type="button"
+              aria-label={navigationContent.menu.openLabel}
+              aria-haspopup="dialog"
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-drawer"
+              onClick={() => setMobileOpen(true)}
+              className={utilityButtonClasses(false)}
+            >
+              <Menu className="size-6" />
+            </button>
+
+            {/* Currency selector - mobile only */}
+            <div className="md:hidden">
+              <CurrencySelector />
+            </div>
+          </div>
 
           {/* Desktop lockup: left-aligned, flows in normal document order. */}
           <Link
@@ -155,9 +159,6 @@ export function Header() {
         <DesktopNavigation isScrolled={!isTransparentHero} />
 
         <div className="flex items-center gap-1">
-          <div className="md:hidden">
-            <CurrencySelector />
-          </div>
           <div className="hidden md:flex items-center gap-1">
             <CurrencySelector />
           </div>
