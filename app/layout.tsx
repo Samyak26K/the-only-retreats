@@ -9,6 +9,7 @@ import {
 import { AppShell } from "@/components/layout/AppShell";
 import { CartToast } from "@/components/shared/CartToast";
 import { PageLoader } from "@/components/shared/PageLoader";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SmoothScroll } from "@/components/shared/SmoothScroll";
 import { DEFAULT_SITE_URL, SITE_NAME } from "@/lib/constants";
 import { warmupDb } from "@/lib/db-warmup";
@@ -90,6 +91,7 @@ export default function RootLayout({
       className={`${displayFont.variable} ${headingFont.variable} ${bodyFont.variable} ${sanskritFont.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
+        <ScrollToTop />
         <PageLoader />
         <a
           href="#main-content"

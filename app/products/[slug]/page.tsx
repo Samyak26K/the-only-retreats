@@ -97,13 +97,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
       }
     >
       <>
+        <div id="page-top" />
         <ProductHero product={product} />
         <ProductWhyExists product={product} />
         {showJourney && <ProductJourney steps={product.originJourney} />}
         <ProductInfoGrid product={product} />
         <ProductCompliance product={product} />
         <ProductComplianceHoney product={product} />
-        <Suspense fallback={null}>
+        <Suspense fallback={<div className="py-16 border-t border-border" />}>
           <ProductRelatedProducts product={product} />
         </Suspense>
         <FooterSection />
