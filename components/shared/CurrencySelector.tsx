@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import { useCurrencyStore } from "@/lib/currency-store";
 import { SUPPORTED_CURRENCIES, type CurrencyCode } from "@/lib/currency";
+import { cn } from "@/lib/utils";
 
-export function CurrencySelector() {
+type CurrencySelectorProps = {
+  isTransparentHero?: boolean;
+};
+
+export function CurrencySelector({
+  isTransparentHero = false,
+}: CurrencySelectorProps) {
   const { currency, setCurrency } = useCurrencyStore();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -13,6 +20,14 @@ export function CurrencySelector() {
     setMounted(true);
     detectUserCurrency();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
   const detectUserCurrency = async () => {
@@ -74,36 +89,80 @@ export function CurrencySelector() {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 text-xs uppercase 
-          tracking-[0.15em] transition-colors"
+        className={cn(
+          "flex items-center gap-1 text-[0.65rem] uppercase",
+          "tracking-[0.12em] font-body transition-colors duration-200",
+          "hover:opacity-70 focus:outline-none",
+          isTransparentHero ? "text-white/80" : "text-foreground/70",
+        )}
+        aria-expanded={open}
+        aria-haspopup="listbox"
       >
-        <span>{current.symbol}</span>
+        <span className="font-medium">{current.symbol}</span>
         <span>{currency}</span>
-        <span className="text-[0.5rem]">▾</span>
+        <span
+          className={cn(
+            "text-[0.5rem] transition-transform duration-200",
+            open && "rotate-180",
+          )}
+        >
+          ▾
+        </span>
       </button>
 
       {open && (
-        <div
-          className="absolute left-0 top-full mt-2 w-48
-          rounded-xl border border-border bg-background shadow-lg 
-          z-50 overflow-hidden md:left-auto md:right-0"
-        >
-          {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
-            <button
-              key={code}
-              type="button"
-              onClick={() => handleSelect(code as CurrencyCode)}
-              className={`w-full flex items-center justify-between 
-                px-4 py-2.5 text-xs hover:bg-surface transition-colors
-                ${currency === code ? "text-gold" : "text-foreground"}`}
-            >
-              <span>
-                {info.symbol} {code}
-              </span>
-              <span className="text-muted text-[0.6rem]">{info.name}</span>
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+
+          <div
+            className="absolute left-0 top-full mt-3 z-50
+              md:left-auto md:right-0
+              w-56 overflow-hidden
+              border border-border/60
+              bg-background/98 backdrop-blur-sm
+              shadow-sm rounded-lg"
+          >
+            <div className="py-1">
+              {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => {
+                const isSelected = currency === code;
+                return (
+                  <button
+                    key={code}
+                    type="button"
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => handleSelect(code as CurrencyCode)}
+                    className={cn(
+                      "w-full flex items-center justify-between",
+                      "px-4 py-2.5 text-left transition-colors duration-150",
+                      "hover:bg-surface focus:outline-none",
+                      isSelected ? "text-foreground" : "text-muted",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        "text-[0.7rem] uppercase tracking-[0.1em]",
+                        "font-medium flex items-center gap-1.5",
+                        isSelected && "text-gold",
+                      )}
+                    >
+                      <span>{info.symbol}</span>
+                      <span>{code}</span>
+                    </span>
+                    <span
+                      className={cn(
+                        "text-[0.6rem] tracking-wide",
+                        isSelected ? "text-muted" : "text-muted/50",
+                      )}
+                    >
+                      {info.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

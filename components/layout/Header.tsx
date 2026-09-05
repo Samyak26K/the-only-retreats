@@ -99,7 +99,7 @@ export function Header() {
 
             {/* Currency selector - mobile only */}
             <div className="md:hidden">
-              <CurrencySelector />
+              <CurrencySelector isTransparentHero={isTransparentHero} />
             </div>
           </div>
 
@@ -160,7 +160,7 @@ export function Header() {
 
         <div className="flex items-center gap-1">
           <div className="hidden md:flex items-center gap-1">
-            <CurrencySelector />
+            <CurrencySelector isTransparentHero={isTransparentHero} />
           </div>
           <button
             type="button"
