@@ -69,14 +69,14 @@ export function HeroSection() {
               >
                 {heroContent.shloka.devanagari}
               </p>
-              <p className="text-sm text-background/70">
+              <p className="text-sm font-medium text-background/85">
                 {heroContent.shloka.translation}
               </p>
             </div>
 
             {/* Block 2: Primary H1 — dominant brand statement */}
             <h1
-              className={`mt-3 font-display uppercase 
+              className={`mt-3 font-display font-medium uppercase
               text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.05] 
               tracking-[0.04em] text-background
               motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] 
@@ -88,7 +88,7 @@ export function HeroSection() {
 
             {/* Block 3: Editorial continuation — italic, medium */}
             <p
-              className={`max-w-lg font-display italic 
+              className={`max-w-lg font-display
               text-lg md:text-xl text-background/80 leading-snug
               motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] 
               motion-safe:opacity-0 ${entranceDelays[2]}`}
