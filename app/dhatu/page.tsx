@@ -625,7 +625,7 @@ export default function DhatuPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:border-t border-[#5A3A2A]">
             {[
               {
                 sanskrit: "तांबा",
@@ -661,11 +661,12 @@ export default function DhatuPage() {
             ].map((metal, index) => (
               <div
                 key={metal.english}
-                className="py-10 px-0 md:px-8 space-y-5 first:pl-0 last:pr-0"
-                style={{
-                  borderTop: "1px solid #5A3A2A",
-                  borderLeft: index > 0 ? "1px solid #5A3A2A" : "none",
-                }}
+                className={`py-10 px-0 md:px-8 space-y-5
+                  first:pl-0 last:pr-0
+                  border-t md:border-t-0
+                  ${index > 0 ? "md:border-l" : ""}
+                  border-[#5A3A2A]`}
+                style={{}}
               >
                 <div>
                   <p
