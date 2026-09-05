@@ -142,47 +142,102 @@ export function FooterSection({
               </Link>
             </div>
             <div
-              className="mt-6 border-t pt-6"
-              style={{ borderColor: "rgba(255,255,255,0.08)" }}
+              className="border-t pt-8 mt-6 space-y-6"
+              style={{ borderColor: "rgba(255,255,255,0.1)" }}
             >
-              {/* FSSAI */}
-              {!hideFssai ? (
-                <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* FSSAI + Company Info row */}
+              <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
+                {/* FSSAI Logo */}
+                {!hideFssai ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src="https://res.cloudinary.com/k7cipxug/image/upload/v1787843837/FSSAI-License-Mandatory-for-Small-Business-300x232-removebg-preview.png"
                     alt="FSSAI Licensed"
-                    className="h-10 w-auto object-contain opacity-80"
+                    className="h-12 w-auto object-contain opacity-90 shrink-0"
                   />
-                  <p className="text-[0.6rem] leading-5 text-white/25">
-                    FSSAI License No. 21526037004345
-                  </p>
-                </div>
-              ) : null}
+                ) : null}
 
-              {/* Company details */}
-              <div className="space-y-1">
-                <p className="text-[0.6rem] leading-5 text-white/25">
-                  Marketed by: The Only Retreats (Brand of Rugvedic Ventures)
+                {/* Company Information */}
+                <div className="space-y-1">
+                  <p className="text-[0.65rem] uppercase tracking-[0.2em] text-white/50 mb-2">
+                    Company Information
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
+                    {[
+                      ["Company", "Rugvedic Ventures Private Limited"],
+                      ["Brand", "The Only Retreats"],
+                      ["CIN", "U46909PN2026PTC256344"],
+                      ["PAN", "AAPCR9493J"],
+                      ["FSSAI Reg. No.", "21526037004345"],
+                      ["Location", "Pune, Maharashtra, India"],
+                    ].map(([label, value]) => (
+                      <p
+                        key={label}
+                        className="text-xs text-white/60 leading-5"
+                      >
+                        <span className="text-white/40 mr-1">{label}:</span>
+                        {value}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Regulatory details */}
+              <div
+                className="space-y-2 pt-4 border-t"
+                style={{ borderColor: "rgba(255,255,255,0.08)" }}
+              >
+                <p className="text-xs text-white/60 leading-6">
+                  <span className="text-white/40">FSSAI License No.:</span>{" "}
+                  21526037004345
                 </p>
-                <p className="text-[0.6rem] leading-5 text-white/25">
-                  Packed & Procured by: Rugvedic Ventures Pvt. Ltd, GAT No. 458,
-                  Flat No. 508, Wing H1, Highland Space, Moshi, Haveli, Pune
-                  412105, Maharashtra
+                <p className="text-xs text-white/60 leading-6">
+                  <span className="text-white/40">Marketed by:</span> The Only
+                  Retreats (Brand of Rugvedic Ventures)
                 </p>
-                <p className="text-[0.6rem] leading-5 text-white/25">
-                  Consumer Care: customer@theonlyretreats.com · +91 9172778248 /
-                  +91 9225181202
+                <p className="text-xs text-white/60 leading-6 max-w-2xl">
+                  <span className="text-white/40">Packed & Procured by:</span>{" "}
+                  Rugvedic Ventures Pvt. Ltd, GAT No. 458, Flat No. 508, Wing
+                  H1, Highland Space, Moshi, Haveli, Pune 412105, Maharashtra
+                </p>
+                <p className="text-xs text-white/60 leading-6">
+                  <span className="text-white/40">Consumer Care:</span>{" "}
+                  <a
+                    href="mailto:customer@theonlyretreats.com"
+                    className="transition-colors hover:text-white"
+                  >
+                    customer@theonlyretreats.com
+                  </a>{" "}
+                  ·{" "}
+                  <a
+                    href="tel:+919172778248"
+                    className="transition-colors hover:text-white"
+                  >
+                    +91 9172778248
+                  </a>{" "}
+                  /{" "}
+                  <a
+                    href="tel:+919225181202"
+                    className="transition-colors hover:text-white"
+                  >
+                    +91 9225181202
+                  </a>
                 </p>
               </div>
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-xs text-white/20">
-                {footerContent.bottom.copyright}
-              </p>
-              <p className="text-xs uppercase tracking-[0.2em] text-white/20">
-                {footerContent.bottom.madeIn}
-              </p>
+
+              {/* Copyright row */}
+              <div
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-4 border-t"
+                style={{ borderColor: "rgba(255,255,255,0.08)" }}
+              >
+                <p className="text-xs text-white/40">
+                  © 2026 The Only Retreats. All rights reserved.
+                </p>
+                <p className="text-xs uppercase tracking-[0.2em] text-white/30">
+                  Made in India
+                </p>
+              </div>
             </div>
           </div>
         </div>
