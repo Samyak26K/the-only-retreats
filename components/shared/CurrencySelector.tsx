@@ -90,19 +90,20 @@ export function CurrencySelector({
         type="button"
         onClick={() => setOpen((o) => !o)}
         className={cn(
-          "flex items-center gap-1 text-[0.65rem] uppercase",
-          "tracking-[0.12em] font-body transition-colors duration-200",
+          "flex items-center gap-1.5 text-[0.7rem] uppercase",
+          "tracking-[0.18em] font-heading font-medium",
+          "transition-colors duration-200",
           "hover:opacity-70 focus:outline-none",
-          isTransparentHero ? "text-white/80" : "text-foreground/70",
+          isTransparentHero ? "text-white/90" : "text-foreground/80",
         )}
         aria-expanded={open}
         aria-haspopup="listbox"
       >
-        <span className="font-medium">{current.symbol}</span>
-        <span>{currency}</span>
+        <span>{current.symbol}</span>
+        <span className="tracking-[0.18em]">{currency}</span>
         <span
           className={cn(
-            "text-[0.5rem] transition-transform duration-200",
+            "text-[0.55rem] opacity-60 transition-transform duration-200",
             open && "rotate-180",
           )}
         >
