@@ -103,7 +103,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <ProductInfoGrid product={product} />
         <ProductCompliance product={product} />
         <ProductComplianceHoney product={product} />
-        <ProductRelatedProducts product={product} />
+        <Suspense fallback={null}>
+          <ProductRelatedProducts product={product} />
+        </Suspense>
         <FooterSection />
       </>
     </Suspense>
