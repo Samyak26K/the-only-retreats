@@ -81,33 +81,87 @@ export function Header() {
           "border-transparent bg-background/95 backdrop-blur",
       )}
     >
-      <Container className="relative flex h-(--navbar-height-mobile) items-center justify-between gap-4 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
-        <div className="flex items-center">
-          <div className="flex items-center gap-1 md:hidden">
-            {/* Hamburger */}
-            <button
-              type="button"
-              aria-label={navigationContent.menu.openLabel}
-              aria-haspopup="dialog"
-              aria-expanded={mobileOpen}
-              aria-controls="mobile-drawer"
-              onClick={() => setMobileOpen(true)}
-              className={utilityButtonClasses(false)}
-            >
-              <Menu className="size-6" />
-            </button>
+      <Container className="relative flex h-(--navbar-height-mobile) items-center md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
+        {/* COMPACT MODE */}
+        <div className="flex items-center gap-1 navbar:hidden">
+          <button
+            type="button"
+            aria-label={navigationContent.menu.openLabel}
+            aria-haspopup="dialog"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-drawer"
+            onClick={() => setMobileOpen(true)}
+            className={cn(
+              "flex size-11 items-center justify-center rounded-full",
+              "transition-colors duration-fast",
+              isTransparentHero
+                ? "text-white hover:bg-white/10"
+                : "text-foreground hover:bg-surface",
+            )}
+          >
+            <Menu className="size-6" />
+          </button>
+          <CurrencySelector isTransparentHero={isTransparentHero} />
+        </div>
 
-            {/* Currency selector - mobile only */}
-            <div className="md:hidden">
-              <CurrencySelector isTransparentHero={isTransparentHero} />
-            </div>
-          </div>
+        <Link
+          href={navigationContent.brand.href}
+          className="navbar:hidden absolute left-1/2 flex -translate-x-1/2 items-center"
+        >
+          <Image
+            src="/logo.png"
+            alt="The Only Retreats"
+            width={36}
+            height={36}
+            className={cn(
+              "object-contain",
+              isTransparentHero && "brightness-0 invert",
+            )}
+          />
+        </Link>
 
-          {/* Desktop lockup: left-aligned, flows in normal document order. */}
+        <div className="navbar:hidden ml-auto flex items-center gap-1">
+          <button
+            type="button"
+            aria-label="Search"
+            onClick={() => setSearchOpen(true)}
+            className={cn(
+              "flex size-11 items-center justify-center rounded-full",
+              "transition-colors duration-fast",
+              isTransparentHero
+                ? "text-white hover:bg-white/10"
+                : "text-foreground hover:bg-surface",
+            )}
+          >
+            <Search className="size-5" />
+          </button>
+          <Link
+            href="/cart"
+            aria-label={navigationContent.utility.cart.label}
+            className={cn(
+              "relative flex size-11 items-center justify-center",
+              "rounded-full transition-colors duration-fast",
+              isTransparentHero
+                ? "text-white hover:bg-white/10"
+                : "text-foreground hover:bg-surface",
+            )}
+          >
+            <ShoppingBag className="size-6" />
+            {mounted && itemCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.55rem] font-bold text-background">
+                {itemCount > 9 ? "9+" : itemCount}
+              </span>
+            )}
+          </Link>
+        </div>
+
+        {/* DESKTOP MODE */}
+        <div className="hidden w-full items-center justify-between gap-4 navbar:flex">
+          {/* Desktop brand - LEFT */}
           <Link
             href={navigationContent.brand.href}
             className={cn(
-              "hidden origin-left items-center gap-3 leading-tight transition-transform duration-normal md:flex",
+              "hidden navbar:flex shrink-0 items-center gap-3 leading-tight transition-transform duration-normal",
               isTransparentHero ? "scale-110" : "scale-100",
             )}
           >
@@ -137,83 +191,49 @@ export function Header() {
               </span>
             </div>
           </Link>
-        </div>
 
-        {/* Mobile lockup: centered independent of the hamburger/search widths. */}
-        <Link
-          href={navigationContent.brand.href}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden"
-        >
-          <Image
-            src="/logo.png"
-            alt="The Only Retreats"
-            width={36}
-            height={36}
-            className={cn(
-              "object-contain transition-all duration-300",
-              isTransparentHero && "brightness-0 invert",
-            )}
-          />
-        </Link>
-
-        <DesktopNavigation isScrolled={!isTransparentHero} />
-
-        <div className="flex items-center gap-1">
-          <div className="hidden md:flex items-center gap-1">
-            <CurrencySelector isTransparentHero={isTransparentHero} />
+          {/* Desktop navigation - CENTER */}
+          <div className="hidden flex-1 justify-center navbar:flex">
+            <DesktopNavigation isScrolled={!isTransparentHero} />
           </div>
-          <button
-            type="button"
-            aria-label="Search"
-            onClick={() => setSearchOpen(true)}
-            className={cn(
-              utilityButtonClasses(isTransparentHero),
-              isTransparentHero && "text-white",
-            )}
-          >
-            <Search className="size-6" />
-          </button>
-          <Link
-            href="/account"
-            aria-label={navigationContent.utility.account.label}
-            className={cn(
-              utilityButtonClasses(isTransparentHero),
-              "hidden md:inline-flex",
-            )}
-          >
-            <UserRound className="size-6" />
-          </Link>
-          <Link
-            href="/cart"
-            aria-label="Cart"
-            className={cn(
-              utilityButtonClasses(false),
-              "relative md:hidden",
-              isTransparentHero && "text-white",
-            )}
-          >
-            <ShoppingBag className="size-6" />
-            {mounted && itemCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
-                {itemCount > 9 ? "9+" : itemCount}
-              </span>
-            )}
-          </Link>
-          <Link
-            href="/cart"
-            aria-label={navigationContent.utility.cart.label}
-            className={cn(
-              utilityButtonClasses(isTransparentHero),
-              "relative hidden md:inline-flex",
-            )}
-          >
-            <ShoppingBag className="size-6" />
-            {mounted && itemCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
-                {itemCount > 9 ? "9+" : itemCount}
-              </span>
-            )}
-          </Link>
+
+          {/* Desktop utilities - RIGHT */}
+          <div className="hidden shrink-0 items-center gap-1 navbar:flex">
+            <CurrencySelector isTransparentHero={isTransparentHero} />
+            <button
+              type="button"
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+              className={cn(
+                utilityButtonClasses(isTransparentHero),
+                isTransparentHero && "text-white",
+              )}
+            >
+              <Search className="size-6" />
+            </button>
+            <Link
+              href="/account"
+              aria-label={navigationContent.utility.account.label}
+              className={utilityButtonClasses(isTransparentHero)}
+            >
+              <UserRound className="size-6" />
+            </Link>
+            <Link
+              href="/cart"
+              aria-label={navigationContent.utility.cart.label}
+              className={cn(
+                utilityButtonClasses(isTransparentHero),
+                "relative",
+              )}
+            >
+              <ShoppingBag className="size-6" />
+              {mounted && itemCount > 0 && (
+                <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
       </Container>
 

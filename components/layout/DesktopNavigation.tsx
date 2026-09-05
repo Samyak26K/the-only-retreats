@@ -16,9 +16,9 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
   return (
     <nav
       aria-label="Primary"
-      className="hidden flex-1 items-center justify-center md:flex"
+      className="hidden items-center justify-center navbar:flex"
     >
-      <ul className="flex items-center gap-8 xl:gap-10">
+      <ul className="flex items-center gap-4 lg:gap-6 xl:gap-8">
         {navigationContent.primaryLinks.map((item) => {
           // Every link today points at an in-page anchor on the single
           // homepage route, so this never matches yet. It lights up once an
@@ -31,7 +31,7 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
               {item.label === "roots-and-ore-brand" ? (
                 <Link
                   href={item.href}
-                  className="flex flex-col items-center leading-tight transition-colors duration-normal"
+                  className="flex flex-col items-center leading-tight whitespace-nowrap transition-colors duration-normal"
                 >
                   <span
                     className="font-sanskrit text-sm"
@@ -48,7 +48,7 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "group relative inline-flex py-2 text-[0.8rem] uppercase tracking-[0.24em] transition-colors duration-fast",
+                    "group relative inline-flex whitespace-nowrap py-2 text-[0.8rem] uppercase tracking-[0.24em] transition-colors duration-fast",
                     isActive
                       ? "font-semibold text-forest"
                       : cn(
