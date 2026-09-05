@@ -154,14 +154,9 @@ export function FooterSection({
                     alt="FSSAI Licensed"
                     className="h-10 w-auto object-contain opacity-80"
                   />
-                  <div>
-                    <p className="text-[0.6rem] tracking-wide text-white/30 uppercase">
-                      FSSAI License No.
-                    </p>
-                    <p className="mt-0.5 text-xs text-white/50">
-                      10924006000044
-                    </p>
-                  </div>
+                  <p className="text-[0.6rem] leading-5 text-white/25">
+                    FSSAI License No. 21526037004345
+                  </p>
                 </div>
               ) : null}
 
@@ -171,12 +166,13 @@ export function FooterSection({
                   Marketed by: The Only Retreats (Brand of Rugvedic Ventures)
                 </p>
                 <p className="text-[0.6rem] leading-5 text-white/25">
-                  Packed & Procured by: Rugvedic Ventures Pvt. Ltd, GAT 458,
-                  Highland Spaces, Maharashtra, Pune 412105
+                  Packed & Procured by: Rugvedic Ventures Pvt. Ltd, GAT No. 458,
+                  Flat No. 508, Wing H1, Highland Space, Moshi, Haveli, Pune
+                  412105, Maharashtra
                 </p>
                 <p className="text-[0.6rem] leading-5 text-white/25">
                   Consumer Care: customer@theonlyretreats.com · +91 9172778248 /
-                  +91 9225181202 · www.theonlyretreats.com
+                  +91 9225181202
                 </p>
               </div>
             </div>
