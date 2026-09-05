@@ -222,7 +222,7 @@ export default function DhatuPage() {
                 मूल • धातु
               </p>
               <p
-                className="text-sm uppercase tracking-[0.3em] mt-2"
+                className="text-2xl md:text-3xl lg:text-4xl uppercase tracking-[0.2em] font-medium mt-2"
                 style={{ color: "#B8A98F" }}
               >
                 ROOTS AND ORE
