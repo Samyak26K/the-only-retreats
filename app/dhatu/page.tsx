@@ -60,19 +60,19 @@ export default function DhatuPage() {
           {/* Center: wordmark */}
           <Link
             href="/dhatu"
-            className="absolute left-1/2 -translate-x-1/2 text-center"
+            className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-auto"
           >
             <p
-              className="font-display text-lg tracking-[0.4em] uppercase"
+              className="font-sanskrit text-base tracking-wide leading-tight"
               style={{ color: "#F2EBE0" }}
             >
-              Tridhatu Kosh
+              मूल • धातु
             </p>
             <p
               className="hidden sm:block text-[0.45rem] uppercase tracking-[0.25em]"
               style={{ color: "#B8A98F" }}
             >
-              by The Only Retreats
+              ROOTS AND ORE
             </p>
           </Link>
 
@@ -102,12 +102,14 @@ export default function DhatuPage() {
             }}
           >
             <div className="mb-12 flex items-center justify-between">
-              <p
-                className="font-display text-lg tracking-[0.3em]"
-                style={{ color: "#F2EBE0" }}
-              >
-                Tridhatu Kosh
-              </p>
+              <div>
+                <span className="font-sanskrit text-lg md:text-xl tracking-wide block">
+                  मूल • धातु
+                </span>
+                <span className="text-[0.55rem] uppercase tracking-[0.3em] block mt-0.5">
+                  ROOTS AND ORE
+                </span>
+              </div>
               <button type="button" onClick={() => setMenuOpen(false)}>
                 <X className="size-5" style={{ color: "#B8A98F" }} />
               </button>
@@ -164,7 +166,7 @@ export default function DhatuPage() {
         {/* Hero image */}
         <Image
           src="https://res.cloudinary.com/k7cipxug/image/upload/v1787836966/Dhatu-Cook.png"
-          alt="Tridhatu Kosh — Handcrafted Heritage"
+          alt="Roots and Ore — Handcrafted Heritage"
           fill
           priority
           fetchPriority="high"
@@ -207,43 +209,52 @@ export default function DhatuPage() {
               className="text-[0.6rem] uppercase tracking-[0.35em] mb-6"
               style={{ color: "#F2EBE0", opacity: 0.7 }}
             >
-              The Only Retreats · Tridhatu Kosh
+              The Only Retreats · Roots &amp; Ore
             </p>
-            <h1
+            <div
               className="font-display text-5xl md:text-6xl lg:text-7xl leading-[0.92] tracking-[-0.02em] mb-6"
               style={{ color: "#F2EBE0" }}
             >
-              The Material
-              <br />
-              <span style={{ color: "#B25B32", fontStyle: "italic" }}>
-                of Living.
-              </span>
-            </h1>
+              <p
+                className="font-sanskrit text-4xl md:text-5xl lg:text-6xl leading-tight"
+                style={{ color: "#F2EBE0" }}
+              >
+                मूल • धातु
+              </p>
+              <p
+                className="text-sm uppercase tracking-[0.3em] mt-2"
+                style={{ color: "#B8A98F" }}
+              >
+                ROOTS AND ORE
+              </p>
+            </div>
             <p
               className="text-sm leading-7 mb-3 max-w-sm"
               style={{ color: "#F0E6D8", opacity: 0.85 }}
             >
-              India has always known how to live well — in copper and brass, in
-              ritual and craft, in traditions passed down without interruption.
+              Every tribe &amp; art has a story, and some stories are worth
+              preserving.
             </p>
-            <p
-              className="text-sm leading-7 mb-10 max-w-sm"
-              style={{ color: "#F0E6D8", opacity: 0.85 }}
-            >
-              We exist to carry that forward. To place Indian heritage in front
-              of the world — with the pride and precision it deserves.
-            </p>
-            <Link
-              href="/dhatu/products"
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-xs uppercase tracking-[0.25em] font-medium transition-all hover:opacity-90"
-              style={{
-                backgroundColor: "#B25B32",
-                color: "#F2EBE0",
-                boxShadow: "0 4px 20px rgba(178,91,50,0.4)",
-              }}
-            >
-              Explore Collection
-            </Link>
+            <div className="flex flex-wrap items-center gap-4 mb-10">
+              <Link
+                href="/dhatu/products"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-xs uppercase tracking-[0.25em] font-medium transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: "#B25B32",
+                  color: "#F2EBE0",
+                  boxShadow: "0 4px 20px rgba(178,91,50,0.4)",
+                }}
+              >
+                SHOP THE LEGACY
+              </Link>
+              <Link
+                href="#ethos"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-xs uppercase tracking-[0.25em] font-medium transition-all hover:opacity-90"
+                style={{ border: "1px solid #B8A98F", color: "#F2EBE0" }}
+              >
+                DISCOVER OUR STORY
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -284,7 +295,8 @@ export default function DhatuPage() {
             {
               metal: "Copper",
               hindi: "तांबा",
-              label: "COPPER तांबा",
+              subtitle: "Tamra",
+              label: "TAMRA • तांबा",
               description: "Antimicrobial. Ayurvedic. Ancient.",
               bg: "#3D1F0F",
               accent: "#B25B32",
@@ -295,7 +307,8 @@ export default function DhatuPage() {
             {
               metal: "Brass",
               hindi: "पीतल",
-              label: "BRASS पीतल",
+              subtitle: "Pital",
+              label: "PITAL • पीतल",
               description: "Durable. Resonant. Timeless.",
               bg: "#2A1F0A",
               accent: "#C89B4A",
@@ -306,7 +319,8 @@ export default function DhatuPage() {
             {
               metal: "Kansa",
               hindi: "कांसा",
-              label: "KANSA कांसा",
+              subtitle: "Bronze",
+              label: "KANSA • कांसा",
               description: "Bell metal. Sacred. Healing.",
               bg: "#1A2A1F",
               accent: "#7A9E7E",
@@ -358,6 +372,12 @@ export default function DhatuPage() {
                   {item.metal}
                 </h3>
                 <p
+                  className="mb-2 text-[0.6rem] uppercase tracking-[0.2em]"
+                  style={{ color: item.accent }}
+                >
+                  {item.subtitle}
+                </p>
+                <p
                   className="mb-4 text-xs leading-5"
                   style={{ color: "#B8A98F" }}
                 >
@@ -385,76 +405,316 @@ export default function DhatuPage() {
             className="mb-2 text-[0.6rem] uppercase tracking-[0.3em]"
             style={{ color: "#B25B32" }}
           >
-            Why Tridhatu Kosh
+            OUR ETHOS
           </p>
           <h2
-            className="font-display text-3xl md:text-4xl"
+            id="ethos"
+            className="font-display text-3xl md:text-4xl leading-tight mb-8"
             style={{ color: "#F2EBE0" }}
           >
-            Five reasons to choose
-            <br />
-            handcrafted metal.
+            In a world of mass production, we exist to safeguard the ancient
+            Indian art of crafting copper, brass, and bronze.
           </h2>
+          <p className="text-sm leading-7 mb-6" style={{ color: "#B8A98F" }}>
+            Every vessel we offer is completely handcrafted—shaped by fire, raw
+            earth, and human hands. When you bring our cookware into your home,
+            you hold the unbroken legacy of the artisans who forged it.
+          </p>
+          <div className="space-y-3 mt-6">
+            {[
+              "Shaped by fire, raw earth, and human hands",
+              "Every piece completely handcrafted — no machine replication",
+              "Direct partnerships with indigenous metalcraft communities",
+              "Ancient techniques preserved across generations",
+              "Ayurvedic benefits of copper, brass and bronze",
+            ].map((point) => (
+              <div key={point} className="flex gap-3 items-start">
+                <span
+                  className="text-sm shrink-0 mt-0.5"
+                  style={{ color: "#C89B4A" }}
+                >
+                  +
+                </span>
+                <p className="text-sm leading-6" style={{ color: "#B8A98F" }}>
+                  {point}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {[
-            {
-              title: "Ancient Wellness",
-              icon: "आयुष्य",
-              description:
-                "Copper and brass have been used in Ayurvedic wellness for thousands of years.",
-            },
-            {
-              title: "True Functionality",
-              icon: "कार्य",
-              description:
-                "Every piece is made to be used daily — not displayed.",
-            },
-            {
-              title: "Metal Revival",
-              icon: "धातु",
-              description:
-                "We are bringing back metals that modern kitchens forgot.",
-            },
-            {
-              title: "Ayurveda",
-              icon: "वैद्य",
-              description:
-                "Aligned with ancient wisdom on how metals interact with the body.",
-            },
-            {
-              title: "Craftsmanship",
-              icon: "शिल्प",
-              description:
-                "Every hammer mark is a signature. No two pieces are identical.",
-            },
-          ].map((card) => (
-            <div
-              key={card.title}
-              className="flex flex-col gap-4 rounded-2xl p-6"
-              style={{
-                backgroundColor: "#241812",
-                border: "1px solid #5A3A2A",
-              }}
+      {/* The Artisans */}
+      <section
+        className="py-20 px-6 md:px-12"
+        style={{ borderTop: "1px solid #5A3A2A" }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p
+              className="text-[0.6rem] uppercase tracking-[0.3em] mb-3"
+              style={{ color: "#B25B32" }}
             >
-              <p
-                className="font-display text-3xl"
-                style={{ color: "#B25B32", opacity: 0.4 }}
+              THE ARTISANS
+            </p>
+            <h2
+              className="font-display text-3xl md:text-4xl leading-tight mb-6"
+              style={{ color: "#F2EBE0" }}
+            >
+              Meet the Makers
+            </h2>
+            <p
+              className="text-sm leading-7 max-w-2xl"
+              style={{ color: "#B8A98F" }}
+            >
+              We partner directly with the indigenous and generational
+              metalcraft communities of India to ensure their ancestral fires
+              keep burning.
+            </p>
+          </div>
+
+          <div className="space-y-0">
+            {[
+              {
+                tribe: "THE DHOKRA TRIBE",
+                subtitle: "Dhokra Damar & Ghadwa of Bastar",
+                description:
+                  "The original nomadic metalworkers and guardians of a 4,500-year-old lost-wax casting technique that dates back to the Indus Valley Civilization. Using natural beeswax and river clay, they shape raw brass and bell-metal into intricate designs, preserving the oldest known metal-casting method in the world.",
+              },
+              {
+                tribe: "THE LOHAR & GOND TRIBES",
+                subtitle: null,
+                description:
+                  "The ancient iron-smiths of the Bastar region who practice traditional Loha Shilp. They hand-forge wrought and scrap metal over open coal fires, shaping every piece entirely by hammer without a single weld.",
+              },
+              {
+                tribe: "THE JHĀRA TRIBE",
+                subtitle: null,
+                description:
+                  "Forest-dwelling tribal artisans from central India who have preserved the raw, earthy art of shaping and casting intricate bronze and brass vessels by hand.",
+              },
+              {
+                tribe: "THE KANSARIS",
+                subtitle: null,
+                description:
+                  "Indigenous bell-metal artisans who carry the ancient, elemental alchemy of mixing copper and tin to cast pure Kansa dinnerware for holistic wellness.",
+              },
+              {
+                tribe: "THE TAMBAT",
+                subtitle: null,
+                description:
+                  "Traditional coppersmiths renowned for their hypnotic mathar kaam—the rhythmic, strengthening indentations hammered into copper that serve as the artisan's permanent signature.",
+              },
+            ].map((artisan, index) => (
+              <div
+                key={artisan.tribe}
+                className="py-8 grid md:grid-cols-[280px_1fr] gap-6 md:gap-12 items-start"
+                style={{ borderTop: "1px solid #5A3A2A" }}
               >
-                {card.icon}
-              </p>
-              <h3
-                className="font-heading text-sm font-semibold tracking-[0.15em] uppercase"
-                style={{ color: "#F2EBE0" }}
+                <div>
+                  <p
+                    className="text-xs uppercase tracking-[0.2em] font-medium mb-1"
+                    style={{ color: "#C89B4A" }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                  <h3
+                    className="font-display text-lg leading-snug"
+                    style={{ color: "#F2EBE0" }}
+                  >
+                    {artisan.tribe}
+                  </h3>
+                  {artisan.subtitle && (
+                    <p
+                      className="text-[0.6rem] uppercase tracking-[0.15em] mt-1"
+                      style={{ color: "#B25B32" }}
+                    >
+                      {artisan.subtitle}
+                    </p>
+                  )}
+                </div>
+                <p className="text-sm leading-7" style={{ color: "#B8A98F" }}>
+                  {artisan.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Hands / Craft Editorial */}
+      <section
+        className="py-20 px-6 md:px-12"
+        style={{
+          borderTop: "1px solid #5A3A2A",
+          backgroundColor: "#241812",
+        }}
+      >
+        <div className="max-w-3xl mx-auto text-center space-y-8">
+          <div>
+            <p
+              className="font-sanskrit text-2xl md:text-3xl"
+              style={{ color: "#C89B4A" }}
+            >
+              अयं मे हस्तो भगवान् ॥
+            </p>
+            <p className="text-xs mt-3 italic" style={{ color: "#B8A98F" }}>
+              In these hands lies the power to create.
+            </p>
+          </div>
+
+          <div>
+            <h2
+              className="font-display text-3xl md:text-4xl lg:text-5xl uppercase tracking-[0.05em] leading-tight"
+              style={{ color: "#F2EBE0" }}
+            >
+              <span className="block">EVERY GENERATION LEAVES A WITNESS.</span>
+              <span className="block mt-1" style={{ color: "#B25B32" }}>
+                SOME WITNESSES MUST NOT BE BURIED.
+              </span>
+            </h2>
+          </div>
+
+          <p
+            className="font-display italic text-lg md:text-xl leading-snug max-w-xl mx-auto"
+            style={{ color: "#B8A98F" }}
+          >
+            Before it was held in your hands,
+            <br />
+            it was passed down through theirs.
+          </p>
+
+          <div
+            className="pt-6 space-y-1"
+            style={{ borderTop: "1px solid #5A3A2A" }}
+          >
+            <p
+              className="text-xs uppercase tracking-[0.25em]"
+              style={{ color: "#C89B4A" }}
+            >
+              Not manufactured. Only immortalized.
+            </p>
+            <p
+              className="text-xs uppercase tracking-[0.25em]"
+              style={{ color: "#C89B4A" }}
+            >
+              Not consumed. Only continued.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Materials / Metals */}
+      <section
+        className="py-20 px-6 md:px-12"
+        style={{ borderTop: "1px solid #5A3A2A" }}
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-14">
+            <p
+              className="text-[0.6rem] uppercase tracking-[0.3em] mb-3"
+              style={{ color: "#B25B32" }}
+            >
+              THE METALS
+            </p>
+            <h2
+              className="font-display text-3xl md:text-4xl"
+              style={{ color: "#F2EBE0" }}
+            >
+              Know your material.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+            {[
+              {
+                sanskrit: "तांबा",
+                english: "TAMRA",
+                subtitle: "Copper",
+                composition: "~99.9% Pure Copper",
+                use: "Cold to Room Temp: Ideal for storing overnight drinking water. Never use for hot liquids or cooking.",
+                benefit:
+                  "Acts as a natural antimicrobial agent. Balances the body's doshas, aids digestion, and boosts daily vitality.",
+                accent: "#B25B32",
+              },
+              {
+                sanskrit: "पीतल",
+                english: "PITAL",
+                subtitle: "Brass",
+                composition: "~60-70% Copper + ~30-40% Zinc",
+                use: "Medium to Low Heat: Perfect for slow cooking, simmering, and roasting on a stove or hearth.",
+                benefit:
+                  "Retains up to 90% of food's natural nutrients during cooking. The natural zinc infusion gently supports immune health.",
+                accent: "#C89B4A",
+              },
+              {
+                sanskrit: "कांसा",
+                english: "KANSA",
+                subtitle: "Bronze",
+                composition:
+                  "~78-80% Copper + ~20-22% Pure Tin (Traditional Bell-Metal ratio)",
+                use: "Warm to Room Temp: Strictly for dining and serving plated food. Never place on a direct flame.",
+                benefit:
+                  "Naturally alkalizes acidic foods to actively aid digestion. Traditionally forged for gut health, immunity, and holistic wellness.",
+                accent: "#7A9E7E",
+              },
+            ].map((metal, index) => (
+              <div
+                key={metal.english}
+                className="py-10 px-0 md:px-8 space-y-5 first:pl-0 last:pr-0"
+                style={{
+                  borderTop: "1px solid #5A3A2A",
+                  borderLeft: index > 0 ? "1px solid #5A3A2A" : "none",
+                }}
               >
-                {card.title}
-              </h3>
-              <p className="text-xs leading-5" style={{ color: "#B8A98F" }}>
-                {card.description}
-              </p>
-            </div>
-          ))}
+                <div>
+                  <p
+                    className="font-sanskrit text-3xl"
+                    style={{ color: metal.accent }}
+                  >
+                    {metal.sanskrit}
+                  </p>
+                  <p
+                    className="text-[0.6rem] uppercase tracking-[0.3em] mt-1"
+                    style={{ color: metal.accent }}
+                  >
+                    {metal.english} · {metal.subtitle}
+                  </p>
+                </div>
+
+                <p
+                  className="text-[0.65rem] font-mono"
+                  style={{ color: "#5A3A2A" }}
+                >
+                  {metal.composition}
+                </p>
+
+                <div>
+                  <p
+                    className="text-[0.6rem] uppercase tracking-[0.15em] mb-1.5"
+                    style={{ color: "#B25B32" }}
+                  >
+                    Use
+                  </p>
+                  <p className="text-xs leading-5" style={{ color: "#B8A98F" }}>
+                    {metal.use}
+                  </p>
+                </div>
+
+                <div>
+                  <p
+                    className="text-[0.6rem] uppercase tracking-[0.15em] mb-1.5"
+                    style={{ color: "#B25B32" }}
+                  >
+                    Traditional Benefits
+                  </p>
+                  <p className="text-xs leading-5" style={{ color: "#B8A98F" }}>
+                    {metal.benefit}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -490,7 +750,7 @@ export default function DhatuPage() {
                 </p>
                 <p className="text-sm leading-7" style={{ color: "#B8A98F" }}>
                   Somewhere along the way, we replaced them with plastic and
-                  stainless steel. Tridhatu Kosh exists to reverse that — to
+                  stainless steel. Roots &amp; Ore exists to reverse that — to
                   bring Indian metalcraft back into the modern home, with the
                   quality and intention it has always deserved.
                 </p>
@@ -546,7 +806,7 @@ export default function DhatuPage() {
                   className="mt-1 text-[0.6rem] uppercase tracking-[0.15em]"
                   style={{ color: "#B8A98F" }}
                 >
-                  Handcrafted Heritage · Tridhatu Kosh
+                  Handcrafted Heritage · Roots &amp; Ore
                 </p>
               </div>
             </div>

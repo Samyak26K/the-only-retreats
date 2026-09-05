@@ -28,32 +28,49 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
 
           return (
             <li key={item.label}>
-              <Link
-                href={item.href}
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "group relative inline-flex py-2 text-[0.8rem] uppercase tracking-[0.24em] transition-colors duration-fast",
-                  isActive
-                    ? "font-semibold text-forest"
-                    : cn(
-                        "font-medium",
-                        isScrolled
-                          ? "text-foreground/70 hover:text-foreground"
-                          : "text-white/80 hover:text-white",
-                      ),
-                )}
-              >
-                {item.label}
-                <span
-                  aria-hidden="true"
+              {item.label === "roots-and-ore-brand" ? (
+                <Link
+                  href={item.href}
+                  className="flex flex-col items-center leading-tight transition-colors duration-normal"
+                >
+                  <span
+                    className="font-sanskrit text-sm"
+                    style={{ color: isScrolled ? undefined : "inherit" }}
+                  >
+                    मूल • धातु
+                  </span>
+                  <span className="text-[0.45rem] uppercase tracking-[0.2em]">
+                    ROOTS AND ORE
+                  </span>
+                </Link>
+              ) : (
+                <Link
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-250 ease-out",
+                    "group relative inline-flex py-2 text-[0.8rem] uppercase tracking-[0.24em] transition-colors duration-fast",
                     isActive
-                      ? "scale-x-100 bg-forest"
-                      : "scale-x-0 group-hover:scale-x-100",
+                      ? "font-semibold text-forest"
+                      : cn(
+                          "font-medium",
+                          isScrolled
+                            ? "text-foreground/70 hover:text-foreground"
+                            : "text-white/80 hover:text-white",
+                        ),
                   )}
-                />
-              </Link>
+                >
+                  {item.label}
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-250 ease-out",
+                      isActive
+                        ? "scale-x-100 bg-forest"
+                        : "scale-x-0 group-hover:scale-x-100",
+                    )}
+                  />
+                </Link>
+              )}
             </li>
           );
         })}

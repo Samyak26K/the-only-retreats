@@ -56,63 +56,95 @@ export function HeroSection() {
       <div className="relative z-10 w-full py-16 pt-[calc(var(--navbar-height-mobile)+2rem)] md:pt-[calc(var(--navbar-height-tablet)+2rem)] lg:pt-[calc(var(--navbar-height-desktop)+2rem)]">
         <Container>
           <div className="flex max-w-2xl flex-col gap-4 md:gap-6">
+            {/* Block 1: Sanskrit opener — quiet, small */}
             <div
-              className={`flex flex-col gap-2 motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 ${entranceDelays[0]}`}
+              className={`flex flex-col gap-1.5 
+              motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] 
+              motion-safe:opacity-0 ${entranceDelays[0]}`}
             >
               <p
                 lang="sa"
-                className="font-sanskrit text-lg tracking-wide text-white/70 sm:text-xl"
+                className="font-sanskrit text-base tracking-wide 
+                  text-white/70 sm:text-lg"
               >
                 {heroContent.shloka.devanagari}
               </p>
-              <p className="sr-only">{heroContent.shloka.transliteration}</p>
-              <p className="max-w-md text-sm text-background/80 sm:text-base">
+              <p className="text-sm text-background/70">
                 {heroContent.shloka.translation}
               </p>
             </div>
 
+            {/* Block 2: Primary H1 — dominant brand statement */}
             <h1
-              className={`mt-2 font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.98] tracking-[-0.02em] text-background motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 sm:mt-3 ${entranceDelays[1]}`}
+              className={`mt-3 font-display uppercase 
+              text-[clamp(1.8rem,4vw,3.2rem)] leading-[1.05] 
+              tracking-[0.04em] text-background
+              motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] 
+              motion-safe:opacity-0 ${entranceDelays[1]}`}
             >
-              {heroContent.title}{" "}
-              <span
-                className="block font-sanskrit text-background/90"
-                style={{ fontStyle: "italic", letterSpacing: "0.02em" }}
-              >
-                {heroContent.titleEmphasis}
-              </span>
+              <span className="block">{heroContent.title}</span>
+              <span className="block">{heroContent.titleEmphasis}</span>
             </h1>
 
+            {/* Block 3: Editorial continuation — italic, medium */}
             <p
-              className={`max-w-md text-sm leading-7 text-background/85 sm:text-lg md:max-w-lg lg:max-w-xl motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 ${entranceDelays[2]}`}
+              className={`max-w-lg font-display italic 
+              text-lg md:text-xl text-background/80 leading-snug
+              motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] 
+              motion-safe:opacity-0 ${entranceDelays[2]}`}
+            >
+              {heroContent.editorial.split("\n").map((line, i) => (
+                <span key={i} className="block">
+                  {line}
+                </span>
+              ))}
+            </p>
+
+            {/* Block 4: Closing brand line — restrained */}
+            <p
+              className={`text-sm text-background/60 
+              tracking-[0.05em] uppercase
+              motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] 
+              motion-safe:opacity-0 ${entranceDelays[2]}`}
+              style={{ animationDelay: "350ms" }}
             >
               {heroContent.supporting}
             </p>
 
+            {/* Block 5: CTAs — unchanged */}
             <div
-              className={`motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] motion-safe:opacity-0 ${entranceDelays[3]}`}
+              className={`flex flex-col lg:flex-row gap-4 
+              items-start mt-2
+              motion-safe:animate-[hero-rise_1.2s_ease-out_forwards] 
+              motion-safe:opacity-0 ${entranceDelays[3]}`}
             >
-              <div className="flex flex-col sm:flex-row gap-4 items-start mt-2">
-                {/* Primary CTA */}
-                <Link
-                  href="/products"
-                  className="group inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm px-7 py-3.5 text-xs uppercase tracking-[0.25em] text-white transition-all duration-300 hover:bg-white hover:text-foreground hover:border-white"
+              <Link
+                href="/products"
+                className="group inline-flex items-center gap-3 
+                  rounded-full border border-white/30 bg-white/10 
+                  backdrop-blur-sm px-7 py-3.5 text-xs uppercase 
+                  tracking-[0.25em] text-white transition-all duration-300
+                  hover:bg-white hover:text-foreground hover:border-white"
+              >
+                <span>Discover the Source</span>
+                <span
+                  className="transition-transform duration-300 
+                  group-hover:translate-x-1"
                 >
-                  <span>Discover the Source</span>
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
+                  →
+                </span>
+              </Link>
 
-                {/* Secondary CTA */}
-                <Link
-                  href="/our-story"
-                  className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors duration-300 pt-3.5"
-                >
-                  <span className="w-6 h-px bg-white/40 group-hover:w-10 transition-all" />
-                  Our Story
-                </Link>
-              </div>
+              <Link
+                href="/our-story"
+                className="inline-flex items-center gap-2 
+                  text-xs uppercase tracking-[0.2em] text-white/60
+                  hover:text-white transition-colors duration-300 
+                  pt-3.5"
+              >
+                <span className="w-6 h-px bg-white/40" />
+                Our Story
+              </Link>
             </div>
           </div>
         </Container>
