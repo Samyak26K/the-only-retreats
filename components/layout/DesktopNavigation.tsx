@@ -18,7 +18,7 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
       aria-label="Primary"
       className="hidden items-center justify-center md:flex"
     >
-      <ul className="flex items-center gap-1.5 lg:gap-6">
+      <ul className="flex items-center gap-1 md:gap-6 lg:gap-3 xl:gap-6">
         {navigationContent.primaryLinks.map((item) => {
           // Every link today points at an in-page anchor on the single
           // homepage route, so this never matches yet. It lights up once an
@@ -31,15 +31,15 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
               {item.label === "roots-and-ore-brand" ? (
                 <Link
                   href={item.href}
-                  className="flex flex-col items-center whitespace-nowrap leading-tight text-[0.6rem] transition-colors duration-normal lg:text-sm"
+                  className="flex flex-col items-center whitespace-nowrap leading-tight text-[0.65rem] md:text-[0.7rem] lg:text-[0.75rem] xl:text-sm transition-colors duration-normal"
                 >
                   <span
-                    className="font-sanskrit text-[0.7rem] lg:text-sm"
+                    className="font-sanskrit text-[0.65rem] md:text-[0.7rem] lg:text-[0.75rem] xl:text-sm"
                     style={{ color: isScrolled ? undefined : "inherit" }}
                   >
                     मूल • धातु
                   </span>
-                  <span className="text-[0.4rem] uppercase tracking-[0.1em] lg:text-[0.45rem] lg:tracking-[0.2em]">
+                  <span className="text-[0.4rem] md:text-[0.45rem] uppercase tracking-[0.1em] md:tracking-[0.12em] lg:tracking-[0.15em] xl:tracking-[0.18em]">
                     ROOTS AND ORE
                   </span>
                 </Link>
@@ -48,7 +48,7 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "group relative inline-flex whitespace-nowrap py-2 text-[0.6rem] uppercase tracking-[0.08em] transition-colors duration-fast lg:text-sm lg:tracking-[0.24em]",
+                    "group relative inline-flex whitespace-nowrap py-2 text-[0.65rem] md:text-[0.7rem] lg:text-[0.75rem] xl:text-sm uppercase tracking-[0.1em] md:tracking-[0.12em] lg:tracking-[0.15em] xl:tracking-[0.18em] transition-colors duration-normal",
                     isActive
                       ? "font-semibold text-forest"
                       : cn(

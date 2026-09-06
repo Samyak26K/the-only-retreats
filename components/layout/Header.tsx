@@ -156,26 +156,26 @@ export function Header() {
         </div>
 
         {/* DESKTOP MODE */}
-        <div className="hidden w-full items-center gap-2 md:grid md:grid-cols-[auto_minmax(0,1fr)_auto] md:grid-rows-1 md:gap-3 lg:flex lg:justify-between lg:gap-4">
+        <div className="hidden md:flex items-center justify-between h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop) gap-2 lg:gap-4 w-full">
           {/* Desktop brand - LEFT */}
           <Link
             href={navigationContent.brand.href}
             className={cn(
-              "hidden shrink-0 items-center gap-1.5 leading-tight transition-transform duration-normal md:col-start-1 md:row-start-1 md:flex md:w-44 lg:w-auto lg:gap-3",
-              isTransparentHero ? "lg:scale-110" : "scale-100",
+              "flex items-center gap-1.5 lg:gap-3 shrink-0 min-w-0 leading-tight transition-transform duration-normal",
+              isTransparentHero ? "scale-110" : "scale-100",
             )}
           >
             <Image
               src="/logo.png"
               alt="The Only Retreats"
-              width={32}
-              height={32}
-              className="size-8 object-contain lg:size-10"
+              width={28}
+              height={28}
+              className="object-contain md:w-7 md:h-7 lg:w-10 lg:h-10"
             />
-            <div className="flex flex-col leading-tight">
+            <div className="hidden xl:flex flex-col leading-tight">
               <span
                 className={cn(
-                  "font-heading text-[0.65rem] font-semibold uppercase tracking-[0.1em] transition-colors duration-normal lg:text-sm lg:tracking-[0.2em]",
+                  "font-heading text-xs xl:text-sm font-semibold uppercase tracking-[0.15em] xl:tracking-[0.2em] transition-colors duration-normal",
                   isTransparentHero ? "text-white" : "text-foreground",
                 )}
               >
@@ -183,7 +183,7 @@ export function Header() {
               </span>
               <span
                 className={cn(
-                  "font-sanskrit text-[0.6rem] tracking-[0.12em] transition-colors duration-normal lg:text-[0.65rem] lg:tracking-[0.16em]",
+                  "font-sanskrit text-[0.55rem] xl:text-[0.65rem] tracking-[0.1em] transition-colors duration-normal",
                   isTransparentHero ? "text-white/80" : "text-muted",
                 )}
               >
@@ -193,12 +193,12 @@ export function Header() {
           </Link>
 
           {/* Desktop navigation - CENTER */}
-          <div className="hidden min-w-0 justify-center md:col-start-2 md:row-start-1 md:flex lg:flex-1">
+          <div className="flex-1 flex justify-center min-w-0 overflow-hidden">
             <DesktopNavigation isScrolled={!isTransparentHero} />
           </div>
 
           {/* Desktop utilities - RIGHT */}
-          <div className="hidden shrink-0 items-center gap-0 md:col-start-3 md:row-start-1 md:flex lg:gap-1">
+          <div className="flex items-center gap-0 lg:gap-1 shrink-0">
             <CurrencySelector isTransparentHero={isTransparentHero} />
             <button
               type="button"
@@ -206,29 +206,33 @@ export function Header() {
               onClick={() => setSearchOpen(true)}
               className={cn(
                 utilityButtonClasses(isTransparentHero),
+                "size-9 xl:size-12",
                 isTransparentHero && "text-white",
               )}
             >
-              <Search className="size-6" />
+              <Search className="size-4 xl:size-6" />
             </button>
             <Link
               href="/account"
               aria-label={navigationContent.utility.account.label}
-              className={utilityButtonClasses(isTransparentHero)}
+              className={cn(
+                utilityButtonClasses(isTransparentHero),
+                "hidden lg:flex size-9 xl:size-12",
+              )}
             >
-              <UserRound className="size-6" />
+              <UserRound className="size-4 xl:size-6" />
             </Link>
             <Link
               href="/cart"
               aria-label={navigationContent.utility.cart.label}
               className={cn(
                 utilityButtonClasses(isTransparentHero),
-                "relative",
+                "relative size-9 xl:size-12",
               )}
             >
-              <ShoppingBag className="size-6" />
+              <ShoppingBag className="size-4 xl:size-6" />
               {mounted && itemCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
+                <span className="absolute -right-0.5 -top-0.5 flex size-3.5 xl:size-4 items-center justify-center rounded-full bg-gold text-[0.5rem] xl:text-[0.55rem] font-bold text-background">
                   {itemCount > 9 ? "9+" : itemCount}
                 </span>
               )}
