@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 type Product = {
@@ -23,7 +24,16 @@ function getCategoryFromName(name: string): string {
 }
 
 export function DhatuProductsGrid({ products }: { products: Product[] }) {
-  const [active, setActive] = useState("All");
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  const [active, setActive] = useState(() => {
+    if (!categoryParam) return "All";
+    const param = categoryParam.toLowerCase();
+    if (param === "copper") return "Copper";
+    if (param === "brass") return "Brass";
+    if (param === "kansa") return "Kansa";
+    return "All";
+  });
 
   const filtered =
     active === "All"

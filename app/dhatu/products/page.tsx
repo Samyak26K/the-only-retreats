@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { DhatuProductsGrid } from "@/components/dhatu/DhatuProductsGrid";
 import { Container } from "@/components/ui/Container";
@@ -103,14 +104,16 @@ export default async function DhatuProductsPage() {
             </p>
           </div>
 
-          <DhatuProductsGrid
-            products={products.map((p) => ({
-              ...p,
-              variants: p.variants.map((v) => ({
-                sellingPrice: Number(v.sellingPrice),
-              })),
-            }))}
-          />
+          <Suspense fallback={null}>
+            <DhatuProductsGrid
+              products={products.map((p) => ({
+                ...p,
+                variants: p.variants.map((v) => ({
+                  sellingPrice: Number(v.sellingPrice),
+                })),
+              }))}
+            />
+          </Suspense>
         </Container>
       </div>
     </div>
