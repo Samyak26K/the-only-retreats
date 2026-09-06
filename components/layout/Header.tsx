@@ -81,7 +81,7 @@ export function Header() {
           "border-transparent bg-background/95 backdrop-blur",
       )}
     >
-      <Container className="relative flex h-(--navbar-height-mobile) items-center px-4 md:px-6 lg:px-10 xl:px-16 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
+      <Container className="relative flex h-(--navbar-height-mobile) items-center px-3 md:px-4 lg:px-8 xl:px-16 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
         {/* COMPACT MODE */}
         <div className="flex items-center gap-1 md:hidden">
           <button
@@ -161,21 +161,21 @@ export function Header() {
           <Link
             href={navigationContent.brand.href}
             className={cn(
-              "flex items-center gap-1.5 lg:gap-3 shrink-0 min-w-0 leading-tight transition-transform duration-normal",
+              "flex items-center gap-1 md:gap-1.5 lg:gap-2 xl:gap-3 shrink-0 max-w-[140px] md:max-w-[160px] lg:max-w-[200px] xl:max-w-none leading-tight transition-transform duration-normal",
               isTransparentHero ? "scale-110" : "scale-100",
             )}
           >
             <Image
               src="/logo.png"
               alt="The Only Retreats"
-              width={28}
-              height={28}
+              width={24}
+              height={24}
               className="object-contain md:w-7 md:h-7 lg:w-10 lg:h-10"
             />
-            <div className="hidden xl:flex flex-col leading-tight">
+            <div className="hidden md:flex flex-col leading-tight max-w-[120px] md:max-w-[140px] lg:max-w-[180px] xl:max-w-none">
               <span
                 className={cn(
-                  "font-heading text-xs xl:text-sm font-semibold uppercase tracking-[0.15em] xl:tracking-[0.2em] transition-colors duration-normal",
+                  "font-heading font-semibold uppercase text-[0.55rem] md:text-[0.6rem] lg:text-[0.65rem] xl:text-sm tracking-[0.08em] md:tracking-[0.1em] lg:tracking-[0.15em] xl:tracking-[0.2em] transition-colors duration-normal leading-tight whitespace-nowrap",
                   isTransparentHero ? "text-white" : "text-foreground",
                 )}
               >
@@ -183,7 +183,7 @@ export function Header() {
               </span>
               <span
                 className={cn(
-                  "font-sanskrit text-[0.55rem] xl:text-[0.65rem] tracking-[0.1em] transition-colors duration-normal",
+                  "font-sanskrit text-[0.45rem] md:text-[0.5rem] lg:text-[0.55rem] xl:text-[0.65rem] tracking-[0.06em] md:tracking-[0.08em] lg:tracking-[0.1em] transition-colors duration-normal leading-tight",
                   isTransparentHero ? "text-white/80" : "text-muted",
                 )}
               >
@@ -193,7 +193,7 @@ export function Header() {
           </Link>
 
           {/* Desktop navigation - CENTER */}
-          <div className="flex-1 flex justify-center min-w-0 overflow-hidden">
+          <div className="flex-1 flex justify-center min-w-0 overflow-visible">
             <DesktopNavigation isScrolled={!isTransparentHero} />
           </div>
 
@@ -206,31 +206,31 @@ export function Header() {
               onClick={() => setSearchOpen(true)}
               className={cn(
                 utilityButtonClasses(isTransparentHero),
-                "size-9 xl:size-12",
+                "size-8 md:size-9 lg:size-10 xl:size-12",
                 isTransparentHero && "text-white",
               )}
             >
-              <Search className="size-4 xl:size-6" />
+              <Search className="size-3.5 md:size-4 lg:size-5 xl:size-6" />
             </button>
             <Link
               href="/account"
               aria-label={navigationContent.utility.account.label}
               className={cn(
                 utilityButtonClasses(isTransparentHero),
-                "hidden lg:flex size-9 xl:size-12",
+                "hidden lg:flex size-8 md:size-9 lg:size-10 xl:size-12",
               )}
             >
-              <UserRound className="size-4 xl:size-6" />
+              <UserRound className="size-3.5 md:size-4 lg:size-5 xl:size-6" />
             </Link>
             <Link
               href="/cart"
               aria-label={navigationContent.utility.cart.label}
               className={cn(
                 utilityButtonClasses(isTransparentHero),
-                "relative size-9 xl:size-12",
+                "relative size-8 md:size-9 lg:size-10 xl:size-12",
               )}
             >
-              <ShoppingBag className="size-4 xl:size-6" />
+              <ShoppingBag className="size-3.5 md:size-4 lg:size-5 xl:size-6" />
               {mounted && itemCount > 0 && (
                 <span className="absolute -right-0.5 -top-0.5 flex size-3.5 xl:size-4 items-center justify-center rounded-full bg-gold text-[0.5rem] xl:text-[0.55rem] font-bold text-background">
                   {itemCount > 9 ? "9+" : itemCount}
