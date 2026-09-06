@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 const utilityButtonClasses = (lightOnDesktop: boolean) =>
   cn(
-    "flex size-12 items-center justify-center rounded-full transition-colors duration-fast",
+    "flex size-9 items-center justify-center rounded-full transition-colors duration-fast lg:size-12",
     "text-foreground hover:bg-surface",
     lightOnDesktop && "md:text-white md:hover:bg-white/10",
   );
@@ -81,9 +81,9 @@ export function Header() {
           "border-transparent bg-background/95 backdrop-blur",
       )}
     >
-      <Container className="relative flex h-(--navbar-height-mobile) items-center md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
+      <Container className="relative flex h-(--navbar-height-mobile) items-center px-4 md:px-6 lg:px-10 xl:px-16 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
         {/* COMPACT MODE */}
-        <div className="flex items-center gap-1 navbar:hidden">
+        <div className="flex items-center gap-1 md:hidden">
           <button
             type="button"
             aria-label={navigationContent.menu.openLabel}
@@ -106,7 +106,7 @@ export function Header() {
 
         <Link
           href={navigationContent.brand.href}
-          className="navbar:hidden absolute left-1/2 flex -translate-x-1/2 items-center"
+          className="md:hidden absolute left-1/2 flex -translate-x-1/2 items-center"
         >
           <Image
             src="/logo.png"
@@ -120,7 +120,7 @@ export function Header() {
           />
         </Link>
 
-        <div className="navbar:hidden ml-auto flex items-center gap-1">
+        <div className="md:hidden ml-auto flex items-center gap-1">
           <button
             type="button"
             aria-label="Search"
@@ -156,26 +156,26 @@ export function Header() {
         </div>
 
         {/* DESKTOP MODE */}
-        <div className="hidden w-full items-center justify-between gap-4 navbar:flex">
+        <div className="hidden w-full items-center gap-2 md:grid md:grid-cols-[auto_minmax(0,1fr)_auto] md:grid-rows-1 md:gap-3 lg:flex lg:justify-between lg:gap-4">
           {/* Desktop brand - LEFT */}
           <Link
             href={navigationContent.brand.href}
             className={cn(
-              "hidden navbar:flex shrink-0 items-center gap-3 leading-tight transition-transform duration-normal",
-              isTransparentHero ? "scale-110" : "scale-100",
+              "hidden shrink-0 items-center gap-1.5 leading-tight transition-transform duration-normal md:col-start-1 md:row-start-1 md:flex md:w-44 lg:w-auto lg:gap-3",
+              isTransparentHero ? "lg:scale-110" : "scale-100",
             )}
           >
             <Image
               src="/logo.png"
               alt="The Only Retreats"
-              width={40}
-              height={40}
-              className="object-contain"
+              width={32}
+              height={32}
+              className="size-8 object-contain lg:size-10"
             />
             <div className="flex flex-col leading-tight">
               <span
                 className={cn(
-                  "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
+                  "font-heading text-[0.65rem] font-semibold uppercase tracking-[0.1em] transition-colors duration-normal lg:text-sm lg:tracking-[0.2em]",
                   isTransparentHero ? "text-white" : "text-foreground",
                 )}
               >
@@ -183,7 +183,7 @@ export function Header() {
               </span>
               <span
                 className={cn(
-                  "font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal",
+                  "font-sanskrit text-[0.6rem] tracking-[0.12em] transition-colors duration-normal lg:text-[0.65rem] lg:tracking-[0.16em]",
                   isTransparentHero ? "text-white/80" : "text-muted",
                 )}
               >
@@ -193,12 +193,12 @@ export function Header() {
           </Link>
 
           {/* Desktop navigation - CENTER */}
-          <div className="hidden flex-1 justify-center navbar:flex">
+          <div className="hidden min-w-0 justify-center md:col-start-2 md:row-start-1 md:flex lg:flex-1">
             <DesktopNavigation isScrolled={!isTransparentHero} />
           </div>
 
           {/* Desktop utilities - RIGHT */}
-          <div className="hidden shrink-0 items-center gap-1 navbar:flex">
+          <div className="hidden shrink-0 items-center gap-0 md:col-start-3 md:row-start-1 md:flex lg:gap-1">
             <CurrencySelector isTransparentHero={isTransparentHero} />
             <button
               type="button"

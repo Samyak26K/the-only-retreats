@@ -52,7 +52,7 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
   }
 
   return createPortal(
-    <div className="navbar:hidden">
+    <div className="md:hidden">
       <div
         className={cn(
           "fixed inset-0 z-50 bg-[rgba(43,43,43,0.5)] transition-opacity duration-slow",
