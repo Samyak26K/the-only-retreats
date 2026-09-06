@@ -204,55 +204,93 @@ export default function DhatuPage() {
 
         {/* Hero text — left side */}
         <div className="absolute inset-0 z-[2] flex items-end pb-24 md:items-center md:pb-0">
-          <div className="px-6 md:px-12 lg:px-16 max-w-xl">
-            <p
-              className="text-[0.6rem] uppercase tracking-[0.35em] mb-6"
-              style={{ color: "#F2EBE0", opacity: 0.7 }}
-            >
-              The Only Retreats · Roots &amp; Ore
-            </p>
-            <div
-              className="font-display text-5xl md:text-6xl lg:text-7xl leading-[0.92] tracking-[-0.02em] mb-6"
-              style={{ color: "#F2EBE0" }}
-            >
+          <div className="px-6 md:px-12 lg:px-16 max-w-xl lg:max-w-3xl">
+            {/* Brand mark */}
+            <div className="mb-6">
               <p
-                className="font-sanskrit text-4xl md:text-5xl lg:text-6xl leading-tight"
+                className="font-sanskrit text-3xl md:text-4xl leading-tight"
                 style={{ color: "#F2EBE0" }}
               >
                 मूल • धातु
               </p>
               <p
-                className="text-2xl md:text-3xl lg:text-4xl uppercase tracking-[0.2em] font-medium mt-2"
+                className="text-sm uppercase tracking-[0.2em] mt-1"
                 style={{ color: "#B8A98F" }}
               >
                 ROOTS AND ORE
               </p>
             </div>
-            <p
-              className="text-sm leading-7 mb-3 max-w-sm"
-              style={{ color: "#F0E6D8", opacity: 0.85 }}
+
+            {/* Mantra */}
+            <div className="mb-6">
+              <p
+                lang="sa"
+                className="font-sanskrit text-base tracking-wide"
+                style={{ color: "#C89B4A" }}
+              >
+                अयं मे हस्तो भगवान् ॥
+              </p>
+              <p className="text-xs mt-1" style={{ color: "#B8A98F" }}>
+                In these hands lies the power to create.
+              </p>
+            </div>
+
+            {/* Primary statement */}
+            <h1
+              className="font-display text-2xl md:text-3xl lg:text-4xl uppercase tracking-[0.03em] leading-[1.1] mb-5"
+              style={{ color: "#F2EBE0" }}
             >
-              Every tribe &amp; art has a story, and some stories are worth
-              preserving.
+              <span className="block">EVERY GENERATION LEAVES A WITNESS.</span>
+              <span className="block mt-1" style={{ color: "#B25B32" }}>
+                SOME WITNESSES MUST NOT BE BURIED.
+              </span>
+            </h1>
+
+            {/* Editorial continuation */}
+            <p
+              className="font-display text-lg md:text-xl leading-snug mb-5"
+              style={{ color: "#B8A98F" }}
+            >
+              Before it was held in your hands,
+              <br />
+              it was passed down through theirs.
             </p>
-            <div className="flex flex-wrap items-center gap-4 mb-10">
+
+            {/* Closing philosophy */}
+            <div className="space-y-1 mb-8">
+              <p
+                className="text-sm uppercase tracking-[0.2em]"
+                style={{ color: "#C89B4A" }}
+              >
+                Not manufactured. Only immortalized.
+              </p>
+              <p
+                className="text-sm uppercase tracking-[0.2em]"
+                style={{ color: "#C89B4A" }}
+              >
+                Not consumed. Only continued.
+              </p>
+            </div>
+
+            {/* CTAs — keep exactly as they are */}
+            <div className="flex flex-col sm:flex-row gap-4 items-start">
               <Link
                 href="/dhatu/products"
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-xs uppercase tracking-[0.25em] font-medium transition-all hover:opacity-90"
-                style={{
-                  backgroundColor: "#B25B32",
-                  color: "#F2EBE0",
-                  boxShadow: "0 4px 20px rgba(178,91,50,0.4)",
-                }}
+                style={{ backgroundColor: "#B25B32", color: "#F2EBE0" }}
               >
-                SHOP THE LEGACY
+                Shop the Legacy
               </Link>
               <Link
                 href="#ethos"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-full text-xs uppercase tracking-[0.25em] font-medium transition-all hover:opacity-90"
-                style={{ border: "1px solid #B8A98F", color: "#F2EBE0" }}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] pt-4"
+                style={{ color: "#B8A98F" }}
               >
-                DISCOVER OUR STORY
+                <span
+                  className="w-6 h-px"
+                  style={{ backgroundColor: "#B8A98F" }}
+                />
+                Discover Our Story
               </Link>
             </div>
           </div>
