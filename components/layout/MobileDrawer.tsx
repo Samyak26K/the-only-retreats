@@ -34,16 +34,24 @@ export function MobileDrawer({ open, onClose }: MobileDrawerProps) {
   }, []);
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
+    if (!open) return;
 
     const { style } = document.body;
     const previousOverflow = style.overflow;
     style.overflow = "hidden";
 
+    // Restore scroll if viewport resizes to desktop
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const handleResize = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        style.overflow = previousOverflow;
+      }
+    };
+    mediaQuery.addEventListener("change", handleResize);
+
     return () => {
       style.overflow = previousOverflow;
+      mediaQuery.removeEventListener("change", handleResize);
     };
   }, [open]);
 

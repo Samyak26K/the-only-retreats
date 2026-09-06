@@ -7,10 +7,13 @@ export function ScrollToTop() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Force scroll to absolute top immediately
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    window.scrollTo(0, 0);
+    // Small delay to let Lenis settle after route change
+    const timer = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 10);
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   return null;
