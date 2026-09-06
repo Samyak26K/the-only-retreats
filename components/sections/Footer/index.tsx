@@ -198,8 +198,8 @@ export function FooterSection({
                 </p>
                 <p className="text-xs text-white/60 leading-6 max-w-2xl">
                   <span className="text-white/40">Packed & Procured by:</span>{" "}
-                  Rugvedic Ventures Pvt. Ltd, GAT No. 458, Flat No. 508, Wing
-                  H1, Highland Space, Moshi, Haveli, Pune 412105, Maharashtra
+                  Rugvedic Ventures Pvt. Ltd, Highland Space, Moshi, Haveli,
+                  Pune 412105, Maharashtra
                 </p>
                 <p className="text-xs text-white/60 leading-6">
                   <span className="text-white/40">Consumer Care:</span>{" "}
