@@ -11,7 +11,6 @@ import { CartToast } from "@/components/shared/CartToast";
 import { PageLoader } from "@/components/shared/PageLoader";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { SmoothScroll } from "@/components/shared/SmoothScroll";
-import { DEFAULT_SITE_URL, SITE_NAME } from "@/lib/constants";
 import { warmupDb } from "@/lib/db-warmup";
 import { AppProviders } from "@/providers/app-providers";
 
@@ -45,36 +44,62 @@ const sanskritFont = Tiro_Devanagari_Sanskrit({
   display: "swap",
 });
 
-const description =
-  "Premium Himalayan heritage products — authentic yak ghee, raw honey, and carefully sourced goods from the mountains.";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(DEFAULT_SITE_URL),
+  metadataBase: new URL("https://theonlyretreats.com"),
   title: {
-    default: SITE_NAME,
-    template: `%s | ${SITE_NAME}`,
+    default: "The Only Retreats | Himalayan Origins, Heritage & Nourishment",
+    template: `%s | The Only Retreats`,
   },
-  description,
+  description:
+    "Authentic Himalayan nourishment — raw honey, Bilona ghee, Shilajit and heritage foods sourced directly from high-altitude valleys. Not mass produced. Only preserved.",
+  keywords: [
+    "Himalayan honey",
+    "Bilona ghee",
+    "Himalayan products",
+    "heritage foods India",
+    "The Only Retreats",
+    "raw honey India",
+    "Ladakhi Shilajit",
+  ],
   openGraph: {
-    title: SITE_NAME,
-    description,
-    url: "/",
-    siteName: SITE_NAME,
+    title: "The Only Retreats | Himalayan Origins, Heritage & Nourishment",
+    description:
+      "Authentic Himalayan nourishment sourced directly from high-altitude valleys. Not mass produced. Only preserved.",
+    url: "https://theonlyretreats.com",
+    siteName: "The Only Retreats",
     type: "website",
     images: [
       {
         url: "/images/og/og-homepage.webp",
         width: 1200,
         height: 630,
-        alt: "The Only Retreats — Ancient Himalayan Nourishment.",
+        alt: "The Only Retreats — Ancient Himalayan Nourishment",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: SITE_NAME,
-    description,
+    title: "The Only Retreats | Himalayan Origins, Heritage & Nourishment",
+    description:
+      "Authentic Himalayan nourishment. Not mass produced. Only preserved.",
     images: ["/images/og/og-homepage.webp"],
+  },
+  alternates: {
+    canonical: "https://theonlyretreats.com",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "ADD_YOUR_GOOGLE_VERIFICATION_CODE_HERE",
   },
 };
 
