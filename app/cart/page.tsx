@@ -8,6 +8,8 @@ import { useCartStore } from "@/lib/cart";
 import { formatPrice as formatCurrencyPrice } from "@/lib/currency";
 import type { CurrencyCode } from "@/lib/currency";
 import { useCurrencyStore } from "@/lib/currency-store";
+import { calculateCouponDiscount, COUPON_CODE } from "@/lib/coupons";
+import { useState } from "react";
 
 export default function CartPage() {
   const { currency: selectedCurrency, rate } = useCurrencyStore();
@@ -20,8 +22,25 @@ export default function CartPage() {
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const couponCode = useCartStore((state) => state.couponCode);
+  const applyCoupon = useCartStore((state) => state.applyCoupon);
+  const removeCoupon = useCartStore((state) => state.removeCoupon);
+  const [couponInput, setCouponInput] = useState(couponCode ?? "");
+  const [couponError, setCouponError] = useState("");
 
   const subtotal = getSubtotal();
+  const discountAmount =
+    couponCode === COUPON_CODE ? calculateCouponDiscount(subtotal) : 0;
+  const total = subtotal - discountAmount;
+
+  function handleApplyCoupon() {
+    if (applyCoupon(couponInput)) {
+      setCouponError("");
+      setCouponInput(COUPON_CODE);
+    } else {
+      setCouponError("Invalid promo code.");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -261,12 +280,40 @@ export default function CartPage() {
                   </p>
                 </div>
 
+                {couponCode === COUPON_CODE ? (
+                  <>
+                    <div className="flex justify-between border-b border-border/50 py-2">
+                      <p className="text-xs uppercase tracking-[0.12em] text-muted">
+                        Coupon ({COUPON_CODE})
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          removeCoupon();
+                          setCouponInput("");
+                        }}
+                        className="text-xs text-muted underline underline-offset-2 hover:text-foreground"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div className="flex justify-between border-b border-border/50 py-2">
+                      <p className="text-xs uppercase tracking-[0.12em] text-muted">
+                        Discount (15%)
+                      </p>
+                      <p className="text-xs font-medium text-gold">
+                        −{formatPrice(discountAmount)}
+                      </p>
+                    </div>
+                  </>
+                ) : null}
+
                 <div className="flex justify-between pt-2">
                   <p className="font-heading text-sm font-semibold text-foreground">
                     Estimated Total
                   </p>
                   <p className="font-heading text-base font-semibold text-foreground">
-                    {formatPrice(subtotal)}
+                    {formatPrice(total)}
                   </p>
                 </div>
 
@@ -307,15 +354,25 @@ export default function CartPage() {
                     <input
                       type="text"
                       placeholder="Enter code"
+                      value={couponInput}
+                      onChange={(event) => {
+                        setCouponInput(event.target.value);
+                        setCouponError("");
+                      }}
                       className="flex-1 rounded-lg border border-border bg-background px-3 py-3 text-base placeholder:text-muted/40 focus:border-gold focus:outline-none"
                     />
                     <button
                       type="button"
+                      onClick={handleApplyCoupon}
+                      disabled={couponCode === COUPON_CODE}
                       className="rounded-lg border border-border px-3 py-2 text-xs uppercase tracking-wide text-muted transition-colors hover:border-gold hover:text-gold"
                     >
                       Apply
                     </button>
                   </div>
+                  {couponError ? (
+                    <p className="mt-2 text-xs text-red-500">{couponError}</p>
+                  ) : null}
                 </div>
               </div>
             </div>

@@ -1,17 +1,13 @@
 import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
+import Razorpay from "razorpay";
 
 import { prisma } from "@/lib/prisma";
-
-type CheckoutItem = {
-  variantId: string;
-  productId: string;
-  productName: string;
-  variantLabel: string;
-  price: number;
-  currency: string;
-  quantity: number;
-};
+import { calculateCheckoutPricing } from "@/lib/services/checkout-pricing";
+import {
+  returnExistingPaymentOnConflict,
+  type PaymentResult,
+} from "@/lib/services/payment-idempotency";
 
 type CustomerDetails = {
   fullName: string;
@@ -25,45 +21,132 @@ type CustomerDetails = {
 };
 
 type VerifyPaymentBody = {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
+  razorpay_order_id?: unknown;
+  razorpay_payment_id?: unknown;
+  razorpay_signature?: unknown;
   customerDetails: CustomerDetails;
-  items: CheckoutItem[];
-  subtotal: number;
-  currency: string;
+  items?: unknown;
+  couponCode?: unknown;
+  currency?: unknown;
 };
 
+async function getExistingPaymentResult(
+  paymentId: string,
+): Promise<
+  (PaymentResult & { expectedAmount: number; expectedCurrency: string }) | null
+> {
+  const existingPayment = await prisma.payment.findFirst({
+    where: {
+      provider: "razorpay",
+      providerTransactionId: paymentId,
+    },
+    select: {
+      amount: true,
+      currency: true,
+      order: { select: { id: true, orderNumber: true } },
+    },
+  });
+
+  return existingPayment
+    ? {
+        success: true,
+        orderNumber: existingPayment.order.orderNumber,
+        orderId: existingPayment.order.id,
+        expectedAmount: Number(existingPayment.amount) * 100,
+        expectedCurrency: existingPayment.currency,
+      }
+    : null;
+}
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID!,
+  key_secret: process.env.RAZORPAY_KEY_SECRET!,
+});
+
 export async function POST(req: NextRequest) {
-  console.log("=== VERIFY ROUTE CALLED ===");
   try {
     const body = (await req.json()) as VerifyPaymentBody;
-    console.log("Body parsed:", {
-      orderId: body.razorpay_order_id,
-      paymentId: body.razorpay_payment_id,
-    });
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
       customerDetails,
-      subtotal,
       currency,
     } = body;
+
+    if (
+      typeof razorpay_order_id !== "string" ||
+      typeof razorpay_payment_id !== "string" ||
+      typeof razorpay_signature !== "string" ||
+      typeof currency !== "string" ||
+      currency !== "INR" ||
+      !customerDetails ||
+      typeof customerDetails.email !== "string"
+    ) {
+      return NextResponse.json(
+        { error: "Invalid payment data" },
+        { status: 400 },
+      );
+    }
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
       .update(razorpay_order_id + "|" + razorpay_payment_id)
       .digest("hex");
 
-    if (expectedSignature !== razorpay_signature) {
+    if (
+      expectedSignature.length !== razorpay_signature.length ||
+      !crypto.timingSafeEqual(
+        Buffer.from(expectedSignature),
+        Buffer.from(razorpay_signature),
+      )
+    ) {
       return NextResponse.json(
         { error: "Invalid payment signature" },
         { status: 400 },
       );
     }
 
-    console.log("Signature verified successfully");
+    const razorpayOrder = await razorpay.orders.fetch(razorpay_order_id);
+    const razorpayPayment = await razorpay.payments.fetch(razorpay_payment_id);
+    const existingPaymentResult =
+      await getExistingPaymentResult(razorpay_payment_id);
+    if (existingPaymentResult) {
+      if (
+        razorpayPayment.order_id !== razorpay_order_id ||
+        razorpayPayment.currency !== currency ||
+        razorpayPayment.status !== "captured" ||
+        razorpayOrder.amount !== existingPaymentResult.expectedAmount ||
+        razorpayPayment.amount !== existingPaymentResult.expectedAmount ||
+        existingPaymentResult.expectedCurrency !== currency
+      ) {
+        return NextResponse.json(
+          { error: "Payment does not match the existing order" },
+          { status: 400 },
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        orderNumber: existingPaymentResult.orderNumber,
+        orderId: existingPaymentResult.orderId,
+      });
+    }
+
+    const pricing = await calculateCheckoutPricing(body.items, body.couponCode);
+    if (
+      razorpayOrder.currency !== currency ||
+      razorpayOrder.amount !== Math.round(pricing.total * 100) ||
+      razorpayPayment.order_id !== razorpay_order_id ||
+      razorpayPayment.currency !== currency ||
+      razorpayPayment.amount !== Math.round(pricing.total * 100) ||
+      razorpayPayment.status !== "captured"
+    ) {
+      return NextResponse.json(
+        { error: "Payment amount does not match the order" },
+        { status: 400 },
+      );
+    }
 
     const orderNumber = "TOR-" + Date.now();
 
@@ -91,42 +174,72 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    console.log("Customer:", customer?.id);
+    const order = await returnExistingPaymentOnConflict(
+      () =>
+        prisma.$transaction(async (tx) => {
+          const order = await tx.order.create({
+            data: {
+              orderNumber,
+              customerId: customer.id,
+              status: "CONFIRMED",
+              paymentStatus: "CAPTURED",
+              fulfillmentStatus: "UNFULFILLED",
+              currency,
+              subtotal: pricing.subtotal,
+              couponCode: pricing.couponCode,
+              discountAmount: pricing.discountAmount,
+              shippingAmount: 0,
+              taxAmount: 0,
+              total: pricing.total,
+              items: {
+                create: pricing.items.map((item) => ({
+                  productVariantId: item.variantId,
+                  quantity: item.quantity,
+                  unitPrice: item.unitPrice,
+                  totalAmount: item.unitPrice * item.quantity,
+                })),
+              },
+            },
+          });
 
-    const order = await prisma.order.create({
-      data: {
-        orderNumber,
-        customerId: customer.id,
-        status: "CONFIRMED",
-        paymentStatus: "CAPTURED",
-        fulfillmentStatus: "UNFULFILLED",
-        currency,
-        subtotal,
-        shippingAmount: 0,
-        taxAmount: 0,
-        total: subtotal,
-        payments: {
-          create: {
-            provider: "razorpay",
-            providerTransactionId: razorpay_payment_id,
-            amount: subtotal,
-            currency,
-            status: "CAPTURED",
-            paymentMethod: "razorpay",
-          },
-        },
+          await tx.payment.create({
+            data: {
+              orderId: order.id,
+              provider: "razorpay",
+              providerTransactionId: razorpay_payment_id,
+              amount: pricing.total,
+              currency,
+              status: "CAPTURED",
+              paymentMethod: "razorpay",
+            },
+          });
+
+          return {
+            success: true as const,
+            orderNumber: order.orderNumber,
+            orderId: order.id,
+          };
+        }),
+      async () => {
+        const existingResult =
+          await getExistingPaymentResult(razorpay_payment_id);
+        return existingResult
+          ? {
+              success: true as const,
+              orderNumber: existingResult.orderNumber,
+              orderId: existingResult.orderId,
+            }
+          : null;
       },
-    });
+    );
 
-    console.log("Order created:", order.orderNumber);
-
-    console.log("=== VERIFY SUCCESS ===");
     return NextResponse.json({
       success: true,
-      orderNumber,
-      orderId: order.id,
+      orderNumber: order.orderNumber,
+      orderId: order.orderId,
     });
-  } catch {
+  } catch (error) {
+    console.error("Razorpay verify error:", error);
     return NextResponse.json(
       { error: "Failed to save order" },
       { status: 500 },

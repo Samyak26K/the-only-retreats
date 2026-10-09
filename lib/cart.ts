@@ -16,12 +16,15 @@ export type CartItem = {
 
 type CartStore = {
   items: CartItem[];
+  couponCode: string | null;
   addItem: (item: Omit<CartItem, "quantity">) => void;
   removeItem: (variantId: string) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
   clearCart: () => void;
   getItemCount: () => number;
   getSubtotal: () => number;
+  applyCoupon: (code: string) => boolean;
+  removeCoupon: () => void;
 };
 
 const noopStorage = {
@@ -34,6 +37,7 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      couponCode: null,
       addItem: (item) => {
         const existing = get().items.find(
           (cartItem) => cartItem.variantId === item.variantId,
@@ -55,10 +59,12 @@ export const useCartStore = create<CartStore>()(
         });
       },
       removeItem: (variantId) => {
+        const items = get().items.filter(
+          (cartItem) => cartItem.variantId !== variantId,
+        );
         set({
-          items: get().items.filter(
-            (cartItem) => cartItem.variantId !== variantId,
-          ),
+          items,
+          couponCode: items.length === 0 ? null : get().couponCode,
         });
       },
       updateQuantity: (variantId, quantity) => {
@@ -76,7 +82,7 @@ export const useCartStore = create<CartStore>()(
         });
       },
       clearCart: () => {
-        set({ items: [] });
+        set({ items: [], couponCode: null });
       },
       getItemCount: () => {
         return get().items.reduce(
@@ -90,13 +96,28 @@ export const useCartStore = create<CartStore>()(
           0,
         );
       },
+      applyCoupon: (code) => {
+        const normalizedCode = code.trim().toUpperCase();
+        if (normalizedCode !== "ANU15") {
+          return false;
+        }
+
+        set({ couponCode: normalizedCode });
+        return true;
+      },
+      removeCoupon: () => {
+        set({ couponCode: null });
+      },
     }),
     {
       name: "tor-cart",
       storage: createJSONStorage(() =>
         typeof window !== "undefined" ? window.localStorage : noopStorage,
       ),
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({
+        items: state.items,
+        couponCode: state.couponCode,
+      }),
     },
   ),
 );

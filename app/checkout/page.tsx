@@ -12,6 +12,7 @@ import { useCartStore } from "@/lib/cart";
 import { formatPrice as formatCurrencyPrice } from "@/lib/currency";
 import type { CurrencyCode } from "@/lib/currency";
 import { useCurrencyStore } from "@/lib/currency-store";
+import { calculateCouponDiscount, COUPON_CODE } from "@/lib/coupons";
 import { cn } from "@/lib/utils";
 
 const inputClassName =
@@ -31,6 +32,7 @@ export default function CheckoutPage() {
   const { user } = useUser();
   const items = useCartStore((state) => state.items);
   const getSubtotal = useCartStore((state) => state.getSubtotal);
+  const couponCode = useCartStore((state) => state.couponCode);
   const clearCart = useCartStore((state) => state.clearCart);
   const addAddress = useAddressStore((state) => state.addAddress);
   const getDefault = useAddressStore((state) => state.getDefault);
@@ -64,6 +66,9 @@ export default function CheckoutPage() {
   };
 
   const subtotal = getSubtotal();
+  const discountAmount =
+    couponCode === COUPON_CODE ? calculateCouponDiscount(subtotal) : 0;
+  const total = subtotal - discountAmount;
 
   useEffect(() => {
     if (user) {
@@ -113,7 +118,11 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: getSubtotal(),
+          items: items.map((item) => ({
+            variantId: item.variantId,
+            quantity: item.quantity,
+          })),
+          couponCode,
           currency: items[0]?.currency ?? "INR",
           receipt: "receipt-" + Date.now(),
         }),
@@ -172,14 +181,9 @@ export default function CheckoutPage() {
                 },
                 items: items.map((item) => ({
                   variantId: item.variantId,
-                  productId: item.productId,
-                  productName: item.productName,
-                  variantLabel: item.variantLabel,
-                  price: item.price,
-                  currency: item.currency,
                   quantity: item.quantity,
                 })),
-                subtotal: getSubtotal(),
+                couponCode,
                 currency: items[0]?.currency ?? "INR",
               }),
             });
@@ -477,7 +481,7 @@ export default function CheckoutPage() {
                 >
                   {isLoading
                     ? "Processing..."
-                    : `Pay ₹${getSubtotal().toLocaleString("en-IN")}`}
+                    : `Pay ₹${total.toLocaleString("en-IN")}`}
                 </Button>
               </div>
               <p className="mt-4 text-xs leading-5 text-muted">
@@ -529,6 +533,17 @@ export default function CheckoutPage() {
               </p>
             </div>
 
+            {couponCode === COUPON_CODE ? (
+              <div className="flex justify-between">
+                <p className="text-xs uppercase tracking-[0.12em] text-muted">
+                  Coupon ({COUPON_CODE})
+                </p>
+                <p className="text-xs font-medium text-gold">
+                  −{formatPrice(discountAmount)}
+                </p>
+              </div>
+            ) : null}
+
             <div className="flex justify-between border-b border-border pb-4">
               <p className="text-xs uppercase tracking-[0.12em] text-muted">
                 Shipping
@@ -541,7 +556,7 @@ export default function CheckoutPage() {
                 Total
               </p>
               <p className="font-heading text-base font-medium text-foreground">
-                {formatPrice(subtotal)}
+                {formatPrice(total)}
               </p>
             </div>
 

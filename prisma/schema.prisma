@@ -527,6 +527,7 @@ model Order {
   currency          String            @default("INR")
   subtotal          Decimal           @db.Decimal(10, 2)
   discountAmount    Decimal           @default(0) @db.Decimal(10, 2)
+  couponCode        String?
   shippingAmount    Decimal           @default(0) @db.Decimal(10, 2)
   taxAmount         Decimal           @default(0) @db.Decimal(10, 2)
   total             Decimal           @db.Decimal(10, 2)
@@ -544,6 +545,7 @@ model Order {
   @@index([status])
   @@index([paymentStatus])
   @@index([createdAt])
+  @@index([couponCode])
 }
 
 model OrderItem {
@@ -581,8 +583,8 @@ model Payment {
   updatedAt             DateTime      @updatedAt
 
   @@index([orderId])
-  @@index([providerTransactionId])
   @@index([status])
+  @@unique([provider, providerTransactionId])
 }
 
 model Shipment {
