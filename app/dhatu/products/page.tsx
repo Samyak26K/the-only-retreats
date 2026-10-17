@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { DhatuProductsGrid } from "@/components/dhatu/DhatuProductsGrid";
 import { Container } from "@/components/ui/Container";
@@ -55,10 +56,20 @@ export default async function DhatuProductsPage() {
         </Link>
         <Link
           href="/dhatu"
-          className="absolute left-1/2 -translate-x-1/2 text-center font-display text-lg tracking-[0.3em] uppercase"
-          style={{ color: "#F2EBE0" }}
+          className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-auto"
         >
-          Tridhatu Kosh
+          <p
+            className="font-sanskrit text-base tracking-wide leading-tight"
+            style={{ color: "#F2EBE0" }}
+          >
+            मूल • धातु
+          </p>
+          <p
+            className="hidden sm:block text-[0.45rem] uppercase tracking-[0.25em]"
+            style={{ color: "#B8A98F" }}
+          >
+            ROOTS AND ORE
+          </p>
         </Link>
         <Link
           href="/cart"
@@ -93,14 +104,16 @@ export default async function DhatuProductsPage() {
             </p>
           </div>
 
-          <DhatuProductsGrid
-            products={products.map((p) => ({
-              ...p,
-              variants: p.variants.map((v) => ({
-                sellingPrice: Number(v.sellingPrice),
-              })),
-            }))}
-          />
+          <Suspense fallback={null}>
+            <DhatuProductsGrid
+              products={products.map((p) => ({
+                ...p,
+                variants: p.variants.map((v) => ({
+                  sellingPrice: Number(v.sellingPrice),
+                })),
+              }))}
+            />
+          </Suspense>
         </Container>
       </div>
     </div>

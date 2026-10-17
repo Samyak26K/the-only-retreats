@@ -4,28 +4,41 @@ import { useEffect } from "react";
 
 export function SmoothScroll() {
   useEffect(() => {
-    let lenis: { raf: (time: number) => void; destroy: () => void } | undefined;
+    let frameId = 0;
+    let disposed = false;
+    let lenis:
+      | {
+          raf: (time: number) => void;
+          destroy: () => void;
+        }
+      | undefined;
 
     async function initLenis() {
-      const Lenis = (await import("lenis")).default;
-      lenis = new Lenis({
+      const LenisClass = (await import("lenis")).default;
+
+      if (disposed) return;
+
+      lenis = new LenisClass({
         duration: 1.4,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
       });
 
       function raf(time: number) {
+        if (!lenis || disposed) return;
         lenis.raf(time);
-        requestAnimationFrame(raf);
+        frameId = requestAnimationFrame(raf);
       }
 
-      requestAnimationFrame(raf);
+      frameId = requestAnimationFrame(raf);
     }
 
     initLenis();
 
     return () => {
-      if (lenis) lenis.destroy();
+      disposed = true;
+      cancelAnimationFrame(frameId);
+      lenis?.destroy();
     };
   }, []);
 

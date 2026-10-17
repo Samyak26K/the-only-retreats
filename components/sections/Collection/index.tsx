@@ -108,13 +108,13 @@ export async function CollectionSection() {
         <div className="flex items-end justify-between mb-10">
           <div>
             <p className="text-xs uppercase tracking-[0.24em] text-muted mb-2">
-              FEATURED COLLECTION
+              FROM THE LIVING TRADITIONS
             </p>
             <h2 className="font-display text-4xl md:text-5xl tracking-[-0.03em] text-foreground leading-[0.95]">
-              विशिष्ट संग्रह
+              परम्परा
             </h2>
             <p className="font-display text-base text-muted italic mt-2">
-              Nourishment crafted by nature, honoured by tradition.
+              Objects and foods carried forward from living landscapes.
             </p>
           </div>
           <Link

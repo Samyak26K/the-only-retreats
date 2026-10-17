@@ -31,7 +31,7 @@ export const navigationContent: NavigationContent = {
   primaryLinks: [
     { label: "Collection", href: "/products" },
     { label: "Our Story", href: "/our-story" },
-    { label: "Tridhatu Kosh", href: "/dhatu" },
+    { label: "ROOTS AND ORE (मूल • धातु)", href: "/dhatu" },
     { label: "Divya", href: "/divya" },
     { label: "Contact", href: "/#contact" },
   ],

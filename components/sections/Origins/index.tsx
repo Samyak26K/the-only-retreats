@@ -59,16 +59,17 @@ export function OriginsSection() {
       <Container>
         <div className="mb-8 md:mb-10">
           <p className="mb-3 text-xs uppercase tracking-[0.24em] text-white/50">
-            OUR VALLEYS
+            OUR ORIGINS
           </p>
           <h2
             lang="sa"
             className="font-sanskrit text-3xl leading-tight text-white/90 md:text-4xl"
           >
-            उपत्यका:
+            उद्गम
           </h2>
           <p className="mt-3 text-[0.6rem] tracking-[0.15em] text-white/20 uppercase">
-            The Only Retreats — Sourced with intention. Preserved with care.
+            Places, peoples, knowledge and landscapes from which each story
+            begins.
           </p>
         </div>
 

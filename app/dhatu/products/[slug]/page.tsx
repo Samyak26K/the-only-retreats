@@ -102,10 +102,20 @@ export default async function DhatuProductPage({ params }: Props) {
         </Link>
         <Link
           href="/dhatu"
-          className="absolute left-1/2 -translate-x-1/2 text-center font-display text-lg tracking-[0.3em] uppercase"
-          style={{ color: "#F2EBE0" }}
+          className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-auto"
         >
-          Tridhatu Kosh
+          <p
+            className="font-sanskrit text-base tracking-wide leading-tight"
+            style={{ color: "#F2EBE0" }}
+          >
+            मूल • धातु
+          </p>
+          <p
+            className="hidden sm:block text-[0.45rem] uppercase tracking-[0.25em]"
+            style={{ color: "#B8A98F" }}
+          >
+            ROOTS AND ORE
+          </p>
         </Link>
         <Link
           href="/cart"

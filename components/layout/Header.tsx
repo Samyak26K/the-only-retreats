@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 const utilityButtonClasses = (lightOnDesktop: boolean) =>
   cn(
-    "flex size-12 items-center justify-center rounded-full transition-colors duration-fast",
+    "flex size-9 items-center justify-center rounded-full transition-colors duration-fast lg:size-12",
     "text-foreground hover:bg-surface",
     lightOnDesktop && "md:text-white md:hover:bg-white/10",
   );
@@ -81,8 +81,9 @@ export function Header() {
           "border-transparent bg-background/95 backdrop-blur",
       )}
     >
-      <Container className="relative flex h-(--navbar-height-mobile) items-center justify-between gap-4 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
-        <div className="flex items-center">
+      <Container className="relative flex h-(--navbar-height-mobile) items-center px-3 md:px-4 lg:px-8 xl:px-16 md:h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop)">
+        {/* COMPACT MODE */}
+        <div className="flex items-center gap-1 md:hidden">
           <button
             type="button"
             aria-label={navigationContent.menu.openLabel}
@@ -91,54 +92,21 @@ export function Header() {
             aria-controls="mobile-drawer"
             onClick={() => setMobileOpen(true)}
             className={cn(
-              utilityButtonClasses(false),
-              "md:hidden",
-              isTransparentHero && "text-white hover:bg-white/10",
+              "flex size-11 items-center justify-center rounded-full",
+              "transition-colors duration-fast",
+              isTransparentHero
+                ? "text-white hover:bg-white/10"
+                : "text-foreground hover:bg-surface",
             )}
           >
             <Menu className="size-6" />
           </button>
-
-          {/* Desktop lockup: left-aligned, flows in normal document order. */}
-          <Link
-            href={navigationContent.brand.href}
-            className={cn(
-              "hidden origin-left items-center gap-3 leading-tight transition-transform duration-normal md:flex",
-              isTransparentHero ? "scale-110" : "scale-100",
-            )}
-          >
-            <Image
-              src="/logo.png"
-              alt="The Only Retreats"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
-            <div className="flex flex-col leading-tight">
-              <span
-                className={cn(
-                  "font-heading text-sm font-semibold uppercase tracking-[0.32em] transition-colors duration-normal",
-                  isTransparentHero ? "text-white" : "text-foreground",
-                )}
-              >
-                {navigationContent.brand.name}
-              </span>
-              <span
-                className={cn(
-                  "font-sanskrit text-[0.65rem] tracking-[0.16em] transition-colors duration-normal",
-                  isTransparentHero ? "text-white/80" : "text-muted",
-                )}
-              >
-                {navigationContent.brand.tagline}
-              </span>
-            </div>
-          </Link>
+          <CurrencySelector isTransparentHero={isTransparentHero} />
         </div>
 
-        {/* Mobile lockup: centered independent of the hamburger/search widths. */}
         <Link
           href={navigationContent.brand.href}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:hidden"
+          className="md:hidden absolute left-1/2 flex -translate-x-1/2 items-center"
         >
           <Image
             src="/logo.png"
@@ -146,73 +114,130 @@ export function Header() {
             width={36}
             height={36}
             className={cn(
-              "object-contain transition-all duration-300",
+              "object-contain",
               isTransparentHero && "brightness-0 invert",
             )}
           />
         </Link>
 
-        <DesktopNavigation isScrolled={!isTransparentHero} />
-
-        <div className="flex items-center gap-1">
-          <div className="md:hidden">
-            <CurrencySelector />
-          </div>
-          <div className="hidden md:flex items-center gap-1">
-            <CurrencySelector />
-          </div>
+        <div className="md:hidden ml-auto flex items-center gap-1">
           <button
             type="button"
             aria-label="Search"
             onClick={() => setSearchOpen(true)}
             className={cn(
-              utilityButtonClasses(isTransparentHero),
-              isTransparentHero && "text-white",
+              "flex size-11 items-center justify-center rounded-full",
+              "transition-colors duration-fast",
+              isTransparentHero
+                ? "text-white hover:bg-white/10"
+                : "text-foreground hover:bg-surface",
             )}
           >
-            <Search className="size-6" />
+            <Search className="size-5" />
           </button>
-          <Link
-            href="/account"
-            aria-label={navigationContent.utility.account.label}
-            className={cn(
-              utilityButtonClasses(isTransparentHero),
-              "hidden md:inline-flex",
-            )}
-          >
-            <UserRound className="size-6" />
-          </Link>
-          <Link
-            href="/cart"
-            aria-label="Cart"
-            className={cn(
-              utilityButtonClasses(false),
-              "relative md:hidden",
-              isTransparentHero && "text-white",
-            )}
-          >
-            <ShoppingBag className="size-6" />
-            {mounted && itemCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
-                {itemCount > 9 ? "9+" : itemCount}
-              </span>
-            )}
-          </Link>
           <Link
             href="/cart"
             aria-label={navigationContent.utility.cart.label}
             className={cn(
-              utilityButtonClasses(isTransparentHero),
-              "relative hidden md:inline-flex",
+              "relative flex size-11 items-center justify-center",
+              "rounded-full transition-colors duration-fast",
+              isTransparentHero
+                ? "text-white hover:bg-white/10"
+                : "text-foreground hover:bg-surface",
             )}
           >
             <ShoppingBag className="size-6" />
             {mounted && itemCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.6rem] font-bold text-white">
+              <span className="absolute -top-0.5 -right-0.5 flex size-4 items-center justify-center rounded-full bg-gold text-[0.55rem] font-bold text-background">
                 {itemCount > 9 ? "9+" : itemCount}
               </span>
             )}
           </Link>
+        </div>
+
+        {/* DESKTOP MODE */}
+        <div className="hidden md:flex items-center justify-between h-(--navbar-height-tablet) lg:h-(--navbar-height-desktop) gap-2 lg:gap-4 w-full">
+          {/* Desktop brand - LEFT */}
+          <Link
+            href={navigationContent.brand.href}
+            className={cn(
+              "flex items-center gap-1 md:gap-1.5 lg:gap-2 xl:gap-3 shrink-0 max-w-[140px] md:max-w-[160px] lg:max-w-[200px] xl:max-w-none leading-tight transition-transform duration-normal",
+              isTransparentHero ? "scale-110" : "scale-100",
+            )}
+          >
+            <Image
+              src="/logo.png"
+              alt="The Only Retreats"
+              width={24}
+              height={24}
+              className="object-contain md:w-7 md:h-7 lg:w-10 lg:h-10"
+            />
+            <div className="hidden md:flex flex-col leading-tight max-w-[120px] md:max-w-[140px] lg:max-w-[180px] xl:max-w-none">
+              <span
+                className={cn(
+                  "font-heading font-semibold uppercase text-[0.55rem] md:text-[0.6rem] lg:text-[0.65rem] xl:text-sm tracking-[0.08em] md:tracking-[0.1em] lg:tracking-[0.15em] xl:tracking-[0.2em] transition-colors duration-normal leading-tight whitespace-nowrap",
+                  isTransparentHero ? "text-white" : "text-foreground",
+                )}
+              >
+                {navigationContent.brand.name}
+              </span>
+              <span
+                className={cn(
+                  "font-sanskrit text-[0.45rem] md:text-[0.5rem] lg:text-[0.55rem] xl:text-[0.65rem] tracking-[0.06em] md:tracking-[0.08em] lg:tracking-[0.1em] transition-colors duration-normal leading-tight",
+                  isTransparentHero ? "text-white/80" : "text-muted",
+                )}
+              >
+                {navigationContent.brand.tagline}
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop navigation - CENTER */}
+          <div className="flex-1 flex justify-center min-w-0 overflow-visible">
+            <DesktopNavigation isScrolled={!isTransparentHero} />
+          </div>
+
+          {/* Desktop utilities - RIGHT */}
+          <div className="flex items-center gap-0 lg:gap-1 shrink-0">
+            <CurrencySelector isTransparentHero={isTransparentHero} />
+            <button
+              type="button"
+              aria-label="Search"
+              onClick={() => setSearchOpen(true)}
+              className={cn(
+                utilityButtonClasses(isTransparentHero),
+                "size-8 md:size-9 lg:size-10 xl:size-12",
+                isTransparentHero && "text-white",
+              )}
+            >
+              <Search className="size-3.5 md:size-4 lg:size-5 xl:size-6" />
+            </button>
+            <Link
+              href="/account"
+              aria-label={navigationContent.utility.account.label}
+              className={cn(
+                utilityButtonClasses(isTransparentHero),
+                "hidden lg:flex size-8 md:size-9 lg:size-10 xl:size-12",
+              )}
+            >
+              <UserRound className="size-3.5 md:size-4 lg:size-5 xl:size-6" />
+            </Link>
+            <Link
+              href="/cart"
+              aria-label={navigationContent.utility.cart.label}
+              className={cn(
+                utilityButtonClasses(isTransparentHero),
+                "relative size-8 md:size-9 lg:size-10 xl:size-12",
+              )}
+            >
+              <ShoppingBag className="size-3.5 md:size-4 lg:size-5 xl:size-6" />
+              {mounted && itemCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex size-3.5 xl:size-4 items-center justify-center rounded-full bg-gold text-[0.5rem] xl:text-[0.55rem] font-bold text-background">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
+            </Link>
+          </div>
         </div>
       </Container>
 

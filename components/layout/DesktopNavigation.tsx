@@ -16,9 +16,9 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
   return (
     <nav
       aria-label="Primary"
-      className="hidden flex-1 items-center justify-center md:flex"
+      className="hidden items-center justify-center md:flex"
     >
-      <ul className="flex items-center gap-8 xl:gap-10">
+      <ul className="flex items-center gap-1 md:gap-2 lg:gap-4 xl:gap-6">
         {navigationContent.primaryLinks.map((item) => {
           // Every link today points at an in-page anchor on the single
           // homepage route, so this never matches yet. It lights up once an
@@ -28,32 +28,49 @@ export function DesktopNavigation({ isScrolled }: DesktopNavigationProps) {
 
           return (
             <li key={item.label}>
-              <Link
-                href={item.href}
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "group relative inline-flex py-2 text-[0.8rem] uppercase tracking-[0.24em] transition-colors duration-fast",
-                  isActive
-                    ? "font-semibold text-forest"
-                    : cn(
-                        "font-medium",
-                        isScrolled
-                          ? "text-foreground/70 hover:text-foreground"
-                          : "text-white/80 hover:text-white",
-                      ),
-                )}
-              >
-                {item.label}
-                <span
-                  aria-hidden="true"
+              {item.label === "roots-and-ore-brand" ? (
+                <Link
+                  href={item.href}
+                  className="flex flex-col items-center whitespace-nowrap leading-tight text-[0.6rem] md:text-[0.65rem] lg:text-[0.7rem] xl:text-sm uppercase tracking-[0.08em] md:tracking-[0.1em] lg:tracking-[0.15em] xl:tracking-[0.18em] transition-colors duration-normal"
+                >
+                  <span
+                    className="font-sanskrit text-[0.6rem] md:text-[0.65rem] lg:text-[0.7rem] xl:text-sm"
+                    style={{ color: isScrolled ? undefined : "inherit" }}
+                  >
+                    मूल • धातु
+                  </span>
+                  <span className="text-[0.4rem] md:text-[0.45rem] uppercase tracking-[0.08em] md:tracking-[0.1em] lg:tracking-[0.15em] xl:tracking-[0.18em]">
+                    ROOTS AND ORE
+                  </span>
+                </Link>
+              ) : (
+                <Link
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-250 ease-out",
+                    "group relative inline-flex whitespace-nowrap py-2 text-[0.6rem] md:text-[0.65rem] lg:text-[0.7rem] xl:text-sm uppercase tracking-[0.08em] md:tracking-[0.1em] lg:tracking-[0.15em] xl:tracking-[0.18em] transition-colors duration-normal",
                     isActive
-                      ? "scale-x-100 bg-forest"
-                      : "scale-x-0 group-hover:scale-x-100",
+                      ? "font-semibold text-forest"
+                      : cn(
+                          "font-medium",
+                          isScrolled
+                            ? "text-foreground/70 hover:text-foreground"
+                            : "text-white/80 hover:text-white",
+                        ),
                   )}
-                />
-              </Link>
+                >
+                  {item.label}
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-250 ease-out",
+                      isActive
+                        ? "scale-x-100 bg-forest"
+                        : "scale-x-0 group-hover:scale-x-100",
+                    )}
+                  />
+                </Link>
+              )}
             </li>
           );
         })}
