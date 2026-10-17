@@ -93,6 +93,19 @@ export async function POST(req: NextRequest) {
 
     console.log("Customer:", customer?.id);
 
+    const shippingAddress = await prisma.customerAddress.create({
+      data: {
+        customerId: customer.id,
+        fullName: customerDetails.fullName,
+        line1: customerDetails.addressLine1,
+        line2: customerDetails.addressLine2 || "",
+        city: customerDetails.city,
+        state: customerDetails.state,
+        postalCode: customerDetails.pincode,
+        country: "IN",
+      },
+    });
+
     const order = await prisma.order.create({
       data: {
         orderNumber,
@@ -105,6 +118,15 @@ export async function POST(req: NextRequest) {
         shippingAmount: 0,
         taxAmount: 0,
         total: subtotal,
+        shippingAddressId: shippingAddress.id,
+        items: {
+          create: body.items.map((item) => ({
+            productVariantId: item.variantId,
+            quantity: item.quantity,
+            unitPrice: item.price,
+            totalAmount: item.price * item.quantity,
+          })),
+        },
         payments: {
           create: {
             provider: "razorpay",
