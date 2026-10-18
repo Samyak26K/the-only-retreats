@@ -156,7 +156,7 @@ export default async function NewProductPage() {
       const createdVariant = await prisma.productVariant.create({
         data: {
           productId: createdProduct.id,
-          name: variantLabel,
+          label: variantLabel,
           sku:
             variantSku ||
             `${createdProduct.slug}-${slugify(variantLabel) || "variant"}-${i}`,

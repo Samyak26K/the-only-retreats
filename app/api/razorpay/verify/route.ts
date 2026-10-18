@@ -177,6 +177,19 @@ export async function POST(req: NextRequest) {
     const order = await returnExistingPaymentOnConflict(
       () =>
         prisma.$transaction(async (tx) => {
+          const shippingAddress = await tx.customerAddress.create({
+            data: {
+              customerId: customer.id,
+              fullName: customerDetails.fullName,
+              line1: customerDetails.addressLine1,
+              line2: customerDetails.addressLine2 || "",
+              city: customerDetails.city,
+              state: customerDetails.state,
+              postalCode: customerDetails.pincode,
+              country: "IN",
+            },
+          });
+
           const order = await tx.order.create({
             data: {
               orderNumber,
@@ -191,6 +204,7 @@ export async function POST(req: NextRequest) {
               shippingAmount: 0,
               taxAmount: 0,
               total: pricing.total,
+              shippingAddressId: shippingAddress.id,
               items: {
                 create: pricing.items.map((item) => ({
                   productVariantId: item.variantId,
