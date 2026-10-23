@@ -508,12 +508,16 @@ export default async function AdminProductDetailPage({
           <div className="grid gap-4 md:grid-cols-3">
             <label className="block space-y-1">
               <span className="text-sm font-medium text-foreground">Brand</span>
-              <input
+              <select
                 name="brand"
-                type="text"
                 defaultValue={product.brand ?? ""}
                 className={inputClassName}
-              />
+              >
+                <option value="">Select brand</option>
+                <option value="Himalayan">Himalayan (TOR Food)</option>
+                <option value="Dhatu">Dhatu (Roots and Ore)</option>
+                <option value="Divya">Divya (Spirituality)</option>
+              </select>
             </label>
             <label className="block space-y-1">
               <span className="text-sm font-medium text-foreground">
