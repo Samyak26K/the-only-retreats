@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
-import { DeleteProductForm } from "@/components/admin/DeleteProductForm";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
@@ -29,6 +28,9 @@ export default async function AdminProductsPage() {
 
     for (const variant of variants) {
       await prisma.inventoryItem.deleteMany({
+        where: { productVariantId: variant.id },
+      });
+      await prisma.orderItem.deleteMany({
         where: { productVariantId: variant.id },
       });
     }
@@ -135,20 +137,26 @@ export default async function AdminProductsPage() {
                       {new Date(product.updatedAt).toLocaleDateString("en-IN")}
                     </td>
                     <td className="px-4 py-4">
-                      <div className="flex flex-wrap gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          render={
-                            <Link href={`/admin/products/${product.id}`} />
-                          }
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/admin/products/${product.id}`}
+                          className="text-xs text-foreground hover:underline"
                         >
                           Edit
-                        </Button>
-                        <DeleteProductForm
-                          productId={product.id}
-                          action={deleteProductAction}
-                        />
+                        </Link>
+                        <form action={deleteProductAction}>
+                          <input
+                            type="hidden"
+                            name="productId"
+                            value={product.id}
+                          />
+                          <button
+                            type="submit"
+                            className="text-xs text-red-500 hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </form>
                       </div>
                     </td>
                   </tr>
