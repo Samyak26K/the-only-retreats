@@ -15,7 +15,7 @@ import { prisma } from "@/lib/prisma";
 import { getPublishedProductBySlug } from "@/lib/storefront/products";
 
 export const dynamic = "force-static";
-export const revalidate = 3600;
+export const revalidate = 60;
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;

@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { redirect, notFound } from "next/navigation";
 import { z } from "zod";
 
@@ -200,13 +201,16 @@ export default async function AdminProductDetailPage({
       throw new Error("Validation failed");
     }
 
-    await updateProduct(id, parsed.data, {
+    const updatedProduct = await updateProduct(id, parsed.data, {
       actor: {
         id: writeAdminContext.adminUserId,
         email: writeAdminContext.email,
         role: writeAdminContext.roleName,
       },
     });
+
+    revalidatePath(`/products/${updatedProduct.slug}`);
+    revalidatePath("/products");
   }
 
   async function addImageAction(formData: FormData) {

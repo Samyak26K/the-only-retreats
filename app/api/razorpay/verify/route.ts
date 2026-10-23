@@ -252,10 +252,10 @@ export async function POST(req: NextRequest) {
       orderNumber: order.orderNumber,
       orderId: order.orderId,
     });
-  } catch (error) {
-    console.error("Razorpay verify error:", error);
+  } catch (err) {
+    console.error("=== VERIFY ERROR ===", err);
     return NextResponse.json(
-      { error: "Failed to save order" },
+      { error: "Failed to save order", details: String(err) },
       { status: 500 },
     );
   }
