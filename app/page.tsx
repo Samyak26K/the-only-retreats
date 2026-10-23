@@ -1,6 +1,7 @@
 import { CertificationBandSection } from "@/components/sections/CertificationBand";
 import { CollectionSection } from "@/components/sections/Collection";
 import { BharatBhumiSection } from "@/components/sections/BharatBhumi";
+import { ArticlesSection } from "@/components/sections/Articles";
 import { FooterSection } from "@/components/sections/Footer";
 import { FounderSection } from "@/components/sections/Founder";
 import { HeritageSection } from "@/components/sections/Heritage";
@@ -73,6 +74,7 @@ export default function HomePage() {
       <RevealOnScroll delay={0}>
         <FounderSection />
       </RevealOnScroll>
+      <ArticlesSection />
       <FooterSection />
     </>
   );
