@@ -1,12 +1,44 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
+import { DeleteProductForm } from "@/components/admin/DeleteProductForm";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
+import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
 import { listProducts } from "@/lib/services/products";
 
 export default async function AdminProductsPage() {
+  async function deleteProductAction(formData: FormData) {
+    "use server";
+
+    const adminContext = await requirePermission("products.write");
+    if (!adminContext) throw new Error("Unauthorized");
+
+    const productId = formData.get("productId");
+    if (typeof productId !== "string" || !productId) return;
+
+    await prisma.productMedia.deleteMany({ where: { productId } });
+    await prisma.productPassport.deleteMany({ where: { productId } });
+
+    const variants = await prisma.productVariant.findMany({
+      where: { productId },
+      select: { id: true },
+    });
+
+    for (const variant of variants) {
+      await prisma.inventoryItem.deleteMany({
+        where: { productVariantId: variant.id },
+      });
+    }
+
+    await prisma.productVariant.deleteMany({ where: { productId } });
+    await prisma.product.delete({ where: { id: productId } });
+
+    redirect("/admin/products");
+  }
+
   const adminContext = await requirePermission("products.read").catch(
     () => null,
   );
@@ -113,6 +145,10 @@ export default async function AdminProductsPage() {
                         >
                           Edit
                         </Button>
+                        <DeleteProductForm
+                          productId={product.id}
+                          action={deleteProductAction}
+                        />
                       </div>
                     </td>
                   </tr>

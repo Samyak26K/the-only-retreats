@@ -94,7 +94,8 @@ export default async function AdminOrderDetailPage({
 
   try {
     order = await getOrderDetailById(id);
-  } catch {
+  } catch (err) {
+    console.error("Order detail error:", err);
     error = "Unable to load order details right now.";
   }
 

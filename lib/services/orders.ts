@@ -149,7 +149,7 @@ export async function getOrderDetailById(
           totalAmount: true,
           productVariant: {
             select: {
-              label: true,
+              name: true,
               sku: true,
               product: {
                 select: {
