@@ -5,6 +5,9 @@ import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/server/auth";
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Admin",
   description: "Internal administration for The Only Retreats",
@@ -18,6 +21,7 @@ const navigation = [
   { href: "/admin/orders", label: "Orders", section: "OPERATIONS" },
   { href: "/admin/customers", label: "Customers", section: "OPERATIONS" },
   { href: "/admin/content", label: "Content", section: "EDITORIAL" },
+  { href: "/admin/articles", label: "Articles", section: "EDITORIAL" },
   { href: "/admin/settings", label: "Settings", section: "SYSTEM" },
 ];
 
@@ -33,9 +37,9 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-muted/20">
+    <div className="bg-muted/20">
       <div className="flex min-h-screen flex-col lg:flex-row">
-        <aside className="relative z-20 w-full shrink-0 border-b border-border bg-background px-6 py-6 lg:w-72 lg:border-r lg:border-b-0">
+        <aside className="relative z-20 w-full shrink-0 border-b border-border bg-background px-6 py-6 lg:w-72 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-r lg:border-b-0">
           <div className="flex items-center justify-between lg:block">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted">
@@ -87,7 +91,7 @@ export default async function AdminLayout({
           </nav>
         </aside>
 
-        <div className="relative z-0 min-w-0 flex-1">
+        <div className="relative z-0 min-w-0 flex-1 overflow-y-auto">
           <header className="border-b border-border bg-background/90 px-6 py-4 backdrop-blur">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>

@@ -6,6 +6,8 @@ import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
 
+export const revalidate = 0;
+
 const ORDER_STATUS_FILTERS = [
   "PENDING",
   "CONFIRMED",

@@ -479,17 +479,17 @@ model InventoryMovement {
 }
 
 model Customer {
-  id          String            @id @default(cuid())
-  clerkUserId String            @unique
-  firstName   String?
-  lastName    String?
-  email       String?           @unique
-  phone       String?
-  newsletterSubscribed Boolean  @default(false)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  addresses   CustomerAddress[]
-  orders      Order[]
+  id                   String            @id @default(cuid())
+  clerkUserId          String            @unique
+  firstName            String?
+  lastName             String?
+  email                String?           @unique
+  phone                String?
+  newsletterSubscribed Boolean           @default(false)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+  addresses            CustomerAddress[]
+  orders               Order[]
 
   @@index([email])
 }
@@ -582,9 +582,9 @@ model Payment {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
+  @@unique([provider, providerTransactionId])
   @@index([orderId])
   @@index([status])
-  @@unique([provider, providerTransactionId])
 }
 
 model Shipment {
@@ -713,4 +713,25 @@ model SiteSetting {
   value     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Article {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  excerpt         String?
+  content         String    @db.Text
+  coverImageUrl   String?
+  category        String?
+  status          String    @default("DRAFT")
+  featuredProduct String?
+  seoTitle        String?
+  seoDescription  String?
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([slug])
 }

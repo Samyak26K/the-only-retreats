@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { redirect, notFound } from "next/navigation";
 import { z } from "zod";
 
@@ -200,13 +201,16 @@ export default async function AdminProductDetailPage({
       throw new Error("Validation failed");
     }
 
-    await updateProduct(id, parsed.data, {
+    const updatedProduct = await updateProduct(id, parsed.data, {
       actor: {
         id: writeAdminContext.adminUserId,
         email: writeAdminContext.email,
         role: writeAdminContext.roleName,
       },
     });
+
+    revalidatePath(`/products/${updatedProduct.slug}`);
+    revalidatePath("/products");
   }
 
   async function addImageAction(formData: FormData) {
@@ -508,12 +512,16 @@ export default async function AdminProductDetailPage({
           <div className="grid gap-4 md:grid-cols-3">
             <label className="block space-y-1">
               <span className="text-sm font-medium text-foreground">Brand</span>
-              <input
+              <select
                 name="brand"
-                type="text"
                 defaultValue={product.brand ?? ""}
                 className={inputClassName}
-              />
+              >
+                <option value="">Select brand</option>
+                <option value="Himalayan">Himalayan (TOR Food)</option>
+                <option value="Dhatu">Dhatu (Roots and Ore)</option>
+                <option value="Divya">Divya (Spirituality)</option>
+              </select>
             </label>
             <label className="block space-y-1">
               <span className="text-sm font-medium text-foreground">

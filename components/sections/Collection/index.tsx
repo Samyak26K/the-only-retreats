@@ -37,21 +37,19 @@ export async function CollectionSection() {
     },
   });
 
-  const sorted = products
-    .sort((a, b) => {
-      if (a.slug === "himalayan-vedic-yak-ghee") return -1;
-      if (b.slug === "himalayan-vedic-yak-ghee") return 1;
-      const order = (name: string) => {
-        const n = name.toLowerCase();
-        if (n.includes("ghee")) return 0;
-        if (n.includes("honey")) return 1;
-        if (n.includes("shilajit")) return 2;
-        if (n.includes("coffee")) return 3;
-        return 4;
-      };
-      return order(a.name) - order(b.name);
-    })
-    .slice(0, 6);
+  const sorted = products.sort((a, b) => {
+    if (a.slug === "himalayan-vedic-yak-ghee") return -1;
+    if (b.slug === "himalayan-vedic-yak-ghee") return 1;
+    const order = (name: string) => {
+      const n = name.toLowerCase();
+      if (n.includes("ghee")) return 0;
+      if (n.includes("honey")) return 1;
+      if (n.includes("shilajit")) return 2;
+      if (n.includes("coffee")) return 3;
+      return 4;
+    };
+    return order(a.name) - order(b.name);
+  });
 
   if (products.length === 0) return null;
 

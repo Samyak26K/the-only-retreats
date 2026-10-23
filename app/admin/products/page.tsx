@@ -1,12 +1,48 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
+import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
 import { listProducts } from "@/lib/services/products";
 
+export const revalidate = 30;
+
 export default async function AdminProductsPage() {
+  async function deleteProductAction(formData: FormData) {
+    "use server";
+
+    const adminContext = await requirePermission("products.write");
+    if (!adminContext) throw new Error("Unauthorized");
+
+    const productId = formData.get("productId");
+    if (typeof productId !== "string" || !productId) return;
+
+    await prisma.productMedia.deleteMany({ where: { productId } });
+    await prisma.productPassport.deleteMany({ where: { productId } });
+
+    const variants = await prisma.productVariant.findMany({
+      where: { productId },
+      select: { id: true },
+    });
+
+    for (const variant of variants) {
+      await prisma.inventoryItem.deleteMany({
+        where: { productVariantId: variant.id },
+      });
+      await prisma.orderItem.deleteMany({
+        where: { productVariantId: variant.id },
+      });
+    }
+
+    await prisma.productVariant.deleteMany({ where: { productId } });
+    await prisma.product.delete({ where: { id: productId } });
+
+    redirect("/admin/products");
+  }
+
   const adminContext = await requirePermission("products.read").catch(
     () => null,
   );
@@ -103,16 +139,26 @@ export default async function AdminProductsPage() {
                       {new Date(product.updatedAt).toLocaleDateString("en-IN")}
                     </td>
                     <td className="px-4 py-4">
-                      <div className="flex flex-wrap gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          render={
-                            <Link href={`/admin/products/${product.id}`} />
-                          }
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/admin/products/${product.id}`}
+                          className="text-xs text-foreground hover:underline"
                         >
                           Edit
-                        </Button>
+                        </Link>
+                        <form action={deleteProductAction}>
+                          <input
+                            type="hidden"
+                            name="productId"
+                            value={product.id}
+                          />
+                          <button
+                            type="submit"
+                            className="text-xs text-red-500 hover:underline"
+                          >
+                            Delete
+                          </button>
+                        </form>
                       </div>
                     </td>
                   </tr>

@@ -245,13 +245,17 @@ export async function createProduct(
     },
   });
 
-  await recordAuditLog({
-    actor: options?.actor,
-    action: "create",
-    entityType: "Product",
-    entityId: product.id,
-    newState: product,
-  });
+  try {
+    await recordAuditLog({
+      actor: options?.actor,
+      action: "create",
+      entityType: "Product",
+      entityId: product.id,
+      newState: product,
+    });
+  } catch (err) {
+    console.error("Audit log failed:", err);
+  }
 
   return {
     ...product,
