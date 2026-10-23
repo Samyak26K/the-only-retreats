@@ -160,7 +160,28 @@ export default async function ArticlePage({ params }: Props) {
               ) : null}
 
               <div
-                className="prose prose-lg max-w-none prose-headings:font-display prose-headings:tracking-tight prose-headings:text-foreground prose-h2:mb-4 prose-h2:mt-10 prose-h2:text-2xl prose-h3:mb-3 prose-h3:mt-8 prose-h3:text-xl prose-p:mb-6 prose-p:leading-8 prose-p:text-muted prose-strong:font-semibold prose-strong:text-foreground prose-a:text-gold prose-a:no-underline hover:prose-a:underline prose-ul:space-y-2 prose-ul:text-muted prose-li:leading-7 prose-img:rounded-2xl"
+                className="space-y-6
+                  [&_h2]:font-display [&_h2]:text-2xl [&_h2]:md:text-3xl
+                  [&_h2]:text-foreground [&_h2]:tracking-[-0.02em]
+                  [&_h2]:mt-10 [&_h2]:mb-4
+                  [&_h3]:font-display [&_h3]:text-xl [&_h3]:text-foreground
+                  [&_h3]:tracking-[-0.01em] [&_h3]:mt-8 [&_h3]:mb-3
+                  [&_p]:font-body [&_p]:text-base [&_p]:leading-8
+                  [&_p]:text-muted [&_p]:mb-0
+                  [&_strong]:text-foreground [&_strong]:font-semibold
+                  [&_em]:font-display [&_em]:italic [&_em]:text-foreground/80
+                  [&_ul]:space-y-3 [&_ul]:my-4
+                  [&_li]:text-muted [&_li]:leading-7 [&_li]:pl-2
+                  [&_li]:before:content-['+'] [&_li]:before:text-gold
+                  [&_li]:before:mr-3 [&_li]:before:font-bold
+                  [&_li]:list-none
+                  [&_a]:text-gold [&_a]:no-underline
+                  hover:[&_a]:underline [&_a]:underline-offset-2
+                  [&_blockquote]:border-l-2 [&_blockquote]:border-gold
+                  [&_blockquote]:pl-6 [&_blockquote]:my-8
+                  [&_blockquote]:font-display [&_blockquote]:italic
+                  [&_blockquote]:text-xl [&_blockquote]:text-muted
+                  [&_img]:rounded-2xl [&_img]:w-full [&_img]:my-8"
                 dangerouslySetInnerHTML={{
                   __html: sanitizeArticleHtml(article.content),
                 }}
