@@ -1,46 +1,54 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function SmoothScroll() {
+  const pathname = usePathname();
+
   useEffect(() => {
-    let frameId = 0;
-    let disposed = false;
     let lenis:
       | {
           raf: (time: number) => void;
           destroy: () => void;
+          scrollTo: (target: number) => void;
         }
       | undefined;
+    let frameId = 0;
+    let disposed = false;
 
-    async function initLenis() {
-      const LenisClass = (await import("lenis")).default;
+    async function init() {
+      try {
+        const LenisClass = (await import("lenis")).default;
+        if (disposed) return;
 
-      if (disposed) return;
+        lenis = new LenisClass({
+          duration: 1.2,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+          touchMultiplier: 2,
+        });
 
-      lenis = new LenisClass({
-        duration: 1.4,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-      });
+        function raf(time: number) {
+          if (disposed || !lenis) return;
+          lenis.raf(time);
+          frameId = requestAnimationFrame(raf);
+        }
 
-      function raf(time: number) {
-        if (!lenis || disposed) return;
-        lenis.raf(time);
         frameId = requestAnimationFrame(raf);
+      } catch (err) {
+        console.error("Lenis init failed:", err);
       }
-
-      frameId = requestAnimationFrame(raf);
     }
 
-    initLenis();
+    init();
 
     return () => {
       disposed = true;
       cancelAnimationFrame(frameId);
       lenis?.destroy();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
