@@ -5,6 +5,9 @@ import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
 import { Button } from "@/components/ui/button";
 import { requireAdmin } from "@/lib/server/auth";
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Admin",
   description: "Internal administration for The Only Retreats",

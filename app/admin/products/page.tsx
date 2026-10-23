@@ -8,6 +8,8 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
 import { listProducts } from "@/lib/services/products";
 
+export const revalidate = 30;
+
 export default async function AdminProductsPage() {
   async function deleteProductAction(formData: FormData) {
     "use server";
