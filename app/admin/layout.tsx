@@ -21,6 +21,7 @@ const navigation = [
   { href: "/admin/orders", label: "Orders", section: "OPERATIONS" },
   { href: "/admin/customers", label: "Customers", section: "OPERATIONS" },
   { href: "/admin/content", label: "Content", section: "EDITORIAL" },
+  { href: "/admin/articles", label: "Articles", section: "EDITORIAL" },
   { href: "/admin/settings", label: "Settings", section: "SYSTEM" },
 ];
 
