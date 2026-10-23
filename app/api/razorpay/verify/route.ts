@@ -107,6 +107,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("Starting customer lookup...");
+
     const razorpayOrder = await razorpay.orders.fetch(razorpay_order_id);
     const razorpayPayment = await razorpay.payments.fetch(razorpay_payment_id);
     const existingPaymentResult =
@@ -174,47 +176,75 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    console.log("Customer found/created:", customer?.id);
+
     const order = await returnExistingPaymentOnConflict(
       () =>
         prisma.$transaction(async (tx) => {
-          const shippingAddress = await tx.customerAddress.create({
-            data: {
-              customerId: customer.id,
-              fullName: customerDetails.fullName,
-              line1: customerDetails.addressLine1,
-              line2: customerDetails.addressLine2 || "",
-              city: customerDetails.city,
-              state: customerDetails.state,
-              postalCode: customerDetails.pincode,
-              country: "IN",
-            },
-          });
-
-          const order = await tx.order.create({
-            data: {
-              orderNumber,
-              customerId: customer.id,
-              status: "CONFIRMED",
-              paymentStatus: "CAPTURED",
-              fulfillmentStatus: "UNFULFILLED",
-              currency,
-              subtotal: pricing.subtotal,
-              couponCode: pricing.couponCode,
-              discountAmount: pricing.discountAmount,
-              shippingAmount: 0,
-              taxAmount: 0,
-              total: pricing.total,
-              shippingAddressId: shippingAddress.id,
-              items: {
-                create: pricing.items.map((item) => ({
-                  productVariantId: item.variantId,
-                  quantity: item.quantity,
-                  unitPrice: item.unitPrice,
-                  totalAmount: item.unitPrice * item.quantity,
-                })),
+          let shippingAddress;
+          try {
+            shippingAddress = await tx.customerAddress.create({
+              data: {
+                customerId: customer.id,
+                fullName: customerDetails.fullName,
+                line1: customerDetails.addressLine1,
+                line2: customerDetails.addressLine2 || "",
+                city: customerDetails.city,
+                state: customerDetails.state,
+                postalCode: customerDetails.pincode,
+                country: "IN",
               },
-            },
-          });
+            });
+            console.log("Shipping address created:", shippingAddress?.id);
+            console.log("Address created:", shippingAddress.id);
+          } catch (addrErr) {
+            console.error("Address creation failed:", addrErr);
+            throw addrErr;
+          }
+
+          const requestItems = Array.isArray(body.items) ? body.items : [];
+          console.log(
+            "Creating order with items:",
+            requestItems.length,
+            "items",
+          );
+          console.log(
+            "First item variantId:",
+            (requestItems[0] as { variantId?: unknown } | undefined)?.variantId,
+          );
+
+          let order;
+          try {
+            order = await tx.order.create({
+              data: {
+                orderNumber,
+                customerId: customer.id,
+                status: "CONFIRMED",
+                paymentStatus: "CAPTURED",
+                fulfillmentStatus: "UNFULFILLED",
+                currency,
+                subtotal: pricing.subtotal,
+                couponCode: pricing.couponCode,
+                discountAmount: pricing.discountAmount,
+                shippingAmount: 0,
+                taxAmount: 0,
+                total: pricing.total,
+                shippingAddressId: shippingAddress.id,
+                items: {
+                  create: pricing.items.map((item) => ({
+                    productVariantId: item.variantId,
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    totalAmount: item.unitPrice * item.quantity,
+                  })),
+                },
+              },
+            });
+            console.log("Order created:", order.orderNumber);
+          } catch (orderErr) {
+            console.error("Order creation failed:", orderErr);
+            throw orderErr;
+          }
 
           await tx.payment.create({
             data: {
