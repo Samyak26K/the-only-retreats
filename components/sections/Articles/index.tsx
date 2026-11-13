@@ -23,9 +23,9 @@ export async function ArticlesSection() {
   if (articles.length === 0) return null;
 
   return (
-    <section className="bg-background py-16 md:py-24">
+    <section className="bg-background py-12 md:py-16">
       <Container>
-        <div className="mb-10 flex items-end justify-between">
+        <div className="mb-8 flex items-end justify-between">
           <div>
             <p className="mb-2 text-[0.6rem] uppercase tracking-[0.24em] text-gold">
               From Our Journal

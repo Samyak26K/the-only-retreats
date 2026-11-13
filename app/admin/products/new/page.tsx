@@ -2,19 +2,86 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
-import { Button } from "@/components/ui/button";
+import {
+  AdminForm,
+  SubmitButton,
+  type AdminFormState,
+} from "@/components/admin/AdminForm";
+import { VariantFields } from "@/components/admin/VariantFields";
 import { Heading } from "@/components/ui/Heading";
-import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
-import { createProduct } from "@/lib/services/products";
+import {
+  formText,
+  getDefaultInventoryLocationId,
+  revalidateProductPages,
+  slugify,
+  toAdminErrorMessage,
+  upsertCategoryByName,
+  validateImageUrl,
+} from "@/lib/server/product-admin";
+import {
+  createProductWithDetails,
+  type NewProductDetails,
+} from "@/lib/services/products";
 import { productCreateSchema } from "@/lib/validation/service-schemas";
 
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+const INITIAL_VARIANT_STOCK = 50;
+
+function readVariants(
+  formData: FormData,
+  productSlug: string,
+): NewProductDetails["variants"] | string {
+  const indices = Array.from(
+    new Set(
+      Array.from(formData.keys())
+        .map((key) => /^variant_(\d+)_label$/.exec(key)?.[1])
+        .filter((index): index is string => index !== undefined),
+    ),
+  );
+
+  const variants: NewProductDetails["variants"] = [];
+  for (const i of indices) {
+    const name = formText(formData, `variant_${i}_label`);
+    const priceText = formText(formData, `variant_${i}_price`);
+    if (!name || !priceText) {
+      continue;
+    }
+
+    const sellingPrice = Number(priceText);
+    const mrpText = formText(formData, `variant_${i}_mrp`);
+    const mrp = mrpText ? Number(mrpText) : sellingPrice;
+    const qtyText = formText(formData, `variant_${i}_qty`);
+    const netQuantity = qtyText ? Number(qtyText) : null;
+
+    if (
+      !Number.isFinite(sellingPrice) ||
+      sellingPrice < 0 ||
+      !Number.isFinite(mrp) ||
+      mrp < 0 ||
+      (netQuantity !== null && !Number.isFinite(netQuantity))
+    ) {
+      return `Variant "${name}" has an invalid price, MRP or quantity.`;
+    }
+
+    variants.push({
+      name,
+      sku:
+        formText(formData, `variant_${i}_sku`) ??
+        `${productSlug}-${slugify(name) || "variant"}-${i}`,
+      sellingPrice,
+      mrp,
+      netQuantity,
+      unit: formText(formData, `variant_${i}_unit`) ?? null,
+      isDefault: formData.get(`variant_${i}_default`) === "on",
+    });
+  }
+
+  const skus = variants.map((variant) => variant.sku.toLowerCase());
+  if (new Set(skus).size !== skus.length) {
+    return "Two variants share the same SKU. Each SKU must be unique.";
+  }
+
+  return variants;
 }
 
 export default async function NewProductPage() {
@@ -26,180 +93,98 @@ export default async function NewProductPage() {
     return <AdminAccessRequired />;
   }
 
-  async function createProductAction(formData: FormData) {
+  async function createProductAction(
+    _state: AdminFormState,
+    formData: FormData,
+  ): Promise<AdminFormState> {
     "use server";
 
-    if (!adminContext) {
-      throw new Error("Unauthorized");
+    const writeAdminContext = await requirePermission("products.write").catch(
+      () => null,
+    );
+    if (!writeAdminContext) {
+      return { error: "You do not have permission to create products." };
     }
 
-    const categoryInput = ((formData.get("category") as string) ?? "").trim();
-    let categoryId: string | undefined;
+    const name = formText(formData, "name");
+    if (!name) {
+      return { error: "Product name is required." };
+    }
+    // Normalise whatever the admin typed ("Wild Honey 500g" -> "wild-honey-500g").
+    const slug = slugify(formText(formData, "slug") ?? name);
+    if (!slug) {
+      return { error: "Could not build a URL slug from the name. Add a slug." };
+    }
 
-    if (categoryInput) {
-      const categorySlug = slugify(categoryInput);
-
-      if (categorySlug) {
-        const categoryRecord = await prisma.category.upsert({
-          where: { slug: categorySlug },
-          update: { name: categoryInput },
-          create: { name: categoryInput, slug: categorySlug },
-        });
-        categoryId = categoryRecord.id;
+    const imageUrls: string[] = [];
+    for (const key of ["heroImageUrl", "image2Url", "image3Url"]) {
+      const raw = formText(formData, key);
+      if (!raw) continue;
+      const url = validateImageUrl(raw);
+      if (!url) {
+        return {
+          error: `Image URL "${raw}" must be an https://res.cloudinary.com/... link.`,
+        };
       }
+      imageUrls.push(url);
     }
 
-    const raw = {
-      name: formData.get("name"),
-      slug: formData.get("slug") || undefined,
-      brand: formData.get("brand") || undefined,
-      categoryId,
-      shortDescription: formData.get("shortDescription") || undefined,
-      longDescription: formData.get("longDescription") || undefined,
-      status: formData.get("status"),
-      featured: formData.get("featured") === "on",
-      currency: formData.get("currency") || "INR",
-      mrp: formData.get("mrp") || undefined,
-      sellingPrice: formData.get("sellingPrice") || undefined,
-      seoTitle: formData.get("seoTitle") || undefined,
-      seoDescription: formData.get("seoDescription") || undefined,
-    };
+    const variants = readVariants(formData, slug);
+    if (typeof variants === "string") {
+      return { error: variants };
+    }
 
-    const parsed = productCreateSchema.safeParse(raw);
+    let createdId: string;
+    try {
+      // Independent lookups run together; the product itself is one nested write.
+      const [categoryId, inventoryLocationId] = await Promise.all([
+        upsertCategoryByName(formText(formData, "category")),
+        variants.length > 0 ? getDefaultInventoryLocationId() : "",
+      ]);
 
-    if (!parsed.success) {
-      console.error("Validation errors:", parsed.error.flatten());
-      throw new Error(
-        "Validation failed: " + JSON.stringify(parsed.error.flatten()),
+      const parsed = productCreateSchema.parse({
+        name,
+        slug,
+        brand: formText(formData, "brand"),
+        categoryId,
+        shortDescription: formText(formData, "shortDescription"),
+        longDescription: formText(formData, "longDescription"),
+        status: formText(formData, "status"),
+        featured: formData.get("featured") === "on",
+        currency: formText(formData, "currency") ?? "INR",
+        mrp: formText(formData, "mrp"),
+        sellingPrice: formText(formData, "sellingPrice"),
+        seoTitle: formText(formData, "seoTitle"),
+        seoDescription: formText(formData, "seoDescription"),
+      });
+
+      const altitude = formText(formData, "altitude");
+      const region = formText(formData, "primaryOriginText");
+
+      const created = await createProductWithDetails(
+        parsed,
+        {
+          passport: altitude || region ? { altitude, region } : undefined,
+          imageUrls,
+          variants,
+          inventoryLocationId,
+          initialStock: INITIAL_VARIANT_STOCK,
+        },
+        {
+          actor: {
+            id: writeAdminContext.adminUserId,
+            email: writeAdminContext.email,
+            role: writeAdminContext.roleName,
+          },
+        },
       );
+      createdId = created.id;
+    } catch (error) {
+      return { error: toAdminErrorMessage(error) };
     }
 
-    const primaryOriginText = formData.get("primaryOriginText") as string;
-    const altitude = formData.get("altitude") as string;
-
-    const createdProduct = await createProduct(parsed.data, {
-      actor: {
-        id: adminContext.adminUserId,
-        email: adminContext.email,
-        role: adminContext.roleName,
-      },
-    });
-
-    if (altitude || primaryOriginText) {
-      await prisma.productPassport.upsert({
-        where: { productId: createdProduct.id },
-        update: {
-          altitude: altitude || undefined,
-          region: primaryOriginText || undefined,
-        },
-        create: {
-          productId: createdProduct.id,
-          altitude: altitude || "",
-          region: primaryOriginText || "",
-        },
-      });
-    }
-
-    const imageUrls = [
-      formData.get("heroImageUrl"),
-      formData.get("image2Url"),
-      formData.get("image3Url"),
-    ].filter(
-      (url): url is string => typeof url === "string" && url.trim().length > 0,
-    );
-
-    if (imageUrls.length > 0) {
-      await prisma.productMedia.createMany({
-        data: imageUrls.map((url, index) => ({
-          productId: createdProduct.id,
-          type: "image",
-          url: url.trim(),
-          alt: parsed.data.name,
-          sortOrder: index,
-        })),
-      });
-    }
-
-    const variantIndices = Array.from(
-      new Set(
-        Array.from(formData.keys())
-          .map((key) => {
-            const match = /^variant_(\d+)_label$/.exec(key);
-            return match ? Number(match[1]) : null;
-          })
-          .filter((index): index is number => index !== null),
-      ),
-    );
-
-    for (const i of variantIndices) {
-      const variantLabel = (
-        (formData.get(`variant_${i}_label`) as string) ?? ""
-      ).trim();
-      const variantSku = (
-        (formData.get(`variant_${i}_sku`) as string) ?? ""
-      ).trim();
-      const variantPrice = formData.get(`variant_${i}_price`) as string;
-      const variantMrp = formData.get(`variant_${i}_mrp`) as string;
-      const variantQty = formData.get(`variant_${i}_qty`) as string;
-      const variantUnit = (
-        (formData.get(`variant_${i}_unit`) as string) ?? ""
-      ).trim();
-      const isDefault = formData.get(`variant_${i}_default`) === "on";
-
-      if (!variantLabel || !variantPrice) {
-        continue;
-      }
-
-      const sellingPrice = parseFloat(variantPrice);
-      const mrp = variantMrp ? parseFloat(variantMrp) : sellingPrice;
-
-      const createdVariant = await prisma.productVariant.create({
-        data: {
-          productId: createdProduct.id,
-          name: variantLabel,
-          sku:
-            variantSku ||
-            `${createdProduct.slug}-${slugify(variantLabel) || "variant"}-${i}`,
-          sellingPrice,
-          mrp,
-          netQuantity: variantQty ? parseFloat(variantQty) : null,
-          unit: variantUnit || null,
-          isDefault,
-          status: "ACTIVE",
-        },
-      });
-
-      const location =
-        (await prisma.inventoryLocation.findFirst({
-          where: { isActive: true },
-        })) ??
-        (await prisma.inventoryLocation.create({
-          data: {
-            name: "Main Warehouse",
-            type: "warehouse",
-            isActive: true,
-          },
-        }));
-
-      await prisma.inventoryItem.upsert({
-        where: {
-          productVariantId_inventoryLocationId: {
-            productVariantId: createdVariant.id,
-            inventoryLocationId: location.id,
-          },
-        },
-        update: {},
-        create: {
-          productVariantId: createdVariant.id,
-          inventoryLocationId: location.id,
-          quantityOnHand: 50,
-          quantityReserved: 0,
-          status: "ACTIVE",
-        },
-      });
-    }
-
-    redirect("/admin/products");
+    revalidateProductPages();
+    redirect(`/admin/products/${createdId}?success=product_created`);
   }
 
   return (
@@ -210,7 +195,7 @@ export default async function NewProductPage() {
         alignment="left"
       />
 
-      <form action={createProductAction} className="space-y-8">
+      <AdminForm action={createProductAction} className="space-y-8">
         <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
           <h2 className="font-heading text-base font-semibold text-foreground">
             Basic Information
@@ -424,93 +409,7 @@ export default async function NewProductPage() {
             units of inventory automatically.
           </p>
 
-          <div id="variants-container" className="space-y-4" />
-
-          <input
-            type="hidden"
-            name="variantCount"
-            id="variantCount"
-            value="0"
-          />
-
-          <button
-            type="button"
-            id="addVariant"
-            className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm text-muted transition-colors hover:border-gold hover:text-foreground"
-          >
-            + Add Variant
-          </button>
-
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-            let count = 0;
-            document.getElementById('addVariant').addEventListener('click', function() {
-              const container = document.getElementById('variants-container');
-              const row = document.createElement('div');
-              row.className = 'grid gap-3 md:grid-cols-6 p-4 rounded-xl border border-border bg-surface relative';
-              row.innerHTML = \`
-                <label class="space-y-1 md:col-span-2">
-                  <span class="text-xs font-medium text-foreground">Label *</span>
-                  <input name="variant_\${count}_label" type="text"
-                    placeholder="e.g. 250g, 500ml, 1kg" required
-                    class="w-full rounded-lg border border-border bg-background
-                    px-3 py-2 text-sm focus:outline-none focus:border-gold" />
-                </label>
-                <label class="space-y-1">
-                  <span class="text-xs font-medium text-foreground">SKU</span>
-                  <input name="variant_\${count}_sku" type="text"
-                    placeholder="TOR-HNY-250"
-                    class="w-full rounded-lg border border-border bg-background
-                    px-3 py-2 text-sm focus:outline-none focus:border-gold" />
-                </label>
-                <label class="space-y-1">
-                  <span class="text-xs font-medium text-foreground">Price *</span>
-                  <input name="variant_\${count}_price" type="number" step="0.01"
-                    placeholder="0.00" required
-                    class="w-full rounded-lg border border-border bg-background
-                    px-3 py-2 text-sm focus:outline-none focus:border-gold" />
-                </label>
-                <label class="space-y-1">
-                  <span class="text-xs font-medium text-foreground">MRP</span>
-                  <input name="variant_\${count}_mrp" type="number" step="0.01"
-                    placeholder="0.00"
-                    class="w-full rounded-lg border border-border bg-background
-                    px-3 py-2 text-sm focus:outline-none focus:border-gold" />
-                </label>
-                <label class="space-y-1">
-                  <span class="text-xs font-medium text-foreground">Qty & Unit</span>
-                  <div class="flex gap-1">
-                    <input name="variant_\${count}_qty" type="number"
-                      placeholder="250"
-                      class="w-16 rounded-lg border border-border bg-background
-                      px-2 py-2 text-sm focus:outline-none focus:border-gold" />
-                    <input name="variant_\${count}_unit" type="text"
-                      placeholder="g"
-                      class="flex-1 rounded-lg border border-border bg-background
-                      px-2 py-2 text-sm focus:outline-none focus:border-gold" />
-                  </div>
-                </label>
-                <div class="md:col-span-6 flex items-center justify-between">
-                  <label class="flex items-center gap-2 text-sm text-foreground">
-                    <input name="variant_\${count}_default" type="checkbox" />
-                    Default variant
-                  </label>
-                  <button type="button" onclick="this.closest('div.grid').remove();
-                    document.getElementById('variantCount').value =
-                    document.getElementById('variants-container').children.length;"
-                    class="text-xs text-muted hover:text-red-500 transition-colors">
-                    Remove
-                  </button>
-                </div>
-              \`;
-              container.appendChild(row);
-              count++;
-              document.getElementById('variantCount').value = count;
-            });
-          `,
-            }}
-          />
+          <VariantFields />
         </section>
 
         <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
@@ -570,9 +469,9 @@ export default async function NewProductPage() {
         </section>
 
         <div className="flex gap-3 pb-8">
-          <Button type="submit" className="px-8">
+          <SubmitButton className="px-8" pendingLabel="Creating product…">
             Save Product
-          </Button>
+          </SubmitButton>
           <Link
             href="/admin/products"
             className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface"
@@ -580,7 +479,7 @@ export default async function NewProductPage() {
             Cancel
           </Link>
         </div>
-      </form>
+      </AdminForm>
     </div>
   );
 }

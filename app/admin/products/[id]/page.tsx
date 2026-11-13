@@ -3,10 +3,23 @@ import { redirect, notFound } from "next/navigation";
 import { z } from "zod";
 
 import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
-import { Button } from "@/components/ui/button";
+import {
+  AdminForm,
+  SubmitButton,
+  type AdminFormState,
+} from "@/components/admin/AdminForm";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
+import {
+  formText,
+  getDefaultInventoryLocationId,
+  revalidateProductPages,
+  slugify,
+  toAdminErrorMessage,
+  upsertCategoryByName,
+  validateImageUrl,
+} from "@/lib/server/product-admin";
 import { getProductById, updateProduct } from "@/lib/services/products";
 import {
   createVariant,
@@ -39,6 +52,8 @@ function toFeedbackMessage(value: string | undefined) {
   }
 
   const messages: Record<string, string> = {
+    product_created:
+      "Product created. You can add more images and variants below.",
     variant_created: "Variant created successfully.",
     variant_updated: "Variant updated successfully.",
     variant_deactivated: "Variant deactivated successfully.",
@@ -56,50 +71,28 @@ function toFeedbackMessage(value: string | undefined) {
   return messages[value] ?? "Operation could not be completed.";
 }
 
-type ProductEditValues = {
-  name: string;
-  slug: string;
-  brand: string;
-  shortDescription: string;
-  longDescription: string;
-  status: string;
-  featured: boolean;
-  currency: string;
-  mrp: string;
-  sellingPrice: string;
-  seoTitle: string;
-  seoDescription: string;
-};
+// Each "Save Changes" form posts only its own fields; anything not posted is
+// left unchanged (previously every form re-posted all fields as hidden inputs,
+// which wrote mrp/sellingPrice = 0 for products without a base price).
+const PRODUCT_TEXT_FIELDS = [
+  "name",
+  "brand",
+  "shortDescription",
+  "longDescription",
+  "status",
+  "currency",
+  "seoTitle",
+  "seoDescription",
+] as const;
 
-function HiddenProductFields({
-  values,
-  exclude,
-}: {
-  values: ProductEditValues;
-  exclude: Array<keyof ProductEditValues>;
-}) {
-  const skip = new Set(exclude);
+function revalidateAfterProductChange(productId: string) {
+  revalidatePath(`/admin/products/${productId}`);
+  revalidatePath("/admin/products");
+  revalidateProductPages();
+}
 
-  return (
-    <>
-      {(Object.keys(values) as Array<keyof ProductEditValues>)
-        .filter(
-          (key): key is Exclude<keyof ProductEditValues, "featured"> =>
-            key !== "featured" && !skip.has(key),
-        )
-        .map((key) => (
-          <input
-            key={key}
-            type="hidden"
-            name={key}
-            value={String(values[key] ?? "")}
-          />
-        ))}
-      {!skip.has("featured") && values.featured ? (
-        <input type="hidden" name="featured" value="on" />
-      ) : null}
-    </>
-  );
+function requireWriteOrNull() {
+  return requirePermission("products.write").catch(() => null);
 }
 
 export default async function AdminProductDetailPage({
@@ -121,16 +114,37 @@ export default async function AdminProductDetailPage({
     return <AdminAccessRequired />;
   }
 
-  const product = await getProductById(id);
-  const variants = await listVariants(id);
+  // Independent reads in one round trip (was four sequential awaits).
+  const [product, variants, media, productExtras, resolvedSearchParams] =
+    await Promise.all([
+      getProductById(id),
+      listVariants(id),
+      prisma.productMedia.findMany({
+        where: { productId: id },
+        orderBy: { sortOrder: "asc" },
+      }),
+      prisma.product.findUnique({
+        where: { id },
+        select: {
+          seoTitle: true,
+          seoDescription: true,
+          passport: {
+            select: {
+              altitude: true,
+              region: true,
+            },
+          },
+        },
+      }),
+      searchParams ?? Promise.resolve(undefined),
+    ]);
 
-  const resolvedSearchParams = searchParams ? await searchParams : {};
   const successKey =
-    typeof resolvedSearchParams.success === "string"
+    typeof resolvedSearchParams?.success === "string"
       ? resolvedSearchParams.success
       : undefined;
   const errorKey =
-    typeof resolvedSearchParams.error === "string"
+    typeof resolvedSearchParams?.error === "string"
       ? resolvedSearchParams.error
       : undefined;
   const successMessage = toFeedbackMessage(successKey);
@@ -140,104 +154,168 @@ export default async function AdminProductDetailPage({
     notFound();
   }
 
-  const [media, productExtras] = await Promise.all([
-    prisma.productMedia.findMany({
-      where: { productId: id },
-      orderBy: { sortOrder: "asc" },
-    }),
-    prisma.product.findUnique({
-      where: { id },
-      select: {
-        seoTitle: true,
-        seoDescription: true,
-        passport: {
-          select: {
-            altitude: true,
-            region: true,
-          },
-        },
-      },
-    }),
-  ]);
-
-  const editValues: ProductEditValues = {
-    name: product.name,
-    slug: product.slug,
-    brand: product.brand ?? "",
-    shortDescription: product.shortDescription ?? "",
-    longDescription: product.longDescription ?? "",
-    status: product.status,
-    featured: product.featured,
-    currency: product.currency,
-    mrp: product.mrp?.toString() ?? "",
-    sellingPrice: product.sellingPrice?.toString() ?? "",
-    seoTitle: productExtras?.seoTitle ?? "",
-    seoDescription: productExtras?.seoDescription ?? "",
-  };
-
-  async function updateProductAction(formData: FormData) {
+  async function updateProductAction(
+    _state: AdminFormState,
+    formData: FormData,
+  ): Promise<AdminFormState> {
     "use server";
 
-    const writeAdminContext = await requirePermission("products.write");
-
-    const raw = {
-      name: formData.get("name"),
-      slug: formData.get("slug"),
-      brand: formData.get("brand"),
-      shortDescription: formData.get("shortDescription"),
-      longDescription: formData.get("longDescription"),
-      status: formData.get("status"),
-      featured: formData.get("featured") === "on",
-      currency: formData.get("currency"),
-      mrp: formData.get("mrp"),
-      sellingPrice: formData.get("sellingPrice"),
-      seoTitle: formData.get("seoTitle"),
-      seoDescription: formData.get("seoDescription"),
-    };
-
-    const parsed = productUpdateSchema.safeParse(raw);
-
-    if (!parsed.success) {
-      throw new Error("Validation failed");
+    const writeAdminContext = await requireWriteOrNull();
+    if (!writeAdminContext) {
+      return { error: "You do not have permission to edit products." };
     }
 
-    const updatedProduct = await updateProduct(id, parsed.data, {
-      actor: {
-        id: writeAdminContext.adminUserId,
-        email: writeAdminContext.email,
-        role: writeAdminContext.roleName,
-      },
-    });
+    const isBasicSection = formData.get("_section") === "basic";
+    const raw: Record<string, unknown> = {};
+    for (const key of PRODUCT_TEXT_FIELDS) {
+      if (formData.has(key)) {
+        raw[key] = String(formData.get(key) ?? "").trim();
+      }
+    }
+    if (formData.has("slug")) {
+      const slug = slugify(String(formData.get("slug") ?? ""));
+      if (!slug) {
+        return { error: "Slug cannot be empty." };
+      }
+      raw.slug = slug;
+    }
+    if (isBasicSection) {
+      raw.featured = formData.get("featured") === "on";
+    }
 
-    revalidatePath(`/products/${updatedProduct.slug}`);
-    revalidatePath("/products");
+    const parsed = productUpdateSchema.safeParse(raw);
+    if (!parsed.success) {
+      return { error: toAdminErrorMessage(parsed.error) };
+    }
+
+    try {
+      const categoryId = isBasicSection
+        ? await upsertCategoryByName(formText(formData, "category"))
+        : undefined;
+      const passport = {
+        altitude: formText(formData, "altitude") ?? "",
+        region: formText(formData, "primaryOriginText") ?? "",
+      };
+
+      await Promise.all([
+        updateProduct(
+          id,
+          { ...parsed.data, ...(categoryId ? { categoryId } : {}) },
+          {
+            actor: {
+              id: writeAdminContext.adminUserId,
+              email: writeAdminContext.email,
+              role: writeAdminContext.roleName,
+            },
+          },
+        ),
+        // Valley/altitude live on the passport; they were previously ignored.
+        isBasicSection
+          ? prisma.productPassport.upsert({
+              where: { productId: id },
+              update: passport,
+              create: { productId: id, ...passport },
+            })
+          : null,
+      ]);
+    } catch (error) {
+      return { error: toAdminErrorMessage(error) };
+    }
+
+    revalidateAfterProductChange(id);
+    return { success: "Saved. The storefront has been refreshed." };
   }
 
-  async function addImageAction(formData: FormData) {
+  async function addImageAction(
+    _state: AdminFormState,
+    formData: FormData,
+  ): Promise<AdminFormState> {
     "use server";
 
-    await requirePermission("products.write");
+    if (!(await requireWriteOrNull())) {
+      return { error: "You do not have permission to edit products." };
+    }
 
-    const url = formData.get("url") as string;
-    const alt = formData.get("alt") as string;
+    const url = validateImageUrl(String(formData.get("url") ?? ""));
+    if (!url) {
+      return {
+        error: "Image URL must be an https://res.cloudinary.com/... link.",
+      };
+    }
 
-    if (!url?.trim()) return;
+    try {
+      const { _max } = await prisma.productMedia.aggregate({
+        where: { productId: id },
+        _max: { sortOrder: true },
+      });
+      await prisma.productMedia.create({
+        data: {
+          productId: id,
+          type: "image",
+          url,
+          alt: formText(formData, "alt") ?? null,
+          sortOrder: (_max.sortOrder ?? -1) + 1,
+        },
+      });
+    } catch (error) {
+      return { error: toAdminErrorMessage(error) };
+    }
 
-    const existingCount = await prisma.productMedia.count({
-      where: { productId: id },
+    revalidateAfterProductChange(id);
+    return { success: "Image added." };
+  }
+
+  async function replaceImageAction(
+    _state: AdminFormState,
+    formData: FormData,
+  ): Promise<AdminFormState> {
+    "use server";
+
+    if (!(await requireWriteOrNull())) {
+      return { error: "You do not have permission to edit products." };
+    }
+
+    const mediaId = formText(formData, "mediaId");
+    const url = validateImageUrl(String(formData.get("url") ?? ""));
+    if (!mediaId || !url) {
+      return {
+        error: "Image URL must be an https://res.cloudinary.com/... link.",
+      };
+    }
+
+    const { count } = await prisma.productMedia.updateMany({
+      where: { id: mediaId, productId: id },
+      data: { url },
+    });
+    if (count === 0) {
+      return { error: "That image no longer exists. Refresh the page." };
+    }
+
+    revalidateAfterProductChange(id);
+    return { success: "Image replaced." };
+  }
+
+  async function deleteImageAction(
+    _state: AdminFormState,
+    formData: FormData,
+  ): Promise<AdminFormState> {
+    "use server";
+
+    if (!(await requireWriteOrNull())) {
+      return { error: "You do not have permission to edit products." };
+    }
+
+    const mediaId = formText(formData, "mediaId");
+    if (!mediaId) {
+      return { error: "Missing image id." };
+    }
+
+    await prisma.productMedia.deleteMany({
+      where: { id: mediaId, productId: id },
     });
 
-    await prisma.productMedia.create({
-      data: {
-        productId: id,
-        type: "image",
-        url: url.trim(),
-        alt: alt?.trim() || null,
-        sortOrder: existingCount,
-      },
-    });
-
-    redirect(`/admin/products/${id}`);
+    revalidateAfterProductChange(id);
+    return { success: "Image removed." };
   }
 
   async function createVariantAction(formData: FormData) {
@@ -270,11 +348,32 @@ export default async function AdminProductDetailPage({
     }
 
     try {
-      await createVariant(id, parsed.data, {
-        actor: {
-          id: writeAdminContext.adminUserId,
-          email: writeAdminContext.email,
-          role: writeAdminContext.roleName,
+      // createVariant returns the new id, so no re-query by name is needed.
+      const [variant, locationId] = await Promise.all([
+        createVariant(id, parsed.data, {
+          actor: {
+            id: writeAdminContext.adminUserId,
+            email: writeAdminContext.email,
+            role: writeAdminContext.roleName,
+          },
+        }),
+        getDefaultInventoryLocationId(),
+      ]);
+
+      await prisma.inventoryItem.upsert({
+        where: {
+          productVariantId_inventoryLocationId: {
+            productVariantId: variant.id,
+            inventoryLocationId: locationId,
+          },
+        },
+        update: {},
+        create: {
+          productVariantId: variant.id,
+          inventoryLocationId: locationId,
+          quantityOnHand: 50,
+          quantityReserved: 0,
+          status: "ACTIVE",
         },
       });
     } catch (error) {
@@ -291,46 +390,7 @@ export default async function AdminProductDetailPage({
       redirect(`/admin/products/${id}?error=variant_create_failed`);
     }
 
-    const location =
-      (await prisma.inventoryLocation.findFirst({
-        where: { isActive: true },
-      })) ??
-      (await prisma.inventoryLocation.create({
-        data: {
-          name: "Main Warehouse",
-          type: "warehouse",
-          isActive: true,
-        },
-      }));
-
-    const variants = await prisma.productVariant.findMany({
-      where: {
-        product: { id },
-        name: parsed.data.name,
-      },
-      orderBy: { createdAt: "desc" },
-      take: 1,
-    });
-
-    if (variants[0]) {
-      await prisma.inventoryItem.upsert({
-        where: {
-          productVariantId_inventoryLocationId: {
-            productVariantId: variants[0].id,
-            inventoryLocationId: location.id,
-          },
-        },
-        update: {},
-        create: {
-          productVariantId: variants[0].id,
-          inventoryLocationId: location.id,
-          quantityOnHand: 50,
-          quantityReserved: 0,
-          status: "ACTIVE",
-        },
-      });
-    }
-
+    revalidateAfterProductChange(id);
     redirect(`/admin/products/${id}?success=variant_created`);
   }
 
@@ -396,6 +456,7 @@ export default async function AdminProductDetailPage({
       redirect(`/admin/products/${id}?error=variant_update_failed`);
     }
 
+    revalidateAfterProductChange(id);
     redirect(`/admin/products/${id}?success=variant_updated`);
   }
 
@@ -437,25 +498,8 @@ export default async function AdminProductDetailPage({
       redirect(`/admin/products/${id}?error=variant_deactivate_failed`);
     }
 
+    revalidateAfterProductChange(id);
     redirect(`/admin/products/${id}?success=variant_deactivated`);
-  }
-
-  async function deleteImageAction(formData: FormData) {
-    "use server";
-
-    await requirePermission("products.write");
-
-    const mediaId = formData.get("mediaId") as string;
-
-    if (!mediaId) {
-      return;
-    }
-
-    await prisma.productMedia.deleteMany({
-      where: { id: mediaId, productId: id },
-    });
-
-    redirect(`/admin/products/${id}`);
   }
 
   return (
@@ -472,7 +516,10 @@ export default async function AdminProductDetailPage({
         </div>
       ) : null}
       {errorMessage ? (
-        <div className="rounded-2xl border border-dashed border-border bg-background p-4 text-sm text-muted">
+        <div
+          role="alert"
+          className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
+        >
           {errorMessage}
         </div>
       ) : null}
@@ -482,11 +529,8 @@ export default async function AdminProductDetailPage({
           Basic Information
         </h2>
 
-        <form action={updateProductAction} className="space-y-4">
-          <HiddenProductFields
-            values={editValues}
-            exclude={["name", "slug", "brand", "status", "featured"]}
-          />
+        <AdminForm action={updateProductAction} className="space-y-4">
+          <input type="hidden" name="_section" value="basic" />
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block space-y-1">
@@ -521,6 +565,11 @@ export default async function AdminProductDetailPage({
                 <option value="Himalayan">Himalayan (TOR Food)</option>
                 <option value="Dhatu">Dhatu (Roots and Ore)</option>
                 <option value="Divya">Divya (Spirituality)</option>
+                {/* Keep legacy brand values selectable so saving doesn't clear them. */}
+                {product.brand &&
+                !["Himalayan", "Dhatu", "Divya"].includes(product.brand) ? (
+                  <option value={product.brand}>{product.brand}</option>
+                ) : null}
               </select>
             </label>
             <label className="block space-y-1">
@@ -616,8 +665,8 @@ export default async function AdminProductDetailPage({
             </label>
           </div>
 
-          <Button type="submit">Save Changes</Button>
-        </form>
+          <SubmitButton>Save Changes</SubmitButton>
+        </AdminForm>
       </section>
 
       <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
@@ -625,12 +674,7 @@ export default async function AdminProductDetailPage({
           Description
         </h2>
 
-        <form action={updateProductAction} className="space-y-4">
-          <HiddenProductFields
-            values={editValues}
-            exclude={["shortDescription", "longDescription"]}
-          />
-
+        <AdminForm action={updateProductAction} className="space-y-4">
           <label className="block space-y-1">
             <span className="text-sm font-medium text-foreground">
               Short Description
@@ -654,8 +698,8 @@ export default async function AdminProductDetailPage({
             />
           </label>
 
-          <Button type="submit">Save Changes</Button>
-        </form>
+          <SubmitButton>Save Changes</SubmitButton>
+        </AdminForm>
       </section>
 
       <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
@@ -664,37 +708,59 @@ export default async function AdminProductDetailPage({
         </h2>
 
         {media.length > 0 ? (
-          <div className="flex gap-3 overflow-x-auto pb-1">
-            {media.map((item) => (
-              <div key={item.id} className="relative shrink-0">
+          <ul className="space-y-3">
+            {media.map((item, index) => (
+              <li
+                key={item.id}
+                className="flex flex-col gap-3 rounded-xl border border-border p-3 sm:flex-row sm:items-start"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.url}
                   alt={item.alt ?? ""}
-                  className="h-20 w-20 rounded-lg object-cover"
+                  className="h-20 w-20 shrink-0 rounded-lg object-cover"
                 />
-                <form
+                <div className="min-w-0 flex-1 space-y-2">
+                  <p className="text-xs text-muted">
+                    {index === 0 ? "Hero image · " : ""}
+                    <span className="break-all">{item.url}</span>
+                  </p>
+                  <AdminForm
+                    action={replaceImageAction}
+                    className="flex flex-col gap-2 sm:flex-row"
+                  >
+                    <input type="hidden" name="mediaId" value={item.id} />
+                    <input
+                      name="url"
+                      type="text"
+                      required
+                      placeholder="New https://res.cloudinary.com/... URL"
+                      className={inputClassName}
+                    />
+                    <SubmitButton variant="outline" pendingLabel="Replacing…">
+                      Replace
+                    </SubmitButton>
+                  </AdminForm>
+                </div>
+                <AdminForm
                   action={deleteImageAction}
-                  className="absolute -top-1.5 -right-1.5"
+                  confirmMessage="Remove this image from the product?"
                 >
                   <input type="hidden" name="mediaId" value={item.id} />
-                  <button
-                    type="submit"
-                    className="flex h-5 w-5 items-center justify-center rounded-full border border-border bg-background text-xs text-muted hover:border-red-400 hover:text-red-500"
-                    aria-label="Delete image"
-                  >
-                    ×
-                  </button>
-                </form>
-              </div>
+                  <SubmitButton variant="destructive" pendingLabel="Removing…">
+                    Delete
+                  </SubmitButton>
+                </AdminForm>
+              </li>
             ))}
-          </div>
+          </ul>
         ) : (
           <p className="text-xs text-muted">No images yet.</p>
         )}
 
-        <form
+        <AdminForm
           action={addImageAction}
+          resetOnSuccess
           className="space-y-3 border-t border-border pt-4"
         >
           <div className="grid gap-3 md:grid-cols-2">
@@ -722,8 +788,8 @@ export default async function AdminProductDetailPage({
               />
             </label>
           </div>
-          <Button type="submit">Add Image</Button>
-        </form>
+          <SubmitButton pendingLabel="Adding…">Add Image</SubmitButton>
+        </AdminForm>
       </section>
 
       <section className="space-y-4 rounded-2xl border border-border bg-background p-6">
@@ -888,7 +954,7 @@ export default async function AdminProductDetailPage({
                                 Default
                               </label>
                             </div>
-                            <Button type="submit">Save variant</Button>
+                            <SubmitButton>Save variant</SubmitButton>
                           </form>
                         </details>
                         <form action={deactivateVariantAction}>
@@ -998,7 +1064,7 @@ export default async function AdminProductDetailPage({
             />
             Default variant
           </label>
-          <Button type="submit">Add Variant</Button>
+          <SubmitButton pendingLabel="Adding…">Add Variant</SubmitButton>
         </form>
       </section>
 
@@ -1007,12 +1073,7 @@ export default async function AdminProductDetailPage({
           SEO
         </h2>
 
-        <form action={updateProductAction} className="space-y-4">
-          <HiddenProductFields
-            values={editValues}
-            exclude={["seoTitle", "seoDescription"]}
-          />
-
+        <AdminForm action={updateProductAction} className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block space-y-1">
               <span className="text-sm font-medium text-foreground">
@@ -1021,7 +1082,7 @@ export default async function AdminProductDetailPage({
               <input
                 name="seoTitle"
                 type="text"
-                defaultValue={editValues.seoTitle}
+                defaultValue={productExtras?.seoTitle ?? ""}
                 className={inputClassName}
               />
             </label>
@@ -1032,14 +1093,14 @@ export default async function AdminProductDetailPage({
               <input
                 name="seoDescription"
                 type="text"
-                defaultValue={editValues.seoDescription}
+                defaultValue={productExtras?.seoDescription ?? ""}
                 className={inputClassName}
               />
             </label>
           </div>
 
-          <Button type="submit">Save Changes</Button>
-        </form>
+          <SubmitButton>Save Changes</SubmitButton>
+        </AdminForm>
       </section>
     </div>
   );

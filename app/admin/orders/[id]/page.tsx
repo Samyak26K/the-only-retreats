@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { AdminAccessRequired } from "@/components/admin/AdminAccessRequired";
+import { SubmitButton } from "@/components/admin/AdminForm";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { requirePermission } from "@/lib/server/auth";
@@ -261,6 +262,30 @@ export default async function AdminOrderDetailPage({
                   {order!.fulfillmentStatus}
                 </dd>
               </div>
+              <div>
+                <dt className="text-muted">Payment</dt>
+                <dd className="mt-1 break-all text-foreground">
+                  {order!.payments.length === 0
+                    ? "No payment recorded"
+                    : order!.payments.map((payment) => (
+                        <span
+                          key={payment.providerTransactionId ?? payment.status}
+                          className="block"
+                        >
+                          {payment.provider ?? "Payment"}{" "}
+                          {payment.providerTransactionId ?? ""} ·{" "}
+                          {formatCurrency(payment.amount, order!.currency)} ·{" "}
+                          {payment.status}
+                        </span>
+                      ))}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted">Coupon</dt>
+                <dd className="mt-1 text-foreground">
+                  {order!.couponCode ?? "None"}
+                </dd>
+              </div>
             </dl>
           </section>
 
@@ -402,7 +427,9 @@ export default async function AdminOrderDetailPage({
                           </option>
                         ))}
                       </select>
-                      <Button type="submit">Update</Button>
+                      <SubmitButton pendingLabel="Updating…">
+                        Update
+                      </SubmitButton>
                     </div>
                   </label>
                 </form>
@@ -423,7 +450,9 @@ export default async function AdminOrderDetailPage({
                           </option>
                         ))}
                       </select>
-                      <Button type="submit">Update</Button>
+                      <SubmitButton pendingLabel="Updating…">
+                        Update
+                      </SubmitButton>
                     </div>
                   </label>
                 </form>
@@ -447,7 +476,9 @@ export default async function AdminOrderDetailPage({
                           </option>
                         ))}
                       </select>
-                      <Button type="submit">Update</Button>
+                      <SubmitButton pendingLabel="Updating…">
+                        Update
+                      </SubmitButton>
                     </div>
                   </label>
                 </form>

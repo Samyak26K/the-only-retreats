@@ -6,9 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/Heading";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/server/auth";
+import { revalidateProductPages } from "@/lib/server/product-admin";
 import { listProducts } from "@/lib/services/products";
-
-export const revalidate = 30;
 
 export default async function AdminProductsPage() {
   async function deleteProductAction(formData: FormData) {
@@ -20,26 +19,40 @@ export default async function AdminProductsPage() {
     const productId = formData.get("productId");
     if (typeof productId !== "string" || !productId) return;
 
-    await prisma.productMedia.deleteMany({ where: { productId } });
-    await prisma.productPassport.deleteMany({ where: { productId } });
-
-    const variants = await prisma.productVariant.findMany({
-      where: { productId },
-      select: { id: true },
+    // Never delete order line items: a product that has been sold is archived
+    // so past orders keep their items.
+    const orderedCount = await prisma.orderItem.count({
+      where: { productVariant: { productId } },
     });
 
-    for (const variant of variants) {
-      await prisma.inventoryItem.deleteMany({
-        where: { productVariantId: variant.id },
-      });
-      await prisma.orderItem.deleteMany({
-        where: { productVariantId: variant.id },
-      });
+    if (orderedCount > 0) {
+      await prisma.$transaction([
+        prisma.product.update({
+          where: { id: productId },
+          data: { status: "ARCHIVED", featured: false },
+        }),
+        prisma.productVariant.updateMany({
+          where: { productId },
+          data: { status: "DISCONTINUED", isDefault: false },
+        }),
+      ]);
+    } else {
+      await prisma.$transaction([
+        prisma.inventoryMovement.deleteMany({
+          where: { inventoryItem: { productVariant: { productId } } },
+        }),
+        prisma.inventoryItem.deleteMany({
+          where: { productVariant: { productId } },
+        }),
+        prisma.productMedia.deleteMany({ where: { productId } }),
+        prisma.productPassport.deleteMany({ where: { productId } }),
+        prisma.productContentBlock.deleteMany({ where: { productId } }),
+        prisma.productVariant.deleteMany({ where: { productId } }),
+        prisma.product.delete({ where: { id: productId } }),
+      ]);
     }
 
-    await prisma.productVariant.deleteMany({ where: { productId } });
-    await prisma.product.delete({ where: { id: productId } });
-
+    revalidateProductPages();
     redirect("/admin/products");
   }
 

@@ -27,14 +27,15 @@ export default async function EditArticlePage({ params }: Props) {
   if (!adminContext) return <AdminAccessRequired />;
 
   const { id } = await params;
-  const article = await prisma.article.findUnique({ where: { id } });
+  const [article, products] = await Promise.all([
+    prisma.article.findUnique({ where: { id } }),
+    prisma.product.findMany({
+      where: { status: "ACTIVE" },
+      select: { id: true, name: true, slug: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
   if (!article) notFound();
-
-  const products = await prisma.product.findMany({
-    where: { status: "ACTIVE" },
-    select: { id: true, name: true, slug: true },
-    orderBy: { name: "asc" },
-  });
 
   async function updateArticleAction(formData: FormData) {
     "use server";
