@@ -162,6 +162,28 @@ export async function getInventoryMovements(
   }));
 }
 
+/** Movements for many items in one query, grouped by inventory item id. */
+export async function getInventoryMovementsByItem(
+  inventoryItemIds: string[],
+): Promise<Map<string, InventoryMovementRecord[]>> {
+  const grouped = new Map<string, InventoryMovementRecord[]>();
+  if (inventoryItemIds.length === 0) {
+    return grouped;
+  }
+
+  const movements = await prisma.inventoryMovement.findMany({
+    where: { inventoryItemId: { in: inventoryItemIds } },
+    orderBy: { createdAt: "desc" },
+  });
+
+  for (const movement of movements) {
+    const list = grouped.get(movement.inventoryItemId) ?? [];
+    list.push({ ...movement, quantity: Number(movement.quantity) });
+    grouped.set(movement.inventoryItemId, list);
+  }
+  return grouped;
+}
+
 export async function adjustInventory(
   input: unknown,
   options?: {

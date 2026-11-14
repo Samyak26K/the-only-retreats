@@ -10,7 +10,8 @@ import { requirePermission } from "@/lib/server/auth";
 import {
   adjustInventory,
   getInventory,
-  getInventoryMovements,
+  getInventoryMovementsByItem,
+  type InventoryMovementRecord,
 } from "@/lib/services/inventory";
 import { inventoryAdjustmentSchema } from "@/lib/validation/service-schemas";
 
@@ -111,23 +112,10 @@ export default async function AdminInventoryPage({
     error = "Unable to load inventory right now.";
   }
 
-  const movementMap = new Map<
-    string,
-    Awaited<ReturnType<typeof getInventoryMovements>>
-  >();
-
-  if (inventory.length > 0) {
-    const movementResults = await Promise.all(
-      inventory.map(
-        async (item) =>
-          [item.id, await getInventoryMovements(item.id)] as const,
-      ),
-    );
-
-    for (const [inventoryItemId, movements] of movementResults) {
-      movementMap.set(inventoryItemId, movements);
-    }
-  }
+  // One query for all items (was one query per inventory row).
+  const movementMap = await getInventoryMovementsByItem(
+    inventory.map((item) => item.id),
+  ).catch(() => new Map<string, InventoryMovementRecord[]>());
 
   return (
     <div className="space-y-6">

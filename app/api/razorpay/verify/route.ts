@@ -1,30 +1,24 @@
 import crypto from "crypto";
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 
 import { prisma } from "@/lib/prisma";
 import { calculateCheckoutPricing } from "@/lib/services/checkout-pricing";
+import { notifyNewOrder } from "@/lib/services/order-notifications";
+import {
+  createPaidOrder,
+  type CheckoutCustomerDetails,
+} from "@/lib/services/orders";
 import {
   returnExistingPaymentOnConflict,
   type PaymentResult,
 } from "@/lib/services/payment-idempotency";
 
-type CustomerDetails = {
-  fullName: string;
-  email: string;
-  phone: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  state: string;
-  pincode: string;
-};
-
 type VerifyPaymentBody = {
   razorpay_order_id?: unknown;
   razorpay_payment_id?: unknown;
   razorpay_signature?: unknown;
-  customerDetails: CustomerDetails;
+  customerDetails: CheckoutCustomerDetails;
   items?: unknown;
   couponCode?: unknown;
   currency?: unknown;
@@ -107,12 +101,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Starting customer lookup...");
-
-    const razorpayOrder = await razorpay.orders.fetch(razorpay_order_id);
-    const razorpayPayment = await razorpay.payments.fetch(razorpay_payment_id);
-    const existingPaymentResult =
-      await getExistingPaymentResult(razorpay_payment_id);
+    // Independent lookups (two Razorpay API calls + one DB read) in parallel.
+    const [razorpayOrder, razorpayPayment, existingPaymentResult] =
+      await Promise.all([
+        razorpay.orders.fetch(razorpay_order_id),
+        razorpay.payments.fetch(razorpay_payment_id),
+        getExistingPaymentResult(razorpay_payment_id),
+      ]);
     if (existingPaymentResult) {
       if (
         razorpayPayment.order_id !== razorpay_order_id ||
@@ -151,119 +146,21 @@ export async function POST(req: NextRequest) {
     }
 
     const orderNumber = "TOR-" + Date.now();
-
-    let customer = await prisma.customer.findFirst({
-      where: { email: customerDetails.email },
-    });
-
-    if (!customer) {
-      customer = await prisma.customer.create({
-        data: {
-          clerkUserId: "guest-" + Date.now(),
-          email: customerDetails.email,
-          firstName: customerDetails.fullName.split(" ")[0],
-          lastName:
-            customerDetails.fullName.split(" ").slice(1).join(" ") || "",
-          phone: customerDetails.phone,
-        },
-      });
-    }
-
-    if (customer && !customer.phone && customerDetails.phone) {
-      customer = await prisma.customer.update({
-        where: { id: customer.id },
-        data: { phone: customerDetails.phone },
-      });
-    }
-
-    console.log("Customer found/created:", customer?.id);
+    let createdNewOrder = false;
 
     const order = await returnExistingPaymentOnConflict(
-      () =>
-        prisma.$transaction(async (tx) => {
-          let shippingAddress;
-          try {
-            shippingAddress = await tx.customerAddress.create({
-              data: {
-                customerId: customer.id,
-                fullName: customerDetails.fullName,
-                line1: customerDetails.addressLine1,
-                line2: customerDetails.addressLine2 || "",
-                city: customerDetails.city,
-                state: customerDetails.state,
-                postalCode: customerDetails.pincode,
-                country: "IN",
-              },
-            });
-            console.log("Shipping address created:", shippingAddress?.id);
-            console.log("Address created:", shippingAddress.id);
-          } catch (addrErr) {
-            console.error("Address creation failed:", addrErr);
-            throw addrErr;
-          }
-
-          const requestItems = Array.isArray(body.items) ? body.items : [];
-          console.log(
-            "Creating order with items:",
-            requestItems.length,
-            "items",
-          );
-          console.log(
-            "First item variantId:",
-            (requestItems[0] as { variantId?: unknown } | undefined)?.variantId,
-          );
-
-          let order;
-          try {
-            order = await tx.order.create({
-              data: {
-                orderNumber,
-                customerId: customer.id,
-                status: "CONFIRMED",
-                paymentStatus: "CAPTURED",
-                fulfillmentStatus: "UNFULFILLED",
-                currency,
-                subtotal: pricing.subtotal,
-                couponCode: pricing.couponCode,
-                discountAmount: pricing.discountAmount,
-                shippingAmount: 0,
-                taxAmount: 0,
-                total: pricing.total,
-                shippingAddressId: shippingAddress.id,
-                items: {
-                  create: pricing.items.map((item) => ({
-                    productVariantId: item.variantId,
-                    quantity: item.quantity,
-                    unitPrice: item.unitPrice,
-                    totalAmount: item.unitPrice * item.quantity,
-                  })),
-                },
-              },
-            });
-            console.log("Order created:", order.orderNumber);
-          } catch (orderErr) {
-            console.error("Order creation failed:", orderErr);
-            throw orderErr;
-          }
-
-          await tx.payment.create({
-            data: {
-              orderId: order.id,
-              provider: "razorpay",
-              providerTransactionId: razorpay_payment_id,
-              amount: pricing.total,
-              currency,
-              status: "CAPTURED",
-              paymentMethod: "razorpay",
-            },
-          });
-
-          return {
-            success: true as const,
-            orderNumber: order.orderNumber,
-            orderId: order.id,
-          };
-        }),
+      async () => {
+        const result = await createPaidOrder({
+          orderNumber,
+          customerDetails,
+          pricing,
+          currency,
+          provider: "razorpay",
+          providerTransactionId: razorpay_payment_id,
+        });
+        createdNewOrder = true;
+        return result;
+      },
       async () => {
         const existingResult =
           await getExistingPaymentResult(razorpay_payment_id);
@@ -276,6 +173,13 @@ export async function POST(req: NextRequest) {
           : null;
       },
     );
+
+    console.log("Order saved:", order.orderNumber);
+
+    if (createdNewOrder) {
+      // Runs after the response is sent; it can never block or fail the order.
+      after(() => notifyNewOrder(order.orderId));
+    }
 
     return NextResponse.json({
       success: true,

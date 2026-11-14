@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
 import { recordAuditLog } from "@/lib/services/audit";
+import type { CheckoutPricing } from "@/lib/services/checkout-pricing";
 
 export const ORDER_STATUS_VALUES = [
   "PENDING",
@@ -44,6 +45,123 @@ const fulfillmentStatusUpdateSchema = z.object({
   fulfillmentStatus: z.enum(FULFILLMENT_STATUS_VALUES),
 });
 
+export type CheckoutCustomerDetails = {
+  fullName: string;
+  email: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  pincode: string;
+};
+
+/**
+ * Persists a captured payment as an order: customer (find or create), one
+ * address used for shipping and billing, line items and the payment row.
+ * Address, order, items and payment are written in one transaction.
+ */
+export async function createPaidOrder(params: {
+  orderNumber: string;
+  customerDetails: CheckoutCustomerDetails;
+  pricing: CheckoutPricing;
+  currency: string;
+  provider: string;
+  providerTransactionId: string;
+}) {
+  const { customerDetails, pricing, currency } = params;
+  const [firstName, ...rest] = customerDetails.fullName.trim().split(/\s+/);
+
+  let customer = await prisma.customer.findFirst({
+    where: { email: customerDetails.email },
+    select: { id: true, phone: true },
+  });
+
+  if (!customer) {
+    customer = await prisma.customer.create({
+      data: {
+        clerkUserId: "guest-" + Date.now(),
+        email: customerDetails.email,
+        firstName,
+        lastName: rest.join(" "),
+        phone: customerDetails.phone,
+      },
+      select: { id: true, phone: true },
+    });
+  }
+
+  const customerId = customer.id;
+  const backfillPhone = !customer.phone && !!customerDetails.phone;
+
+  return prisma.$transaction(async (tx) => {
+    const address = await tx.customerAddress.create({
+      data: {
+        customerId,
+        type: "shipping",
+        fullName: customerDetails.fullName,
+        line1: customerDetails.addressLine1,
+        line2: customerDetails.addressLine2 || "",
+        city: customerDetails.city,
+        state: customerDetails.state,
+        postalCode: customerDetails.pincode,
+        country: "IN",
+      },
+      select: { id: true },
+    });
+
+    if (backfillPhone) {
+      await tx.customer.update({
+        where: { id: customerId },
+        data: { phone: customerDetails.phone },
+      });
+    }
+
+    const order = await tx.order.create({
+      data: {
+        orderNumber: params.orderNumber,
+        customerId,
+        status: "CONFIRMED",
+        paymentStatus: "CAPTURED",
+        fulfillmentStatus: "UNFULFILLED",
+        currency,
+        subtotal: pricing.subtotal,
+        couponCode: pricing.couponCode,
+        discountAmount: pricing.discountAmount,
+        shippingAmount: 0,
+        taxAmount: 0,
+        total: pricing.total,
+        shippingAddressId: address.id,
+        billingAddressId: address.id,
+        items: {
+          create: pricing.items.map((item) => ({
+            productVariantId: item.variantId,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalAmount: item.unitPrice * item.quantity,
+          })),
+        },
+        payments: {
+          create: {
+            provider: params.provider,
+            providerTransactionId: params.providerTransactionId,
+            amount: pricing.total,
+            currency,
+            status: "CAPTURED",
+            paymentMethod: params.provider,
+          },
+        },
+      },
+      select: { id: true, orderNumber: true },
+    });
+
+    return {
+      success: true as const,
+      orderNumber: order.orderNumber,
+      orderId: order.id,
+    };
+  });
+}
+
 export type OrderDetail = {
   id: string;
   orderNumber: string;
@@ -54,6 +172,14 @@ export type OrderDetail = {
   currency: string;
   subtotal: number;
   discountAmount: number;
+  couponCode: string | null;
+  payments: Array<{
+    provider: string | null;
+    providerTransactionId: string | null;
+    amount: number;
+    status: string;
+    createdAt: Date;
+  }>;
   shippingAmount: number;
   taxAmount: number;
   total: number;
@@ -107,6 +233,16 @@ export async function getOrderDetailById(
   const order = await prisma.order.findUnique({
     where: { id: parsedOrderId.data },
     include: {
+      payments: {
+        orderBy: { createdAt: "asc" },
+        select: {
+          provider: true,
+          providerTransactionId: true,
+          amount: true,
+          status: true,
+          createdAt: true,
+        },
+      },
       customer: {
         select: {
           id: true,
@@ -177,6 +313,11 @@ export async function getOrderDetailById(
     currency: order.currency,
     subtotal: Number(order.subtotal),
     discountAmount: Number(order.discountAmount),
+    couponCode: order.couponCode,
+    payments: order.payments.map((payment) => ({
+      ...payment,
+      amount: Number(payment.amount),
+    })),
     shippingAmount: Number(order.shippingAmount),
     taxAmount: Number(order.taxAmount),
     total: Number(order.total),

@@ -6,7 +6,7 @@ import { founderContent } from "@/lib/content/founder";
 
 export function FounderSection() {
   return (
-    <section id="founder" className="bg-background py-16 md:py-24">
+    <section id="founder" className="bg-background py-12 md:py-16">
       <Container>
         <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16 xl:gap-24">
           {/* LEFT: Founder photo with logo overlay */}

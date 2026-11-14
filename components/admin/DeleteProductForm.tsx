@@ -16,7 +16,12 @@ export function DeleteProductForm({
         type="submit"
         className="text-xs text-red-500 hover:underline"
         onClick={(event) => {
-          if (!confirm("Delete this product?")) event.preventDefault();
+          if (
+            !confirm(
+              "Delete this product? If it has ever been ordered it will be archived instead, so order history is kept.",
+            )
+          )
+            event.preventDefault();
         }}
       >
         Delete

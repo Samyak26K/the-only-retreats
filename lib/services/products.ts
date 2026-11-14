@@ -265,6 +265,104 @@ export async function createProduct(
   };
 }
 
+export type NewProductDetails = {
+  passport?: { altitude?: string; region?: string };
+  imageUrls: string[];
+  variants: Array<{
+    name: string;
+    sku: string;
+    sellingPrice: number;
+    mrp: number;
+    netQuantity: number | null;
+    unit: string | null;
+    isDefault: boolean;
+  }>;
+  inventoryLocationId: string;
+  initialStock: number;
+};
+
+/**
+ * Creates the product with its passport, images, variants and inventory rows
+ * in one nested write, so a failure leaves nothing half-created.
+ */
+export async function createProductWithDetails(
+  input: unknown,
+  details: NewProductDetails,
+  options?: {
+    actor?: { id?: string | null; email?: string | null; role?: string | null };
+  },
+) {
+  const parsed = productCreateSchema.parse(input);
+  const slug = parsed.slug ?? slugify(parsed.name);
+  const hasDefault = details.variants.some((variant) => variant.isDefault);
+
+  const product = await prisma.product.create({
+    data: {
+      name: parsed.name,
+      slug,
+      categoryId: parsed.categoryId ?? undefined,
+      primaryOriginId: parsed.primaryOriginId ?? undefined,
+      shortDescription: parsed.shortDescription ?? undefined,
+      longDescription: parsed.longDescription ?? undefined,
+      brand: parsed.brand ?? undefined,
+      status: parsed.status ?? "DRAFT",
+      featured: parsed.featured ?? false,
+      currency: parsed.currency ?? "INR",
+      mrp: parsed.mrp ?? undefined,
+      sellingPrice: parsed.sellingPrice ?? undefined,
+      costPrice: parsed.costPrice ?? undefined,
+      seoTitle: parsed.seoTitle ?? undefined,
+      seoDescription: parsed.seoDescription ?? undefined,
+      passport: details.passport
+        ? {
+            create: {
+              altitude: details.passport.altitude ?? "",
+              region: details.passport.region ?? "",
+            },
+          }
+        : undefined,
+      media: {
+        create: details.imageUrls.map((url, index) => ({
+          type: "image",
+          url,
+          alt: parsed.name,
+          sortOrder: index,
+        })),
+      },
+      variants: {
+        create: details.variants.map((variant, index) => ({
+          ...variant,
+          isDefault: hasDefault ? variant.isDefault : index === 0,
+          status: "ACTIVE" as const,
+          inventoryItems: {
+            create: {
+              inventoryLocationId: details.inventoryLocationId,
+              quantityOnHand: details.initialStock,
+              quantityReserved: 0,
+              status: "ACTIVE" as const,
+            },
+          },
+        })),
+      },
+    },
+    select: { id: true, name: true, slug: true, status: true, brand: true },
+  });
+
+  try {
+    await recordAuditLog({
+      actor: options?.actor,
+      action: "create",
+      entityType: "Product",
+      entityId: product.id,
+      newState: { ...product, variants: details.variants.length },
+    });
+  } catch (err) {
+    console.error("Audit log failed:", err);
+  }
+
+  return product;
+}
+
 export async function updateProduct(
   id: string,
   input: unknown,
@@ -327,14 +425,18 @@ export async function updateProduct(
     },
   });
 
-  await recordAuditLog({
-    actor: options?.actor,
-    action: "update",
-    entityType: "Product",
-    entityId: updated.id,
-    previousState: existing,
-    newState: updated,
-  });
+  try {
+    await recordAuditLog({
+      actor: options?.actor,
+      action: "update",
+      entityType: "Product",
+      entityId: updated.id,
+      previousState: existing,
+      newState: updated,
+    });
+  } catch (err) {
+    console.error("Audit log failed:", err);
+  }
 
   return {
     ...updated,
@@ -405,7 +507,7 @@ export async function archiveProduct(
   };
 }
 
-function slugify(value: string) {
+export function slugify(value: string) {
   return value
     .toLowerCase()
     .trim()
